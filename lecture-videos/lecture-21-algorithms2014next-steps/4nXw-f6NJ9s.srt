@@ -1,0 +1,6351 @@
+1
+00:00:00,000 --> 00:00:06,986
+[SQUEAKING]
+[RUSTLING] [CLICKING]
+
+2
+00:00:18,490 --> 00:00:19,700
+JASON KU: Hi, everybody.
+
+3
+00:00:19,700 --> 00:00:22,870
+Welcome to the last
+lecture of 6.006.
+
+4
+00:00:22,870 --> 00:00:27,410
+Last lecture, we talked
+about summing up this class
+
+5
+00:00:27,410 --> 00:00:30,400
+and talking about future
+courses in the department that
+
+6
+00:00:30,400 --> 00:00:33,520
+use this material.
+
+7
+00:00:33,520 --> 00:00:36,640
+Just as a pointer to
+some of those classes,
+
+8
+00:00:36,640 --> 00:00:38,680
+I have a little slide
+here I didn't get to
+
+9
+00:00:38,680 --> 00:00:41,397
+at the last lecture,
+talking about what
+
+10
+00:00:41,397 --> 00:00:43,480
+I was talking about at the
+end of the last lecture
+
+11
+00:00:43,480 --> 00:00:46,300
+about different models--
+
+12
+00:00:46,300 --> 00:00:50,680
+different specialized classes
+on different aspects of 006
+
+13
+00:00:50,680 --> 00:00:52,030
+material--
+
+14
+00:00:52,030 --> 00:00:55,690
+for example, more graph
+stuff, different models
+
+15
+00:00:55,690 --> 00:00:59,230
+of computation,
+randomness, complexity.
+
+16
+00:00:59,230 --> 00:01:02,050
+All of these things have
+their own specialized classes
+
+17
+00:01:02,050 --> 00:01:05,860
+in the department, as well
+as a lot of applications
+
+18
+00:01:05,860 --> 00:01:09,760
+for this material in subjects
+like biology, cryptography,
+
+19
+00:01:09,760 --> 00:01:14,860
+and in particular, for
+your instructors, the realm
+
+20
+00:01:14,860 --> 00:01:17,440
+of graphics and geometry.
+
+21
+00:01:17,440 --> 00:01:19,390
+All of your
+instructors this term
+
+22
+00:01:19,390 --> 00:01:22,990
+happened to be geometers
+and be interested
+
+23
+00:01:22,990 --> 00:01:26,200
+in geometry-related problems.
+
+24
+00:01:26,200 --> 00:01:29,440
+Me in particular, I didn't
+start out in computer science.
+
+25
+00:01:29,440 --> 00:01:32,500
+I started out in
+mechanical engineering.
+
+26
+00:01:32,500 --> 00:01:37,210
+And the thing that was my
+passion coming into MIT
+
+27
+00:01:37,210 --> 00:01:39,370
+was origami.
+
+28
+00:01:39,370 --> 00:01:44,560
+Here's a couple of
+pieces that I designed--
+
+29
+00:01:44,560 --> 00:01:47,320
+origami pieces, one square
+sheet of paper without cutting.
+
+30
+00:01:47,320 --> 00:01:54,190
+Here's a lobster, and here's
+a copyrighted dinosaur
+
+31
+00:01:54,190 --> 00:01:57,040
+from a particular movie of
+the year that I designed it.
+
+32
+00:02:01,790 --> 00:02:03,530
+When I was young,
+in high school,
+
+33
+00:02:03,530 --> 00:02:06,830
+I started designing
+my own origami models.
+
+34
+00:02:06,830 --> 00:02:10,070
+And what I didn't realize
+was, the procedures
+
+35
+00:02:10,070 --> 00:02:13,010
+that I went about
+designing these models
+
+36
+00:02:13,010 --> 00:02:15,020
+was actually algorithms.
+
+37
+00:02:15,020 --> 00:02:17,390
+And I just didn't have
+the mathematical language
+
+38
+00:02:17,390 --> 00:02:20,990
+to understand exactly
+what I was doing,
+
+39
+00:02:20,990 --> 00:02:24,230
+but I could gain some
+intuition as an origami artist
+
+40
+00:02:24,230 --> 00:02:26,947
+and design these
+things by using some
+
+41
+00:02:26,947 --> 00:02:28,280
+of those algorithmic techniques.
+
+42
+00:02:28,280 --> 00:02:32,210
+It wasn't until grad school,
+as a mechanical engineer,
+
+43
+00:02:32,210 --> 00:02:38,990
+that I started talking with
+our other instructor here,
+
+44
+00:02:38,990 --> 00:02:43,100
+Professor Demaine, about using
+algorithms and computer science
+
+45
+00:02:43,100 --> 00:02:48,590
+to design not just
+origami, which we both do,
+
+46
+00:02:48,590 --> 00:02:53,390
+but also folded structures
+that can be used for mechanical
+
+47
+00:02:53,390 --> 00:03:01,460
+applications like space flight,
+deployable bridges in times
+
+48
+00:03:01,460 --> 00:03:04,160
+when you can't--
+
+49
+00:03:04,160 --> 00:03:07,640
+you need a temporary bridge or
+shelter or something like that.
+
+50
+00:03:07,640 --> 00:03:10,280
+Deployable structures
+where you might
+
+51
+00:03:10,280 --> 00:03:13,880
+need to make folded structures--
+transformable structures that
+
+52
+00:03:13,880 --> 00:03:18,290
+can have different applications
+for different purposes--
+
+53
+00:03:18,290 --> 00:03:19,670
+need to reconfigure.
+
+54
+00:03:19,670 --> 00:03:22,880
+The dream being that, we
+have these powerful devices
+
+55
+00:03:22,880 --> 00:03:26,250
+in our pockets right
+now-- cell phones--
+
+56
+00:03:26,250 --> 00:03:29,720
+which are really powerful
+because we can reconfigure
+
+57
+00:03:29,720 --> 00:03:31,490
+the bits in them
+to make software
+
+58
+00:03:31,490 --> 00:03:33,230
+of all different kinds, right?
+
+59
+00:03:33,230 --> 00:03:36,800
+There's an exponential
+number of different programs
+
+60
+00:03:36,800 --> 00:03:37,610
+that we can write.
+
+61
+00:03:37,610 --> 00:03:39,590
+And that's part of
+why you're here,
+
+62
+00:03:39,590 --> 00:03:41,210
+is to write the next best one.
+
+63
+00:03:41,210 --> 00:03:42,020
+Right?
+
+64
+00:03:42,020 --> 00:03:47,960
+So that's how to make
+kind of a universal device
+
+65
+00:03:47,960 --> 00:03:49,520
+at the electronic level.
+
+66
+00:03:49,520 --> 00:03:53,990
+What if we could do that
+from a material standpoint?
+
+67
+00:03:53,990 --> 00:03:57,620
+What if I could reprogram the
+matter in my phone so that,
+
+68
+00:03:57,620 --> 00:04:02,030
+not only could I reprogram
+the app that's on your phone,
+
+69
+00:04:02,030 --> 00:04:06,620
+but instead of having, say, the
+iPhone 10 or whatever that you
+
+70
+00:04:06,620 --> 00:04:09,050
+have, and you want to
+go by the iPhone 11,
+
+71
+00:04:09,050 --> 00:04:13,940
+instead, you download a software
+app that then reconfigures
+
+72
+00:04:13,940 --> 00:04:15,440
+the matter in your phone--
+
+73
+00:04:15,440 --> 00:04:20,779
+it folds or reconfigures into
+the next generation iPhone.
+
+74
+00:04:20,779 --> 00:04:23,060
+You don't have to throw
+away that old one.
+
+75
+00:04:23,060 --> 00:04:24,860
+You can essentially
+recycle the material
+
+76
+00:04:24,860 --> 00:04:29,450
+that you have to potentially
+save material, save
+
+77
+00:04:29,450 --> 00:04:33,000
+cost, and be better for the
+environment, potentially.
+
+78
+00:04:33,000 --> 00:04:37,130
+So I started moving
+into computer science
+
+79
+00:04:37,130 --> 00:04:40,160
+because I found that it
+was a really good way
+
+80
+00:04:40,160 --> 00:04:42,770
+to model the world
+and solve some really
+
+81
+00:04:42,770 --> 00:04:48,500
+interesting problems about
+folding that I really enjoyed.
+
+82
+00:04:48,500 --> 00:04:51,860
+The three of us today
+are going to spend
+
+83
+00:04:51,860 --> 00:04:54,050
+some time talking a
+little bit about how
+
+84
+00:04:54,050 --> 00:04:55,880
+we can use algorithms--
+
+85
+00:04:55,880 --> 00:04:58,550
+6.006 material and beyond--
+
+86
+00:04:58,550 --> 00:05:00,260
+in our own research.
+
+87
+00:05:00,260 --> 00:05:03,650
+And we're going to start
+off with Professor Demaine,
+
+88
+00:05:03,650 --> 00:05:04,790
+and then Professor Solomon.
+
+89
+00:05:07,532 --> 00:05:08,910
+ERIK DEMAINE: Thanks.
+
+90
+00:05:08,910 --> 00:05:12,890
+So let me just jump in here
+to computational origami
+
+91
+00:05:12,890 --> 00:05:15,590
+and geometric
+folding algorithms,
+
+92
+00:05:15,590 --> 00:05:18,800
+sort of a broader umbrella for
+folding-related things, which
+
+93
+00:05:18,800 --> 00:05:22,340
+is encapsulated by
+this class, 6.849,
+
+94
+00:05:22,340 --> 00:05:23,630
+which is happening next fall.
+
+95
+00:05:23,630 --> 00:05:25,940
+So you should all take it.
+
+96
+00:05:25,940 --> 00:05:29,900
+006 should be a
+reasonable background.
+
+97
+00:05:29,900 --> 00:05:33,420
+And in general, we're interested
+in two kinds of problems.
+
+98
+00:05:33,420 --> 00:05:35,810
+One-- the big one
+is origami design,
+
+99
+00:05:35,810 --> 00:05:37,610
+or in general,
+folding design, where
+
+100
+00:05:37,610 --> 00:05:40,310
+you have some specifications of
+what you would like to build.
+
+101
+00:05:40,310 --> 00:05:44,540
+In this case I wanted to
+make a logo for 6.849.
+
+102
+00:05:44,540 --> 00:05:50,330
+And I imagined extruding that
+text into third dimension.
+
+103
+00:05:50,330 --> 00:05:53,300
+And then I wanted an
+algorithm to tell me
+
+104
+00:05:53,300 --> 00:05:54,632
+how to fold that structure.
+
+105
+00:05:54,632 --> 00:05:56,090
+And so there is an
+algorithm, which
+
+106
+00:05:56,090 --> 00:05:57,140
+I'll talk about
+in a moment, that
+
+107
+00:05:57,140 --> 00:05:58,265
+gives you a crease pattern.
+
+108
+00:05:58,265 --> 00:06:00,110
+And then, currently,
+you fold it by hand.
+
+109
+00:06:00,110 --> 00:06:02,510
+The dream is, we'll eventually
+have folding machines that
+
+110
+00:06:02,510 --> 00:06:05,370
+do it all for us.
+
+111
+00:06:05,370 --> 00:06:06,770
+And so that's the
+origami design,
+
+112
+00:06:06,770 --> 00:06:09,440
+where you go from
+the target shape
+
+113
+00:06:09,440 --> 00:06:13,970
+back to the crease pattern.
+
+114
+00:06:13,970 --> 00:06:15,860
+The reverse direction
+is sort of foldability.
+
+115
+00:06:15,860 --> 00:06:19,010
+If I gave you a structure like
+this and I wanted to know,
+
+116
+00:06:19,010 --> 00:06:20,870
+does it fold?
+
+117
+00:06:20,870 --> 00:06:23,540
+That's the problem
+we call foldability--
+
+118
+00:06:23,540 --> 00:06:25,610
+in general, class of problems.
+
+119
+00:06:25,610 --> 00:06:27,890
+And sadly, most of those
+problems are NP-hard.
+
+120
+00:06:27,890 --> 00:06:31,340
+Jason and I proved
+that foldability
+
+121
+00:06:31,340 --> 00:06:34,100
+is hard for a general-- given
+a crease pattern like that,
+
+122
+00:06:34,100 --> 00:06:35,810
+telling you whether
+folds into anything,
+
+123
+00:06:35,810 --> 00:06:37,150
+it turns out to be NP-hard.
+
+124
+00:06:37,150 --> 00:06:39,270
+So that's bad news.
+
+125
+00:06:39,270 --> 00:06:41,570
+So we focus a lot on
+the design problem,
+
+126
+00:06:41,570 --> 00:06:43,380
+because that actually
+tends to be easier.
+
+127
+00:06:43,380 --> 00:06:46,340
+We can solve it with algorithms
+like that one you're seeing.
+
+128
+00:06:49,040 --> 00:06:52,970
+A long time ago, we proved
+that you can fold everything.
+
+129
+00:06:52,970 --> 00:06:54,920
+If I give you a
+square piece of paper
+
+130
+00:06:54,920 --> 00:06:58,012
+and you take any polygon
+you want to make--
+
+131
+00:06:58,012 --> 00:07:00,470
+or maybe the paper's white on
+one side, black on the other,
+
+132
+00:07:00,470 --> 00:07:03,200
+you want to fold some two-color
+pattern, like a zebra,
+
+133
+00:07:03,200 --> 00:07:05,840
+or in general, some
+three-dimensional surface,
+
+134
+00:07:05,840 --> 00:07:08,390
+like these guys, there
+is a way to fold it
+
+135
+00:07:08,390 --> 00:07:10,877
+from a large enough
+square of paper.
+
+136
+00:07:10,877 --> 00:07:13,460
+And it's actually really easy
+to prove that with an algorithm.
+
+137
+00:07:13,460 --> 00:07:16,790
+I have the sketch of
+the two pages of proof
+
+138
+00:07:16,790 --> 00:07:19,220
+that we go over in
+6.849, but I'll just
+
+139
+00:07:19,220 --> 00:07:20,660
+hand-wave a little bit.
+
+140
+00:07:20,660 --> 00:07:23,270
+If you take a piece of
+paper, like my lecture notes
+
+141
+00:07:23,270 --> 00:07:26,570
+here, the first thing
+you do is fold it down
+
+142
+00:07:26,570 --> 00:07:28,730
+into a very long, narrow strip--
+
+143
+00:07:28,730 --> 00:07:30,740
+much longer and
+narrower than this one--
+
+144
+00:07:30,740 --> 00:07:32,480
+wasting most of the material.
+
+145
+00:07:32,480 --> 00:07:35,030
+And then you take your strip,
+and you just figure out
+
+146
+00:07:35,030 --> 00:07:37,640
+how to turn it in
+some general way,
+
+147
+00:07:37,640 --> 00:07:39,800
+and then you just sort
+of zigzag back and forth
+
+148
+00:07:39,800 --> 00:07:41,130
+along the surface.
+
+149
+00:07:41,130 --> 00:07:43,730
+So it's very cool in that you
+can prove with an algorithm,
+
+150
+00:07:43,730 --> 00:07:45,677
+and in a very short
+amount of time,
+
+151
+00:07:45,677 --> 00:07:47,510
+to someone you can
+actually fold everything.
+
+152
+00:07:47,510 --> 00:07:48,830
+Of course, it's a
+terrible folding,
+
+153
+00:07:48,830 --> 00:07:50,247
+because in the
+very first step, we
+
+154
+00:07:50,247 --> 00:07:54,140
+throw away all but
+epsilon of the material.
+
+155
+00:07:54,140 --> 00:07:55,640
+But it's a starting point.
+
+156
+00:07:55,640 --> 00:07:56,870
+That was back in the '90s--
+
+157
+00:07:56,870 --> 00:07:59,060
+late '90s-- one of
+the first results
+
+158
+00:07:59,060 --> 00:08:00,740
+in computational origami.
+
+159
+00:08:00,740 --> 00:08:04,130
+And in modern times, we
+look for better algorithms
+
+160
+00:08:04,130 --> 00:08:07,280
+that are more efficient, that
+try to minimize the scale
+
+161
+00:08:07,280 --> 00:08:09,200
+factor from, how big
+of a piece of paper
+
+162
+00:08:09,200 --> 00:08:13,070
+do I start from to, how
+big of a model do I get?
+
+163
+00:08:13,070 --> 00:08:15,650
+And one of the cool
+ways these days, which
+
+164
+00:08:15,650 --> 00:08:17,720
+was invented by
+Tomohiro Tachi and then
+
+165
+00:08:17,720 --> 00:08:19,642
+analyzed by the two of us--
+
+166
+00:08:19,642 --> 00:08:20,600
+it's called Origamizer.
+
+167
+00:08:20,600 --> 00:08:21,650
+It's free software.
+
+168
+00:08:21,650 --> 00:08:25,190
+You take a 3D
+model and you can--
+
+169
+00:08:25,190 --> 00:08:27,830
+it makes it into a pattern
+that you fold from a square.
+
+170
+00:08:27,830 --> 00:08:32,330
+In this case, it uses 22% of
+the area, which is pretty good--
+
+171
+00:08:32,330 --> 00:08:36,620
+similar to these guys
+in terms of efficiency.
+
+172
+00:08:36,620 --> 00:08:39,380
+But very, very different
+kind of folding
+
+173
+00:08:39,380 --> 00:08:42,923
+than what you would get from
+more traditional origami
+
+174
+00:08:42,923 --> 00:08:44,840
+design, which uses
+different algorithms, which
+
+175
+00:08:44,840 --> 00:08:45,650
+I'm not going to talk about.
+
+176
+00:08:45,650 --> 00:08:46,520
+But you should take the class.
+
+177
+00:08:46,520 --> 00:08:47,978
+Jason gives a
+lecture in the class,
+
+178
+00:08:47,978 --> 00:08:50,940
+so you can learn from him.
+
+179
+00:08:50,940 --> 00:08:54,560
+But the vision is, we can take
+any sheet of material that
+
+180
+00:08:54,560 --> 00:08:57,530
+can hold a crease, like
+this sheet of steel
+
+181
+00:08:57,530 --> 00:08:58,610
+that Tomohiro is folding.
+
+182
+00:08:58,610 --> 00:09:02,490
+It was cut by a big
+laser cutter at MIT.
+
+183
+00:09:02,490 --> 00:09:04,010
+And this is him in
+this Data Center
+
+184
+00:09:04,010 --> 00:09:08,450
+several years ago, folding
+it into a steel bunny.
+
+185
+00:09:08,450 --> 00:09:13,100
+And so this is a totally new
+way to manufacture 3D objects.
+
+186
+00:09:13,100 --> 00:09:16,370
+And you can make particularly
+interesting objects
+
+187
+00:09:16,370 --> 00:09:21,780
+that either collapse flat for
+transportation or transform,
+
+188
+00:09:21,780 --> 00:09:24,260
+like Jason was talking about.
+
+189
+00:09:24,260 --> 00:09:26,420
+But I'm just giving
+you a flavor.
+
+190
+00:09:26,420 --> 00:09:30,230
+I think the first paper we wrote
+together was on maze folding.
+
+191
+00:09:30,230 --> 00:09:32,960
+So this is an example
+of folding a maze
+
+192
+00:09:32,960 --> 00:09:34,860
+from a rectangle of paper.
+
+193
+00:09:34,860 --> 00:09:38,510
+And you can all try this out.
+
+194
+00:09:38,510 --> 00:09:41,660
+You just google for
+our Maze Folder.
+
+195
+00:09:41,660 --> 00:09:43,400
+You can generate a random maze.
+
+196
+00:09:43,400 --> 00:09:46,940
+And this 3D structure
+can be folded
+
+197
+00:09:46,940 --> 00:09:49,490
+from this crease pattern.
+
+198
+00:09:49,490 --> 00:09:53,010
+That's a really hard one, so
+maybe try something smaller.
+
+199
+00:09:53,010 --> 00:09:58,880
+You can also write your favorite
+message and fold this maze--
+
+200
+00:09:58,880 --> 00:10:03,058
+extruded graph-- from
+this crease pattern.
+
+201
+00:10:03,058 --> 00:10:04,850
+Might want to start
+with something smaller,
+
+202
+00:10:04,850 --> 00:10:07,190
+but that's the general idea.
+
+203
+00:10:07,190 --> 00:10:09,860
+And it's actually quite easy
+to prove this algorithmically,
+
+204
+00:10:09,860 --> 00:10:11,600
+if you have a really
+good origamist
+
+205
+00:10:11,600 --> 00:10:13,220
+like Jason on your team.
+
+206
+00:10:13,220 --> 00:10:17,130
+What you do is design how
+to fold each type of vertex.
+
+207
+00:10:17,130 --> 00:10:19,520
+This is just a graph on a grid.
+
+208
+00:10:19,520 --> 00:10:22,070
+There are some constant
+number of different ways
+
+209
+00:10:22,070 --> 00:10:23,300
+that each vertex could look.
+
+210
+00:10:23,300 --> 00:10:24,260
+It could be degree 4.
+
+211
+00:10:24,260 --> 00:10:27,920
+It could be degree 3, as
+a T. It could be degree
+
+212
+00:10:27,920 --> 00:10:29,630
+2, either a turn or a straight.
+
+213
+00:10:29,630 --> 00:10:32,810
+And you design little gadgets,
+little crease patterns,
+
+214
+00:10:32,810 --> 00:10:34,838
+that fold into each of
+those little structures.
+
+215
+00:10:34,838 --> 00:10:37,130
+And if you can do it in a
+way that these boundaries are
+
+216
+00:10:37,130 --> 00:10:39,110
+compatible, then to
+fold the whole thing,
+
+217
+00:10:39,110 --> 00:10:41,360
+you just sort of gluon
+together those crease patterns.
+
+218
+00:10:41,360 --> 00:10:44,930
+And that's how that
+software works.
+
+219
+00:10:44,930 --> 00:10:46,850
+This was particularly
+interesting,
+
+220
+00:10:46,850 --> 00:10:50,210
+because you can fold an
+arbitrarily complicated graph--
+
+221
+00:10:50,210 --> 00:10:52,640
+arbitrarily complicated
+maze, n by n,
+
+222
+00:10:52,640 --> 00:10:54,055
+with a constant scale factor.
+
+223
+00:10:54,055 --> 00:10:55,430
+As long as the
+height that you're
+
+224
+00:10:55,430 --> 00:10:58,340
+extruding that maze
+is constant, then
+
+225
+00:10:58,340 --> 00:11:00,950
+this is one family of shapes we
+know how to fold really well.
+
+226
+00:11:00,950 --> 00:11:02,720
+In general, we're
+trying to understand,
+
+227
+00:11:02,720 --> 00:11:06,410
+what makes this lobster
+a nice shape in that it
+
+228
+00:11:06,410 --> 00:11:09,530
+can be represented with a
+not-too-large piece of paper.
+
+229
+00:11:09,530 --> 00:11:13,960
+And we don't have general
+answers to that problem.
+
+230
+00:11:13,960 --> 00:11:17,800
+I think that was a whirlwind
+tour of computational origami.
+
+231
+00:11:17,800 --> 00:11:21,670
+I also play a lot in
+algorithmic sculpture.
+
+232
+00:11:21,670 --> 00:11:25,540
+One of the leading edges
+in origami and origami math
+
+233
+00:11:25,540 --> 00:11:28,550
+is understanding how
+curved creases work.
+
+234
+00:11:28,550 --> 00:11:30,520
+And one of our
+favorite models is
+
+235
+00:11:30,520 --> 00:11:33,340
+this one, where you fold
+concentric circles alternating
+
+236
+00:11:33,340 --> 00:11:35,740
+mountain and valley,
+cut a circular hole out,
+
+237
+00:11:35,740 --> 00:11:38,890
+and it folds into this
+kind of Pringle shape
+
+238
+00:11:38,890 --> 00:11:42,820
+as a nice physics
+equilibrium thing.
+
+239
+00:11:42,820 --> 00:11:46,600
+And then you can turn it into
+fun sculptures like this.
+
+240
+00:11:46,600 --> 00:11:49,570
+These are done with my dad,
+Martin Demaine, who's also here
+
+241
+00:11:49,570 --> 00:11:51,760
+at MIT, or this guy.
+
+242
+00:11:51,760 --> 00:11:54,550
+This paper has been
+printed with a pattern
+
+243
+00:11:54,550 --> 00:11:56,740
+according to getting
+burned by glass.
+
+244
+00:11:56,740 --> 00:12:00,490
+And then it gets folded and
+then put inside glass, also.
+
+245
+00:12:00,490 --> 00:12:03,340
+Made here at MIT.
+
+246
+00:12:03,340 --> 00:12:05,710
+We use sculpture to try
+to explore and understand
+
+247
+00:12:05,710 --> 00:12:07,240
+intuitively how
+curved creases work,
+
+248
+00:12:07,240 --> 00:12:09,550
+and then we get better
+and better understanding
+
+249
+00:12:09,550 --> 00:12:11,970
+of the mathematics of even--
+
+250
+00:12:11,970 --> 00:12:14,470
+we don't even know whether this
+surface exists, whether it's
+
+251
+00:12:14,470 --> 00:12:17,087
+possible to fold in this
+way, although getting
+
+252
+00:12:17,087 --> 00:12:17,920
+close to proving it.
+
+253
+00:12:20,590 --> 00:12:26,380
+That was sort of in the top
+level of this hierarchy.
+
+254
+00:12:26,380 --> 00:12:29,350
+Computational geometry
+is a bigger umbrella,
+
+255
+00:12:29,350 --> 00:12:31,630
+which is represented by
+another class, 6.850,
+
+256
+00:12:31,630 --> 00:12:33,430
+that's being taught this term.
+
+257
+00:12:33,430 --> 00:12:35,830
+And then I talked
+about geometric folding
+
+258
+00:12:35,830 --> 00:12:37,150
+within that branch.
+
+259
+00:12:37,150 --> 00:12:39,160
+Let me briefly tell
+you about another world
+
+260
+00:12:39,160 --> 00:12:43,000
+of geometry-- very different in
+terms of model of computation.
+
+261
+00:12:43,000 --> 00:12:45,670
+Oh, I jumped ahead a little bit.
+
+262
+00:12:45,670 --> 00:12:46,630
+Rewind.
+
+263
+00:12:46,630 --> 00:12:48,740
+Let me show you
+one more fun demo,
+
+264
+00:12:48,740 --> 00:12:50,920
+which-- if I find my scissors.
+
+265
+00:12:54,580 --> 00:12:58,750
+If I take a rectangle of
+paper, and I fold it flat
+
+266
+00:12:58,750 --> 00:13:03,430
+and make one straight cut,
+what shapes can I get?
+
+267
+00:13:03,430 --> 00:13:05,880
+It's called the
+folding cut problem.
+
+268
+00:13:05,880 --> 00:13:09,400
+It's hundreds of years old.
+
+269
+00:13:09,400 --> 00:13:15,550
+Here, for example, I get a swan.
+
+270
+00:13:15,550 --> 00:13:26,535
+Here, I get-- one straight cut.
+
+271
+00:13:26,535 --> 00:13:32,070
+I unfold and get angelfish.
+
+272
+00:13:32,070 --> 00:13:33,920
+Tough audience today.
+
+273
+00:13:33,920 --> 00:13:34,890
+I've got to keep going.
+
+274
+00:13:34,890 --> 00:13:36,490
+You've seen all of these before.
+
+275
+00:13:36,490 --> 00:13:40,040
+This is this one is a
+particularly difficult one
+
+276
+00:13:40,040 --> 00:13:40,825
+to fold--
+
+277
+00:13:40,825 --> 00:13:42,480
+to only fold.
+
+278
+00:13:42,480 --> 00:13:45,430
+And to cut, yeah.
+
+279
+00:13:45,430 --> 00:13:46,590
+OK.
+
+280
+00:13:46,590 --> 00:13:47,530
+That works well.
+
+281
+00:13:50,710 --> 00:13:56,250
+This is the MIT logo.
+
+282
+00:13:56,250 --> 00:13:57,818
+Ooh, ah.
+
+283
+00:13:57,818 --> 00:13:58,814
+AUDIENCE: Ooh, aah.
+
+284
+00:13:58,814 --> 00:13:59,708
+MIT, yeah!
+
+285
+00:13:59,708 --> 00:14:00,500
+ERIK DEMAINE: Yeah.
+
+286
+00:14:00,500 --> 00:14:02,030
+Go, MIT.
+
+287
+00:14:02,030 --> 00:14:03,710
+All right.
+
+288
+00:14:03,710 --> 00:14:05,330
+That's actually
+the first problem
+
+289
+00:14:05,330 --> 00:14:07,040
+I worked on in
+computational origami.
+
+290
+00:14:07,040 --> 00:14:07,950
+It's a lot of fun.
+
+291
+00:14:07,950 --> 00:14:10,460
+And there's a really interesting
+algorithm here, also,
+
+292
+00:14:10,460 --> 00:14:12,260
+for computing the
+crease pattern,
+
+293
+00:14:12,260 --> 00:14:14,930
+how to fold your piece
+of paper to align--
+
+294
+00:14:14,930 --> 00:14:17,987
+in fact, any graph you
+draw on a piece of paper,
+
+295
+00:14:17,987 --> 00:14:20,070
+you can align all of those
+edges and nothing else.
+
+296
+00:14:20,070 --> 00:14:23,730
+So you cut along the line and
+you get exactly what you want.
+
+297
+00:14:23,730 --> 00:14:24,570
+Cool.
+
+298
+00:14:24,570 --> 00:14:25,200
+All right.
+
+299
+00:14:25,200 --> 00:14:27,730
+Now, I want to talk about
+something completely different,
+
+300
+00:14:27,730 --> 00:14:29,160
+which is self-assembly.
+
+301
+00:14:29,160 --> 00:14:33,270
+A fun thing you can do with
+DNA, which we all have.
+
+302
+00:14:33,270 --> 00:14:35,640
+Just pick out some
+cool DNA strands
+
+303
+00:14:35,640 --> 00:14:38,520
+and design them in a clever
+way so they fit together
+
+304
+00:14:38,520 --> 00:14:42,090
+to form a kind of square
+with dangling ends, which
+
+305
+00:14:42,090 --> 00:14:44,640
+I'll call glues and each
+of those dangling ends
+
+306
+00:14:44,640 --> 00:14:46,170
+can have a very
+particular pattern,
+
+307
+00:14:46,170 --> 00:14:49,440
+and only identical or
+complementary patterns
+
+308
+00:14:49,440 --> 00:14:51,970
+will attach to each other.
+
+309
+00:14:51,970 --> 00:14:53,670
+And so you can
+use this to design
+
+310
+00:14:53,670 --> 00:14:56,640
+your own self-assembling
+system, like biology
+
+311
+00:14:56,640 --> 00:15:00,100
+does, but engineered, for
+example, to build a computer.
+
+312
+00:15:00,100 --> 00:15:03,660
+This is an example of taking
+a bunch of these square tiles
+
+313
+00:15:03,660 --> 00:15:05,370
+and building a binary counter.
+
+314
+00:15:05,370 --> 00:15:08,550
+This thing is roughly counting
+in binary along the diagonal.
+
+315
+00:15:08,550 --> 00:15:10,390
+It's a little skewed,
+so it's hard to see.
+
+316
+00:15:10,390 --> 00:15:19,170
+But the general model
+is, you have squares--
+
+317
+00:15:19,170 --> 00:15:22,770
+this is sort of the
+computational model--
+
+318
+00:15:22,770 --> 00:15:24,120
+with four different glues.
+
+319
+00:15:24,120 --> 00:15:26,230
+And you can build
+any square you want,
+
+320
+00:15:26,230 --> 00:15:29,670
+but you don't have very many of
+these different glues, ideally.
+
+321
+00:15:29,670 --> 00:15:35,190
+And then, if you have two
+tiles with complementary glues,
+
+322
+00:15:35,190 --> 00:15:37,530
+they will want to
+match together.
+
+323
+00:15:37,530 --> 00:15:41,160
+But it depends how strong this
+glue is, how much affinity
+
+324
+00:15:41,160 --> 00:15:44,532
+there is for how long those
+DNA dangling ends are,
+
+325
+00:15:44,532 --> 00:15:46,240
+and also, the temperature
+of your system.
+
+326
+00:15:46,240 --> 00:15:47,460
+If you have really high
+temperature, nothing.
+
+327
+00:15:47,460 --> 00:15:49,150
+Will stick together
+low temperature,
+
+328
+00:15:49,150 --> 00:15:53,160
+things will stick together even
+if they're not supposed to.
+
+329
+00:15:53,160 --> 00:15:55,710
+If you tune your
+system really well,
+
+330
+00:15:55,710 --> 00:16:00,180
+you can design a system so that
+maybe these guys-- these glues
+
+331
+00:16:00,180 --> 00:16:01,690
+are really strong.
+
+332
+00:16:01,690 --> 00:16:05,100
+And so let's, I don't
+know, write "E" here--
+
+333
+00:16:05,100 --> 00:16:06,300
+Erik.
+
+334
+00:16:06,300 --> 00:16:09,280
+And so these tiles will
+always glue together,
+
+335
+00:16:09,280 --> 00:16:11,880
+but only when all three of
+these are glued together
+
+336
+00:16:11,880 --> 00:16:12,900
+can this tile--
+
+337
+00:16:12,900 --> 00:16:17,640
+which has C complement
+and F complement.
+
+338
+00:16:17,640 --> 00:16:20,250
+Then it will, if you set
+the temperatures just right,
+
+339
+00:16:20,250 --> 00:16:22,620
+only because both of
+these edges match will
+
+340
+00:16:22,620 --> 00:16:24,000
+this dial be able to come in.
+
+341
+00:16:24,000 --> 00:16:27,300
+And that's the basis for
+building that binary counter.
+
+342
+00:16:27,300 --> 00:16:29,730
+This is a very different
+model of computation
+
+343
+00:16:29,730 --> 00:16:31,530
+from what we're used
+to in this class,
+
+344
+00:16:31,530 --> 00:16:34,260
+where you think of instructions,
+and they run one at a time.
+
+345
+00:16:34,260 --> 00:16:37,440
+Here the, model of
+computation is geometric.
+
+346
+00:16:37,440 --> 00:16:40,230
+It's these squares that are
+just floating around and gluing
+
+347
+00:16:40,230 --> 00:16:40,750
+together.
+
+348
+00:16:40,750 --> 00:16:42,750
+And so your program,
+at any moment,
+
+349
+00:16:42,750 --> 00:16:46,273
+is some conglomerate of squares.
+
+350
+00:16:46,273 --> 00:16:47,940
+I just wanted to
+mention it because it's
+
+351
+00:16:47,940 --> 00:16:48,883
+a really fun model.
+
+352
+00:16:48,883 --> 00:16:50,550
+You can prove cool
+things in this model,
+
+353
+00:16:50,550 --> 00:16:55,290
+like how to build any shape
+by a sequence of pores
+
+354
+00:16:55,290 --> 00:16:58,900
+mixing between tiles that
+you can execute in parallel.
+
+355
+00:16:58,900 --> 00:17:01,200
+And so it only
+takes log and time
+
+356
+00:17:01,200 --> 00:17:04,500
+of parallel steps, a linear
+number of different mix
+
+357
+00:17:04,500 --> 00:17:06,780
+operations, to make
+an arbitrary shape--
+
+358
+00:17:06,780 --> 00:17:11,550
+even using a constant number of
+different glues, which is cool,
+
+359
+00:17:11,550 --> 00:17:13,990
+and maybe practical.
+
+360
+00:17:13,990 --> 00:17:15,990
+You can also use it to
+build a replicator, where
+
+361
+00:17:15,990 --> 00:17:18,780
+you're given an object
+like this that you
+
+362
+00:17:18,780 --> 00:17:20,503
+don't know the shape of--
+
+363
+00:17:20,503 --> 00:17:22,170
+like, we don't know
+whether this exists,
+
+364
+00:17:22,170 --> 00:17:24,690
+and we can't model it
+mathematically very well,
+
+365
+00:17:24,690 --> 00:17:27,060
+and you stick it in a vat,
+and all of these tiles
+
+366
+00:17:27,060 --> 00:17:29,100
+would attach and
+basically build a mold,
+
+367
+00:17:29,100 --> 00:17:32,070
+and then start photocopying,
+in 3D, that mold.
+
+368
+00:17:32,070 --> 00:17:35,790
+And you can build that with
+a system with only two steps,
+
+369
+00:17:35,790 --> 00:17:38,940
+I believe, and a constant
+number of tile types.
+
+370
+00:17:38,940 --> 00:17:42,120
+And it does all of that, in
+this model, in constant time.
+
+371
+00:17:42,120 --> 00:17:44,200
+In reality, you would
+have to feed this machine
+
+372
+00:17:44,200 --> 00:17:46,560
+and wait for it to print
+out all of these things,
+
+373
+00:17:46,560 --> 00:17:50,070
+and these experiments take
+hours, if not days, to run.
+
+374
+00:17:50,070 --> 00:17:51,443
+But in theory, it's really cool.
+
+375
+00:17:51,443 --> 00:17:52,860
+And you get some
+really fun models
+
+376
+00:17:52,860 --> 00:17:54,310
+and very general results.
+
+377
+00:17:54,310 --> 00:17:57,120
+You can also use it to build
+a miniaturizer or a magnifier
+
+378
+00:17:57,120 --> 00:17:58,820
+and other fun stuff.
+
+379
+00:18:01,670 --> 00:18:04,070
+That was a brief tour of
+computational geometry.
+
+380
+00:18:04,070 --> 00:18:08,030
+I work mostly in four different
+areas of algorithms-- geometry,
+
+381
+00:18:08,030 --> 00:18:09,890
+data structures, graph
+algorithms, and what
+
+382
+00:18:09,890 --> 00:18:11,810
+I call recreational algorithms.
+
+383
+00:18:11,810 --> 00:18:14,200
+I think I made up that term.
+
+384
+00:18:14,200 --> 00:18:17,100
+And let's go into
+data structures,
+
+385
+00:18:17,100 --> 00:18:20,720
+which is represented
+by this class, 6.851.
+
+386
+00:18:20,720 --> 00:18:24,270
+All of the classes I mentioned
+have online video lectures,
+
+387
+00:18:24,270 --> 00:18:28,100
+especially for those watching
+at home on OpenCourseWare.
+
+388
+00:18:28,100 --> 00:18:30,830
+Most of these classes are on
+OpenCourseWare, and if not,
+
+389
+00:18:30,830 --> 00:18:33,530
+they're on my webpage.
+
+390
+00:18:33,530 --> 00:18:36,890
+6.851, Advanced Data Structures,
+is an extension of the sorts
+
+391
+00:18:36,890 --> 00:18:38,990
+of data structures
+you've seen here,
+
+392
+00:18:38,990 --> 00:18:42,710
+in 006 and the ones
+you will see in 6.046.
+
+393
+00:18:42,710 --> 00:18:44,540
+I thought I would
+give you a flavor
+
+394
+00:18:44,540 --> 00:18:54,950
+of one such result,
+which is a problem we've
+
+395
+00:18:54,950 --> 00:19:00,260
+seen in this class done better.
+
+396
+00:19:00,260 --> 00:19:03,740
+Suppose you want to store
+a dynamic ordered set.
+
+397
+00:19:07,490 --> 00:19:10,040
+This is the set interface.
+
+398
+00:19:10,040 --> 00:19:17,150
+Dynamic in the sense that
+I have insert and delete,
+
+399
+00:19:17,150 --> 00:19:20,450
+and ordered in the sense that
+I want to support find-next
+
+400
+00:19:20,450 --> 00:19:21,560
+and find-previous.
+
+401
+00:19:27,290 --> 00:19:30,080
+Exactly which subset
+of the set interface
+
+402
+00:19:30,080 --> 00:19:33,080
+you choose influences what
+data structure you've seen.
+
+403
+00:19:33,080 --> 00:19:36,440
+We've seen, for dynamic sets,
+you want to use hashing.
+
+404
+00:19:36,440 --> 00:19:37,910
+If you don't care
+about find-next,
+
+405
+00:19:37,910 --> 00:19:40,070
+if you just care about
+find, then hashing
+
+406
+00:19:40,070 --> 00:19:41,900
+is great-- constant expected.
+
+407
+00:19:41,900 --> 00:19:44,020
+You can prove stronger
+things about hashing.
+
+408
+00:19:44,020 --> 00:19:46,370
+And we do in that class.
+
+409
+00:19:46,370 --> 00:19:49,610
+But if you want
+dynamic and ordered,
+
+410
+00:19:49,610 --> 00:19:52,070
+you cannot do constant
+time per operation.
+
+411
+00:19:52,070 --> 00:19:55,910
+You can prove that,
+which is cool.
+
+412
+00:19:55,910 --> 00:19:58,640
+What data structure have we seen
+that solves this problem pretty
+
+413
+00:19:58,640 --> 00:19:59,780
+well?
+
+414
+00:19:59,780 --> 00:20:03,710
+Set AVL trees, which
+solve everything in log n.
+
+415
+00:20:03,710 --> 00:20:06,980
+So log n is one competitor.
+
+416
+00:20:13,290 --> 00:20:14,470
+Yeah.
+
+417
+00:20:14,470 --> 00:20:20,730
+I'm interested in
+the word RAM model,
+
+418
+00:20:20,730 --> 00:20:22,970
+which is the only model
+we've seen in this class.
+
+419
+00:20:22,970 --> 00:20:25,550
+This happens to work
+in a stronger model.
+
+420
+00:20:25,550 --> 00:20:32,247
+And we can do better than
+log n in the following--
+
+421
+00:20:32,247 --> 00:20:34,080
+it will take me a while
+before I get better,
+
+422
+00:20:34,080 --> 00:20:36,530
+but here's, at least, a
+different bound we can get--
+
+423
+00:20:36,530 --> 00:20:39,590
+log w.
+
+424
+00:20:39,590 --> 00:20:45,650
+This is via a structure called
+van Emde Boas, who is a person.
+
+425
+00:20:45,650 --> 00:20:47,240
+AVL is two people.
+
+426
+00:20:47,240 --> 00:20:50,060
+van Emde Boas,
+I've actually met.
+
+427
+00:20:50,060 --> 00:20:52,942
+Log w-- remember,
+w is our word size.
+
+428
+00:20:52,942 --> 00:20:54,650
+So this is a bit of
+a weird running time.
+
+429
+00:20:54,650 --> 00:20:58,370
+It's great if w is log n,
+then this is log log n.
+
+430
+00:20:58,370 --> 00:21:01,903
+And we know w is at least log
+n, but it could be bigger.
+
+431
+00:21:01,903 --> 00:21:04,070
+We don't really have a sense
+of how big w could get.
+
+432
+00:21:04,070 --> 00:21:05,150
+Maybe it's even n.
+
+433
+00:21:05,150 --> 00:21:07,280
+Maybe it's big-- and
+then these are the same.
+
+434
+00:21:07,280 --> 00:21:10,470
+Maybe it's bigger than n,
+and then this is maybe worse.
+
+435
+00:21:10,470 --> 00:21:13,400
+But for most ws, this is
+actually pretty good--
+
+436
+00:21:13,400 --> 00:21:14,945
+and indeed, optimal.
+
+437
+00:21:17,840 --> 00:21:20,690
+But it's not strictly
+better, in any sense, yet.
+
+438
+00:21:20,690 --> 00:21:24,170
+On the other hand, there's
+another data structure which
+
+439
+00:21:24,170 --> 00:21:27,830
+runs in log n divided by log w.
+
+440
+00:21:27,830 --> 00:21:30,320
+This is called fusion trees.
+
+441
+00:21:30,320 --> 00:21:31,910
+This was invented
+around the time
+
+442
+00:21:31,910 --> 00:21:33,600
+that cold fusion
+was in the news,
+
+443
+00:21:33,600 --> 00:21:37,515
+and so they wanted data
+structures to represent.
+
+444
+00:21:40,190 --> 00:21:42,950
+We can achieve this bound or
+we can achieve this bound.
+
+445
+00:21:42,950 --> 00:21:46,430
+And this bound is
+good is if w is large.
+
+446
+00:21:46,430 --> 00:21:49,250
+This band as good if w is small.
+
+447
+00:21:49,250 --> 00:21:53,480
+You can always take the min of
+the two, whatever is better.
+
+448
+00:21:53,480 --> 00:22:05,030
+And in particular, the min of
+those two things is at most--
+
+449
+00:22:05,030 --> 00:22:09,980
+I think it's square root
+log n over log log n.
+
+450
+00:22:09,980 --> 00:22:13,850
+If you want to bound
+just in terms of n,
+
+451
+00:22:13,850 --> 00:22:16,880
+then the crossover point
+between these two is this place.
+
+452
+00:22:16,880 --> 00:22:18,380
+And so you're always,
+at most, this,
+
+453
+00:22:18,380 --> 00:22:21,320
+which is quite a bit better
+than the log n of AVL.
+
+454
+00:22:21,320 --> 00:22:22,695
+We've got a square
+root and we've
+
+455
+00:22:22,695 --> 00:22:25,460
+got a slight thing
+in the denominator.
+
+456
+00:22:25,460 --> 00:22:26,318
+Pretty tiny.
+
+457
+00:22:26,318 --> 00:22:27,860
+But the big thing
+is the square root.
+
+458
+00:22:27,860 --> 00:22:29,000
+And that's kind of cool.
+
+459
+00:22:29,000 --> 00:22:31,010
+And it turns out, that's
+pretty much optimal.
+
+460
+00:22:31,010 --> 00:22:33,020
+In terms of an n
+bound, this is optimal.
+
+461
+00:22:33,020 --> 00:22:35,210
+The min of these
+two, in general,
+
+462
+00:22:35,210 --> 00:22:38,930
+is roughly optimal
+up to log log terms.
+
+463
+00:22:38,930 --> 00:22:41,900
+For fun, I threw up
+the actual formula
+
+464
+00:22:41,900 --> 00:22:45,080
+for the right-bound,
+which is tight
+
+465
+00:22:45,080 --> 00:22:47,450
+up to constant factors of
+matching upper and lower
+
+466
+00:22:47,450 --> 00:22:49,250
+bounds, which we talk about.
+
+467
+00:22:49,250 --> 00:22:52,560
+It's min of three things--
+
+468
+00:22:52,560 --> 00:22:56,780
+four things, including log of
+w over a divided by log of log
+
+469
+00:22:56,780 --> 00:22:59,800
+w over a log of log n over a.
+
+470
+00:22:59,800 --> 00:23:01,700
+That's the last term
+that I just read.
+
+471
+00:23:01,700 --> 00:23:03,380
+This was messy.
+
+472
+00:23:03,380 --> 00:23:05,210
+Surprisingly, that
+is the right answer
+
+473
+00:23:05,210 --> 00:23:07,102
+for this very
+particular problem--
+
+474
+00:23:07,102 --> 00:23:08,060
+a very natural problem.
+
+475
+00:23:08,060 --> 00:23:09,590
+AUDIENCE: What is a?
+
+476
+00:23:09,590 --> 00:23:12,600
+ERIK DEMAINE: A is the log
+of the space you're using.
+
+477
+00:23:12,600 --> 00:23:14,960
+So it's the address size.
+
+478
+00:23:14,960 --> 00:23:17,000
+Good question.
+
+479
+00:23:17,000 --> 00:23:18,700
+If you throw it-- so it depends.
+
+480
+00:23:18,700 --> 00:23:21,740
+If you have a polynomial space
+data structure, then basically,
+
+481
+00:23:21,740 --> 00:23:23,250
+these are optimal.
+
+482
+00:23:23,250 --> 00:23:26,600
+And this is generalizing
+to beyond that.
+
+483
+00:23:26,600 --> 00:23:30,210
+Maybe you have a little bit
+more than polynomial space.
+
+484
+00:23:30,210 --> 00:23:31,560
+Cool.
+
+485
+00:23:31,560 --> 00:23:33,720
+So that's data structures.
+
+486
+00:23:33,720 --> 00:23:39,150
+I'm going to jump ahead to
+graph algorithms, which,
+
+487
+00:23:39,150 --> 00:23:41,670
+if you want to take this class,
+I recommend a time travel
+
+488
+00:23:41,670 --> 00:23:42,270
+device.
+
+489
+00:23:42,270 --> 00:23:44,400
+Go back to fall 2011.
+
+490
+00:23:44,400 --> 00:23:45,780
+It may never get taught again.
+
+491
+00:23:45,780 --> 00:23:48,330
+But it has video,
+so you can watch--
+
+492
+00:23:48,330 --> 00:23:50,042
+instead of time
+traveling, if you
+
+493
+00:23:50,042 --> 00:23:51,750
+don't want to watch
+it live, you can just
+
+494
+00:23:51,750 --> 00:23:53,280
+watch the recorded version.
+
+495
+00:23:53,280 --> 00:23:55,980
+It was taught by a bunch
+of postdocs that were here,
+
+496
+00:23:55,980 --> 00:23:59,100
+and a bit myself.
+
+497
+00:23:59,100 --> 00:24:03,180
+What I like to do with graphs
+is the world of planar graphs,
+
+498
+00:24:03,180 --> 00:24:04,875
+or near-planar graphs.
+
+499
+00:24:08,538 --> 00:24:10,080
+We've talked a lot
+about, this class,
+
+500
+00:24:10,080 --> 00:24:12,218
+algorithms that work
+for arbitrary graphs.
+
+501
+00:24:12,218 --> 00:24:14,010
+And the algorithms
+we've seen in this class
+
+502
+00:24:14,010 --> 00:24:16,740
+are pretty much the best we
+know for a lot of problems
+
+503
+00:24:16,740 --> 00:24:18,948
+for arbitrary graphs.
+
+504
+00:24:18,948 --> 00:24:20,490
+But if your graph
+has some structure,
+
+505
+00:24:20,490 --> 00:24:22,590
+like it's a road network
+and there aren't too
+
+506
+00:24:22,590 --> 00:24:26,310
+many overpasses, you can usually
+draw these graphs in the plane
+
+507
+00:24:26,310 --> 00:24:27,240
+without crossings.
+
+508
+00:24:27,240 --> 00:24:28,590
+That's the meaning of planar.
+
+509
+00:24:28,590 --> 00:24:29,550
+Maybe not exactly.
+
+510
+00:24:29,550 --> 00:24:30,990
+Maybe just a few crossings.
+
+511
+00:24:30,990 --> 00:24:33,452
+There's a generalization of
+this, which I won't get into.
+
+512
+00:24:33,452 --> 00:24:35,160
+But let's just think
+about planar graphs.
+
+513
+00:24:35,160 --> 00:24:36,743
+Planar graphs have
+some nice features,
+
+514
+00:24:36,743 --> 00:24:39,898
+like they always have a
+linear number of edges.
+
+515
+00:24:39,898 --> 00:24:40,815
+They're always sparse.
+
+516
+00:24:43,510 --> 00:24:46,380
+So you can immediately plug
+that into our existing bounds.
+
+517
+00:24:46,380 --> 00:24:53,100
+But even so, Dijkstra, in such a
+graph, would take v log v time.
+
+518
+00:24:53,100 --> 00:24:56,520
+For planar graphs, you can do
+the equivalent of Dijkstra,
+
+519
+00:24:56,520 --> 00:24:58,910
+meaning, I can compute
+single-source shortest paths
+
+520
+00:24:58,910 --> 00:25:01,740
+with negative edge
+weights in linear time.
+
+521
+00:25:07,260 --> 00:25:09,820
+No log.
+
+522
+00:25:09,820 --> 00:25:12,310
+Not that impressive,
+but remove a log.
+
+523
+00:25:12,310 --> 00:25:16,510
+More impressive is, we can do
+the equivalent of Bellman-Ford,
+
+524
+00:25:16,510 --> 00:25:18,760
+which is a single-source
+shortest paths with arbitrary
+
+525
+00:25:18,760 --> 00:25:25,870
+edge weights in a planar
+graph in some time--
+
+526
+00:25:25,870 --> 00:25:26,890
+almost linear time.
+
+527
+00:25:29,770 --> 00:25:35,200
+The log squared v
+over log log v. So
+
+528
+00:25:35,200 --> 00:25:37,270
+there's a couple
+of factors here--
+
+529
+00:25:37,270 --> 00:25:39,670
+but for almost linear
+time, whereas Bellman-Ford
+
+530
+00:25:39,670 --> 00:25:40,940
+would take v squared time.
+
+531
+00:25:40,940 --> 00:25:43,210
+So this is a huge
+improvement over what
+
+532
+00:25:43,210 --> 00:25:44,320
+we've seen in the class.
+
+533
+00:25:44,320 --> 00:25:45,670
+These are quite
+complicated algorithms,
+
+534
+00:25:45,670 --> 00:25:47,087
+but they're covered
+in that class,
+
+535
+00:25:47,087 --> 00:25:49,240
+if you're interested in them.
+
+536
+00:25:49,240 --> 00:25:53,410
+Then the area I work in a lot
+is approximation algorithms
+
+537
+00:25:53,410 --> 00:25:56,830
+for planar graphs.
+
+538
+00:25:56,830 --> 00:26:01,450
+And let me just give you a fun
+flavor using something we know,
+
+539
+00:26:01,450 --> 00:26:05,655
+which is breadth-first search.
+
+540
+00:26:05,655 --> 00:26:07,030
+Breath-first search
+you can think
+
+541
+00:26:07,030 --> 00:26:13,380
+of as building sort of rings
+around a single root node.
+
+542
+00:26:13,380 --> 00:26:15,150
+And there's this
+general approach--
+
+543
+00:26:15,150 --> 00:26:17,620
+this was introduced
+by Baker in 1994,
+
+544
+00:26:17,620 --> 00:26:19,890
+we've used for lots
+of different problems.
+
+545
+00:26:19,890 --> 00:26:23,350
+We want to solve some
+NP-hard problem on a graph.
+
+546
+00:26:23,350 --> 00:26:26,760
+So just run breadth-first
+search from an arbitrary vertex
+
+547
+00:26:26,760 --> 00:26:29,162
+and decompose your
+graph into these layers.
+
+548
+00:26:29,162 --> 00:26:30,120
+You could number them--
+
+549
+00:26:30,120 --> 00:26:32,550
+0, 1, 2, 3.
+
+550
+00:26:32,550 --> 00:26:35,370
+These are levels.
+
+551
+00:26:35,370 --> 00:26:38,760
+And let's just, like,
+delete some of those layers.
+
+552
+00:26:38,760 --> 00:26:41,680
+Let's say, let's delete
+every fourth layer.
+
+553
+00:26:41,680 --> 00:26:43,068
+So maybe I delete this one.
+
+554
+00:26:43,068 --> 00:26:44,860
+I delete all of the
+vertices in that layer.
+
+555
+00:26:44,860 --> 00:26:46,693
+And then I delete all
+of the things in layer
+
+556
+00:26:46,693 --> 00:26:50,670
+8, and layer 12, and so on.
+
+557
+00:26:50,670 --> 00:26:54,180
+Guessing-- I don't know which
+one to start with, but from--
+
+558
+00:26:54,180 --> 00:26:55,260
+I'll just try them all.
+
+559
+00:26:55,260 --> 00:26:58,380
+And then I delete every
+fourth layer after that.
+
+560
+00:26:58,380 --> 00:27:02,520
+So I've deleted, on average,
+about a quarter of the graph.
+
+561
+00:27:02,520 --> 00:27:06,660
+And it turns out, for a lot of
+problems that you care about,
+
+562
+00:27:06,660 --> 00:27:09,990
+like choosing where to place
+fire stations in this graph
+
+563
+00:27:09,990 --> 00:27:12,960
+to minimize travel
+time for if there's
+
+564
+00:27:12,960 --> 00:27:14,672
+a fire somewhere in the graph--
+
+565
+00:27:14,672 --> 00:27:15,630
+this happens, you know?
+
+566
+00:27:15,630 --> 00:27:17,610
+Fires and graphs.
+
+567
+00:27:17,610 --> 00:27:21,120
+Then this will only hurt
+your solution by, like,
+
+568
+00:27:21,120 --> 00:27:26,610
+a factor of 1 plus a quarter.
+
+569
+00:27:26,610 --> 00:27:29,250
+So you will get
+a solution that's
+
+570
+00:27:29,250 --> 00:27:35,350
+within 25% of the optimal,
+for a lot of problems.
+
+571
+00:27:35,350 --> 00:27:38,470
+And that works for any value 4.
+
+572
+00:27:38,470 --> 00:27:40,600
+So I could do it
+for 10, and then I
+
+573
+00:27:40,600 --> 00:27:43,960
+would get within 10% of
+the optimal solution.
+
+574
+00:27:43,960 --> 00:27:46,390
+OK, but how do I actually
+solve the problem once I
+
+575
+00:27:46,390 --> 00:27:48,040
+delete every fourth layer?
+
+576
+00:27:48,040 --> 00:27:50,890
+Well, then your graph has
+this extra special structure,
+
+577
+00:27:50,890 --> 00:27:53,180
+which is a constant number
+of layers, let's say.
+
+578
+00:27:53,180 --> 00:27:54,610
+A constant number of
+breadth-first search layers.
+
+579
+00:27:54,610 --> 00:27:56,260
+If you just look
+at this portion,
+
+580
+00:27:56,260 --> 00:27:58,760
+this connected component,
+or this connected component
+
+581
+00:27:58,760 --> 00:28:00,430
+in here, you can--
+
+582
+00:28:00,430 --> 00:28:03,790
+your graph is
+almost like a cycle.
+
+583
+00:28:03,790 --> 00:28:06,100
+It's like four cycles
+stacked up together
+
+584
+00:28:06,100 --> 00:28:07,563
+with some connections
+between them.
+
+585
+00:28:07,563 --> 00:28:08,980
+And it turns out,
+that's something
+
+586
+00:28:08,980 --> 00:28:12,370
+you can solve with very
+fancy dynamic programming,
+
+587
+00:28:12,370 --> 00:28:14,800
+like the stuff we've
+seen in this class, which
+
+588
+00:28:14,800 --> 00:28:17,125
+focuses on just a single
+path or a single cycle.
+
+589
+00:28:17,125 --> 00:28:19,000
+If you just have a
+constant number of cycles,
+
+590
+00:28:19,000 --> 00:28:22,600
+with more work, you can still do
+everything in polynomial time.
+
+591
+00:28:22,600 --> 00:28:26,150
+This is a very general approach
+for getting arbitrarily
+
+592
+00:28:26,150 --> 00:28:27,400
+good approximation algorithms.
+
+593
+00:28:27,400 --> 00:28:31,930
+We call these 1 plus epsilon
+approximation for any epsilon.
+
+594
+00:28:31,930 --> 00:28:34,210
+But the larger the epsilon,
+the more time you take.
+
+595
+00:28:34,210 --> 00:28:39,610
+It's something like 2 to the
+order 1 over epsilon times
+
+596
+00:28:39,610 --> 00:28:41,470
+polynomial n.
+
+597
+00:28:41,470 --> 00:28:42,970
+So as long as
+epsilon is constant,
+
+598
+00:28:42,970 --> 00:28:44,773
+this is polynomial time.
+
+599
+00:28:44,773 --> 00:28:45,690
+This is called a PTAS.
+
+600
+00:28:49,090 --> 00:28:51,310
+Anyway, that was
+graph algorithms.
+
+601
+00:28:51,310 --> 00:28:55,300
+Last topic is recreational
+algorithms, which is maybe
+
+602
+00:28:55,300 --> 00:28:56,830
+best encompassed by this class.
+
+603
+00:28:56,830 --> 00:28:58,840
+6.892 is its latest name.
+
+604
+00:28:58,840 --> 00:29:00,940
+It changes names
+every once in a while.
+
+605
+00:29:00,940 --> 00:29:04,180
+And I mentioned it in the
+hardness complexity lecture,
+
+606
+00:29:04,180 --> 00:29:06,460
+because this class is all
+about hardness proofs,
+
+607
+00:29:06,460 --> 00:29:08,410
+analyzing fun games and puzzles.
+
+608
+00:29:08,410 --> 00:29:12,160
+We saw the Tetris
+NP-hardness in that lecture.
+
+609
+00:29:12,160 --> 00:29:15,490
+But you can also prove Super
+Mario Brothers is hard,
+
+610
+00:29:15,490 --> 00:29:18,070
+or Portal is hard, or
+Mario Kart is hard,
+
+611
+00:29:18,070 --> 00:29:21,340
+or The Witness, a modern
+video game, is hard.
+
+612
+00:29:21,340 --> 00:29:24,070
+Or, one of our latest
+results is that Recurse--
+
+613
+00:29:24,070 --> 00:29:26,740
+that game in the top
+right-- is undecidable.
+
+614
+00:29:26,740 --> 00:29:32,740
+There's no algorithm to
+play that game perfectly.
+
+615
+00:29:32,740 --> 00:29:34,790
+And you can even
+download the level--
+
+616
+00:29:34,790 --> 00:29:40,070
+an example of the level
+and play it, if you dare.
+
+617
+00:29:40,070 --> 00:29:41,800
+So that's a lot of--
+
+618
+00:29:41,800 --> 00:29:44,950
+we have a lot of fun in
+that world of hardness
+
+619
+00:29:44,950 --> 00:29:47,310
+of different games and puzzles.
+
+620
+00:29:47,310 --> 00:29:50,330
+Where do I want to go next?
+
+621
+00:29:50,330 --> 00:29:50,830
+OK.
+
+622
+00:29:50,830 --> 00:29:52,420
+Next topic is balloon twisting.
+
+623
+00:29:52,420 --> 00:29:53,620
+Totally different.
+
+624
+00:29:53,620 --> 00:29:56,350
+This is recreational,
+but not about hardness.
+
+625
+00:29:56,350 --> 00:30:01,270
+This is an octahedron
+twisted from one balloon.
+
+626
+00:30:01,270 --> 00:30:03,917
+I made another one on a stick.
+
+627
+00:30:03,917 --> 00:30:05,500
+Each of these is
+made for one balloon.
+
+628
+00:30:05,500 --> 00:30:08,860
+What graphs can you
+make for one balloon?
+
+629
+00:30:08,860 --> 00:30:10,423
+Well, you should read our paper.
+
+630
+00:30:10,423 --> 00:30:12,340
+And you can characterize
+how many balloons you
+
+631
+00:30:12,340 --> 00:30:15,220
+need to make each polyhedron.
+
+632
+00:30:15,220 --> 00:30:21,170
+And some of these problems are
+NP-hard, and it's a lot of fun.
+
+633
+00:30:21,170 --> 00:30:21,670
+Cool.
+
+634
+00:30:21,670 --> 00:30:23,980
+I think that's the
+end of the slides.
+
+635
+00:30:23,980 --> 00:30:25,690
+The last thing I
+wanted to show you
+
+636
+00:30:25,690 --> 00:30:32,890
+is a problem, a
+puzzle/magic trick--
+
+637
+00:30:32,890 --> 00:30:34,480
+it comes from the puzzle world--
+
+638
+00:30:34,480 --> 00:30:35,990
+called the picture
+hanging problem.
+
+639
+00:30:35,990 --> 00:30:37,750
+So imagine you have a picture.
+
+640
+00:30:37,750 --> 00:30:39,230
+You want to hang it on a wall.
+
+641
+00:30:39,230 --> 00:30:40,960
+So you invested
+in some nice rope,
+
+642
+00:30:40,960 --> 00:30:44,140
+and you hang it on a nail.
+
+643
+00:30:44,140 --> 00:30:47,380
+If the nail falls out, the
+picture falls, and you're sad.
+
+644
+00:30:47,380 --> 00:30:50,590
+So you invest in two
+nails, like I have here,
+
+645
+00:30:50,590 --> 00:30:53,500
+and maybe you hang your
+picture on both those nails.
+
+646
+00:30:53,500 --> 00:30:55,870
+Now, if one of the
+nails falls out,
+
+647
+00:30:55,870 --> 00:30:58,570
+you still have a
+crookedly hung picture.
+
+648
+00:30:58,570 --> 00:31:01,540
+If the other nail falls
+out, OK, it's gone.
+
+649
+00:31:01,540 --> 00:31:04,480
+I want to hang a
+picture on two nails
+
+650
+00:31:04,480 --> 00:31:08,140
+such that, if I remove either
+nail, the picture falls.
+
+651
+00:31:08,140 --> 00:31:11,070
+So, Jason, pick a
+nail, left or right.
+
+652
+00:31:11,070 --> 00:31:13,010
+Left, we remove.
+
+653
+00:31:13,010 --> 00:31:14,780
+Make sure this
+doesn't fall off--
+
+654
+00:31:14,780 --> 00:31:16,430
+and, boom, the picture falls.
+
+655
+00:31:16,430 --> 00:31:17,422
+Same wrapping.
+
+656
+00:31:17,422 --> 00:31:19,130
+You can check-- you
+can rewind the video,
+
+657
+00:31:19,130 --> 00:31:20,450
+make sure I did
+the same wrapping.
+
+658
+00:31:20,450 --> 00:31:21,680
+JASON KU: And take
+out the right.
+
+659
+00:31:21,680 --> 00:31:23,430
+ERIK DEMAINE: Then
+take out the right one.
+
+660
+00:31:23,430 --> 00:31:24,650
+Good choice.
+
+661
+00:31:24,650 --> 00:31:26,600
+Then, also, the picture falls.
+
+662
+00:31:29,150 --> 00:31:31,500
+This is a classic puzzle,
+but you can generalize it.
+
+663
+00:31:31,500 --> 00:31:36,250
+So let me do it for three
+nails, which is all I have here.
+
+664
+00:31:36,250 --> 00:31:39,110
+This nail is sagging
+a little bit.
+
+665
+00:31:39,110 --> 00:31:42,430
+y, x-- y inverse, x inverse.
+
+666
+00:31:42,430 --> 00:31:43,940
+I think that's right.
+
+667
+00:31:43,940 --> 00:31:46,400
+So this is one way to hang
+a picture on three nails
+
+668
+00:31:46,400 --> 00:31:49,610
+such that, if I remove any of
+the nails, the picture falls.
+
+669
+00:31:49,610 --> 00:31:53,420
+Justin, 1, 2, or 3?
+
+670
+00:31:53,420 --> 00:31:54,290
+2.
+
+671
+00:31:54,290 --> 00:31:55,880
+OK.
+
+672
+00:31:55,880 --> 00:31:57,440
+Yeah, I want to
+get out of the way
+
+673
+00:31:57,440 --> 00:32:00,140
+and make sure I don't
+go over the edge here.
+
+674
+00:32:04,380 --> 00:32:05,400
+Yeah.
+
+675
+00:32:05,400 --> 00:32:07,780
+It's a lot easier to
+make this one work.
+
+676
+00:32:07,780 --> 00:32:11,220
+But you can see, boom,
+picture falls there.
+
+677
+00:32:11,220 --> 00:32:13,800
+And of course, imagine
+infinite gravity.
+
+678
+00:32:13,800 --> 00:32:14,930
+And the picture falls.
+
+679
+00:32:14,930 --> 00:32:16,710
+Ta-da!
+
+680
+00:32:16,710 --> 00:32:19,980
+You can generalize this
+to do essentially any--
+
+681
+00:32:19,980 --> 00:32:23,160
+what's called a monotone Boolean
+function-- on any set of nails.
+
+682
+00:32:23,160 --> 00:32:25,410
+I mean, you can make
+any subset of the nails
+
+683
+00:32:25,410 --> 00:32:27,728
+cause the picture to fall
+and any collection of subsets
+
+684
+00:32:27,728 --> 00:32:28,770
+of nails to make it fall.
+
+685
+00:32:28,770 --> 00:32:29,880
+Of course, if you
+remove more nails,
+
+686
+00:32:29,880 --> 00:32:31,200
+it's still going to fall.
+
+687
+00:32:31,200 --> 00:32:33,030
+That's the monotone sense.
+
+688
+00:32:33,030 --> 00:32:36,458
+But otherwise, you can
+do an arbitrary pattern,
+
+689
+00:32:36,458 --> 00:32:37,000
+which is fun.
+
+690
+00:32:37,000 --> 00:32:39,120
+That's actually a
+result with Ron Rivest
+
+691
+00:32:39,120 --> 00:32:43,000
+and a bunch of other people.
+
+692
+00:32:43,000 --> 00:32:46,370
+I think I'm
+approximately on time.
+
+693
+00:32:46,370 --> 00:32:48,490
+So that was a quick tour.
+
+694
+00:32:48,490 --> 00:32:52,030
+And there are obviously various
+classes here you can take.
+
+695
+00:32:52,030 --> 00:32:55,390
+6.892, the hardness class, was
+just offered last semester,
+
+696
+00:32:55,390 --> 00:32:56,890
+so it probably won't
+be for a while.
+
+697
+00:32:56,890 --> 00:32:58,390
+But all of these
+classes are online.
+
+698
+00:32:58,390 --> 00:33:01,270
+Watch the videos, feel
+free to ask me questions.
+
+699
+00:33:01,270 --> 00:33:03,100
+And now we have Justin.
+
+700
+00:33:03,100 --> 00:33:05,665
+I left you space here
+for your outline.
+
+701
+00:33:08,390 --> 00:33:11,907
+You don't have to, but
+I'll put your name.
+
+702
+00:33:11,907 --> 00:33:12,990
+JUSTIN SOLOMON: Thank you.
+
+703
+00:33:18,170 --> 00:33:20,308
+JASON KU: So Justin
+is also a geometer.
+
+704
+00:33:20,308 --> 00:33:22,850
+ERIK DEMAINE: Yeah, we've got
+a lot of geometry people in 006
+
+705
+00:33:22,850 --> 00:33:24,500
+this semester.
+
+706
+00:33:24,500 --> 00:33:25,600
+JUSTIN SOLOMON: Thank you.
+
+707
+00:33:25,600 --> 00:33:27,580
+OK.
+
+708
+00:33:27,580 --> 00:33:30,940
+I can't help but share that,
+on our instructor chat,
+
+709
+00:33:30,940 --> 00:33:33,098
+Erik was texting that
+he was going to be--
+
+710
+00:33:33,098 --> 00:33:35,140
+he was somehow nervous
+that the applied guy would
+
+711
+00:33:35,140 --> 00:33:36,910
+have all of the cool
+stuff to show off,
+
+712
+00:33:36,910 --> 00:33:39,682
+and now I feel totally boring.
+
+713
+00:33:39,682 --> 00:33:43,090
+[LAUGHING] Right.
+
+714
+00:33:43,090 --> 00:33:44,200
+Yeah.
+
+715
+00:33:44,200 --> 00:33:47,950
+We have three different geometry
+instructors in this class.
+
+716
+00:33:47,950 --> 00:33:51,040
+In this class, I think we
+have many different flavors
+
+717
+00:33:51,040 --> 00:33:52,810
+of geometry that are
+kind of represented
+
+718
+00:33:52,810 --> 00:33:54,850
+in this room here, from
+mechanical engineering,
+
+719
+00:33:54,850 --> 00:33:57,460
+to theory plus lots
+of other cool stuff,
+
+720
+00:33:57,460 --> 00:34:00,460
+to whatever it is that I do.
+
+721
+00:34:00,460 --> 00:34:03,730
+I'm a professor, also, in
+CSAIL, and lead a group
+
+722
+00:34:03,730 --> 00:34:07,390
+that studies slightly more
+applied geometry problems,
+
+723
+00:34:07,390 --> 00:34:11,350
+in some sense, and in
+CSAIL, we kind of cross
+
+724
+00:34:11,350 --> 00:34:15,219
+a lot of boundaries-- actually,
+closer to the math department
+
+725
+00:34:15,219 --> 00:34:17,900
+than to the theory group
+and computer science,
+
+726
+00:34:17,900 --> 00:34:20,500
+which I would argue is largely
+a historical artifact rather
+
+727
+00:34:20,500 --> 00:34:25,719
+than anything interesting
+about computer science or math.
+
+728
+00:34:25,719 --> 00:34:29,170
+Continuing in our whirlwind tour
+of interesting geometry classes
+
+729
+00:34:29,170 --> 00:34:33,227
+here at MIT, I have some more
+fun things to add to the list.
+
+730
+00:34:33,227 --> 00:34:35,560
+And we'll introduce some of
+the ideas in the next couple
+
+731
+00:34:35,560 --> 00:34:37,520
+of slides here.
+
+732
+00:34:37,520 --> 00:34:41,380
+So normally, every
+fall, I teach 6.837,
+
+733
+00:34:41,380 --> 00:34:43,630
+which is the introduction
+to computer graphics course.
+
+734
+00:34:43,630 --> 00:34:47,110
+In fact, my background was
+working in an animation studio
+
+735
+00:34:47,110 --> 00:34:50,889
+for a little bit of time, and
+got one movie credit out of it
+
+736
+00:34:50,889 --> 00:34:53,050
+until they changed the
+standards for movie credits,
+
+737
+00:34:53,050 --> 00:34:55,489
+and then that stopped happening.
+
+738
+00:34:55,489 --> 00:34:57,700
+But in any event, if you
+watch-- what's that movie--
+
+739
+00:34:57,700 --> 00:34:58,860
+Up, with the old man.
+
+740
+00:34:58,860 --> 00:35:00,610
+If you hit pause at
+just the right moment,
+
+741
+00:35:00,610 --> 00:35:02,830
+you can find me right above
+the list of babies that
+
+742
+00:35:02,830 --> 00:35:05,800
+were born during production.
+
+743
+00:35:05,800 --> 00:35:07,150
+But in any event--
+
+744
+00:35:07,150 --> 00:35:08,650
+although computer
+graphics might not
+
+745
+00:35:08,650 --> 00:35:10,192
+sound like an
+algorithmic discipline,
+
+746
+00:35:10,192 --> 00:35:12,963
+I'll try to convince you
+guys that, in some sense,
+
+747
+00:35:12,963 --> 00:35:15,130
+you could take just about
+anybody in our department,
+
+748
+00:35:15,130 --> 00:35:17,710
+have them teach 6.006, and
+give a similar talk that,
+
+749
+00:35:17,710 --> 00:35:20,200
+like, the material that you've
+encountered in this course
+
+750
+00:35:20,200 --> 00:35:23,150
+is going to be
+relevant to your life.
+
+751
+00:35:23,150 --> 00:35:25,810
+The other course that I teach
+that might be of interest--
+
+752
+00:35:25,810 --> 00:35:28,660
+and actually, is a little
+more theoretically flavored--
+
+753
+00:35:28,660 --> 00:35:31,120
+that I teach is 6.838.
+
+754
+00:35:31,120 --> 00:35:34,150
+So since Erik so kindly put
+my name on the board here,
+
+755
+00:35:34,150 --> 00:35:36,730
+I guess I can draw
+The So the main object
+
+756
+00:35:36,730 --> 00:35:39,760
+of interest in 6.838
+is a particular thing
+
+757
+00:35:39,760 --> 00:35:41,410
+called the simplicial complex.
+
+758
+00:35:47,600 --> 00:35:50,330
+Usually, in 6.006,
+we spend a lot
+
+759
+00:35:50,330 --> 00:35:52,100
+of time thinking about graphs.
+
+760
+00:35:52,100 --> 00:35:53,930
+Let me draw you a graph.
+
+761
+00:35:53,930 --> 00:35:57,890
+So I'm going to take a
+square and subdivide it.
+
+762
+00:35:57,890 --> 00:36:04,090
+And now, let's say I put
+edges diagonally like that.
+
+763
+00:36:04,090 --> 00:36:08,390
+Now, in 6.006, this
+thing is just a bunch
+
+764
+00:36:08,390 --> 00:36:09,890
+of nodes connected by edges.
+
+765
+00:36:09,890 --> 00:36:12,650
+In fact, if I took this edge and
+I moved it down or something,
+
+766
+00:36:12,650 --> 00:36:14,300
+it would be the same graph.
+
+767
+00:36:14,300 --> 00:36:17,420
+But of course, in a lot of
+computer graphics applications,
+
+768
+00:36:17,420 --> 00:36:20,420
+this thing also looks an
+awful lot like a square.
+
+769
+00:36:20,420 --> 00:36:22,890
+And the reason is
+that, of course,
+
+770
+00:36:22,890 --> 00:36:25,800
+the graph here contains
+triangles inside of it.
+
+771
+00:36:25,800 --> 00:36:29,720
+And so for instance,
+maybe I think of my graph
+
+772
+00:36:29,720 --> 00:36:32,030
+as a collection of vertices,
+a collection of edges.
+
+773
+00:36:32,030 --> 00:36:33,990
+This is the sort of
+notation we've seen before.
+
+774
+00:36:33,990 --> 00:36:38,070
+And then I add a third
+thing to my description,
+
+775
+00:36:38,070 --> 00:36:39,440
+which is a set of triplets.
+
+776
+00:36:39,440 --> 00:36:41,565
+That's a set of triangles here.
+
+777
+00:36:41,565 --> 00:36:43,190
+And we can take a
+lot of the algorithms
+
+778
+00:36:43,190 --> 00:36:44,580
+that we've talked
+about in this class
+
+779
+00:36:44,580 --> 00:36:45,705
+and extend it to this case.
+
+780
+00:36:45,705 --> 00:36:50,510
+For example, here's a
+deceptively annoying one.
+
+781
+00:36:50,510 --> 00:36:52,880
+Let's say that I want the
+shortest path between two
+
+782
+00:36:52,880 --> 00:36:54,710
+vertices of my graph.
+
+783
+00:36:54,710 --> 00:36:57,890
+We certainly have learned
+Dijkstra's algorithm.
+
+784
+00:36:57,890 --> 00:36:59,430
+That's one technique to do that.
+
+785
+00:36:59,430 --> 00:37:02,120
+And indeed, common practice
+in computer graphics,
+
+786
+00:37:02,120 --> 00:37:04,760
+which is shameful, is
+on your triangle mesh,
+
+787
+00:37:04,760 --> 00:37:08,090
+if you want the shortest path
+between two vertices, run
+
+788
+00:37:08,090 --> 00:37:10,792
+Dijkstra's algorithm
+on the edges.
+
+789
+00:37:10,792 --> 00:37:12,500
+And let's see if that
+works really quick.
+
+790
+00:37:12,500 --> 00:37:14,662
+Let's say that I want the
+shortest path between--
+
+791
+00:37:14,662 --> 00:37:17,120
+and, by the way, I'm going to
+assume the length of my edges
+
+792
+00:37:17,120 --> 00:37:19,328
+are the lengths as I've
+drawn them on the board here.
+
+793
+00:37:19,328 --> 00:37:22,640
+So it's like 1, 1,
+square root of 2.
+
+794
+00:37:22,640 --> 00:37:23,180
+OK.
+
+795
+00:37:23,180 --> 00:37:25,280
+So let's say I want the shortest
+path between the bottom left
+
+796
+00:37:25,280 --> 00:37:26,210
+and the upper right.
+
+797
+00:37:26,210 --> 00:37:28,627
+If I run Dijkstra's algorithm,
+we're in good shape, right?
+
+798
+00:37:28,627 --> 00:37:31,530
+We get-- I'll let you do
+the computations at home.
+
+799
+00:37:31,530 --> 00:37:35,840
+You'll get the path
+that is these two edges.
+
+800
+00:37:35,840 --> 00:37:38,000
+But here's a really
+annoying thing.
+
+801
+00:37:38,000 --> 00:37:40,790
+Let's say, instead, I
+wanted the shortest path
+
+802
+00:37:40,790 --> 00:37:44,840
+from the upper left
+to the lower right.
+
+803
+00:37:44,840 --> 00:37:49,280
+If I run Dijkstra's algorithm
+on this triangulated square,
+
+804
+00:37:49,280 --> 00:37:51,820
+what's going to be
+the shortest path?
+
+805
+00:37:51,820 --> 00:37:52,320
+Yeah.
+
+806
+00:37:52,320 --> 00:37:53,782
+In fact, there's
+a bunch of them.
+
+807
+00:37:53,782 --> 00:37:55,740
+One of them might go all
+the way down, and then
+
+808
+00:37:55,740 --> 00:37:57,238
+all the way to the right.
+
+809
+00:37:57,238 --> 00:37:58,530
+What's the length of this path?
+
+810
+00:37:58,530 --> 00:38:00,960
+1, 2, 3, 4.
+
+811
+00:38:00,960 --> 00:38:02,700
+Is that the length
+of the shortest path?
+
+812
+00:38:02,700 --> 00:38:04,080
+Well, probably not.
+
+813
+00:38:04,080 --> 00:38:08,140
+Well, we would like our shortest
+path to do something like that.
+
+814
+00:38:08,140 --> 00:38:11,290
+But graphs don't know
+how to talk to triangles.
+
+815
+00:38:11,290 --> 00:38:13,210
+And this is going
+to be a problem.
+
+816
+00:38:13,210 --> 00:38:16,240
+In fact, it wasn't until
+fairly recently [INAUDIBLE]
+
+817
+00:38:16,240 --> 00:38:18,630
+history terms that we were
+able to kind of work out
+
+818
+00:38:18,630 --> 00:38:20,640
+the correct algorithm
+for the shortest
+
+819
+00:38:20,640 --> 00:38:22,867
+path in a triangulated
+domain like this.
+
+820
+00:38:22,867 --> 00:38:24,700
+And that's the runtime
+that we would expect.
+
+821
+00:38:24,700 --> 00:38:27,060
+This is called MMP.
+
+822
+00:38:27,060 --> 00:38:29,940
+I'm guessing Erik and
+Jason could do a better
+
+823
+00:38:29,940 --> 00:38:32,040
+job describing it than I can.
+
+824
+00:38:32,040 --> 00:38:34,290
+But the basic idea
+of the MMP algorithm
+
+825
+00:38:34,290 --> 00:38:35,220
+actually is a really--
+
+826
+00:38:35,220 --> 00:38:36,928
+happens to be a nice
+extension of the way
+
+827
+00:38:36,928 --> 00:38:39,960
+that we taught Dijkstra's
+algorithm in 6.006,
+
+828
+00:38:39,960 --> 00:38:42,160
+because they really do
+keep track of these level
+
+829
+00:38:42,160 --> 00:38:43,710
+sets of the distance function.
+
+830
+00:38:43,710 --> 00:38:46,050
+But now, the level
+sets have to--
+
+831
+00:38:46,050 --> 00:38:48,870
+oops-- have to window
+and edge like that
+
+832
+00:38:48,870 --> 00:38:51,570
+when I compute shortest path,
+which is a giant headache.
+
+833
+00:38:51,570 --> 00:38:53,070
+This is one of these
+algorithms that
+
+834
+00:38:53,070 --> 00:38:55,920
+was known in theory about 10
+years before anybody bothered
+
+835
+00:38:55,920 --> 00:38:59,130
+to implement it in a way that
+they could convince themselves
+
+836
+00:38:59,130 --> 00:39:01,170
+it ran in n log n time.
+
+837
+00:39:01,170 --> 00:39:04,050
+And nowadays, there's a cottage
+industry in computer graphics
+
+838
+00:39:04,050 --> 00:39:06,100
+research papers to
+implement this and then
+
+839
+00:39:06,100 --> 00:39:07,350
+speed it up in different ways.
+
+840
+00:39:07,350 --> 00:39:10,390
+And sadly, the reality is that
+a different algorithm that we
+
+841
+00:39:10,390 --> 00:39:12,017
+cover in 6.838 called
+fast marching--
+
+842
+00:39:12,017 --> 00:39:14,100
+which doesn't actually
+give you the shortest path,
+
+843
+00:39:14,100 --> 00:39:16,050
+but some approximation thereof--
+
+844
+00:39:16,050 --> 00:39:20,820
+is faster, easier to use, and
+basically indistinguishable.
+
+845
+00:39:20,820 --> 00:39:24,840
+In any event, in
+6.838, we kind of
+
+846
+00:39:24,840 --> 00:39:28,410
+have an interesting
+dual-mindset.
+
+847
+00:39:28,410 --> 00:39:29,940
+We'll talk about a
+lot of algorithms
+
+848
+00:39:29,940 --> 00:39:33,300
+that look like what we've done
+in whatever this class is--
+
+849
+00:39:33,300 --> 00:39:35,180
+6.006.
+
+850
+00:39:35,180 --> 00:39:37,680
+But at the same time, start to
+have a more geometric flavor,
+
+851
+00:39:37,680 --> 00:39:41,013
+and we don't worry quite
+as much about [INAUDIBLE]..
+
+852
+00:39:41,013 --> 00:39:42,930
+So in our computation
+model, oftentimes, we're
+
+853
+00:39:42,930 --> 00:39:44,930
+kind of OK with real
+numbers, because that's not
+
+854
+00:39:44,930 --> 00:39:45,847
+where the headache is.
+
+855
+00:39:45,847 --> 00:39:47,888
+And of course, when you
+write code in this class,
+
+856
+00:39:47,888 --> 00:39:49,650
+you use double-precision
+floating-point.
+
+857
+00:39:49,650 --> 00:39:52,690
+If you're more responsible, like
+in Jason's previous lecture,
+
+858
+00:39:52,690 --> 00:39:55,110
+you should probably keep track
+of the number of operations
+
+859
+00:39:55,110 --> 00:39:56,777
+to make sure that
+your error is counted.
+
+860
+00:39:56,777 --> 00:40:00,390
+But I'm not sure that we
+really bother with that.
+
+861
+00:40:00,390 --> 00:40:04,740
+In any event, this allows us
+to have two different mindsets.
+
+862
+00:40:04,740 --> 00:40:06,840
+There's one mindset,
+which is discrete.
+
+863
+00:40:06,840 --> 00:40:09,220
+There's another mindset,
+which is smooth.
+
+864
+00:40:09,220 --> 00:40:12,270
+We think about understanding
+geometry, like these triangular
+
+865
+00:40:12,270 --> 00:40:14,975
+domains, as an approximation
+of a smooth surface.
+
+866
+00:40:14,975 --> 00:40:17,350
+And then we might want to do
+stuff like compute curvature
+
+867
+00:40:17,350 --> 00:40:19,590
+and so on, which is really
+associated with computing
+
+868
+00:40:19,590 --> 00:40:21,060
+derivatives, which
+of course, we'll
+
+869
+00:40:21,060 --> 00:40:23,400
+have on these kinds
+of simplicial objects.
+
+870
+00:40:23,400 --> 00:40:26,160
+And that leads to this really
+fun area of math and computer
+
+871
+00:40:26,160 --> 00:40:28,890
+science, whatever, called
+discrete differential
+
+872
+00:40:28,890 --> 00:40:32,160
+geometry, which sounds like
+a contradiction in terms.
+
+873
+00:40:32,160 --> 00:40:34,635
+And it's something that we
+covered in quite some detail
+
+874
+00:40:34,635 --> 00:40:35,470
+in this course.
+
+875
+00:40:35,470 --> 00:40:38,820
+So we build up, all of calculus,
+that the only calculations
+
+876
+00:40:38,820 --> 00:40:40,530
+you're left to do
+are on the vertices
+
+877
+00:40:40,530 --> 00:40:43,410
+and edges and triangles
+of a triangle mesh.
+
+878
+00:40:43,410 --> 00:40:46,830
+And get pretty far, including
+some constructions of topology,
+
+879
+00:40:46,830 --> 00:40:48,990
+like the Duran
+complex, and so on.
+
+880
+00:40:48,990 --> 00:40:51,990
+I would argue, actually, if
+you take our course and then
+
+881
+00:40:51,990 --> 00:40:53,500
+the differential
+geometry courses
+
+882
+00:40:53,500 --> 00:40:56,783
+in that department,
+somehow, some of the indices
+
+883
+00:40:56,783 --> 00:40:58,950
+and headaches that you often
+encounter in that world
+
+884
+00:40:58,950 --> 00:41:00,630
+are much more
+concrete when you try
+
+885
+00:41:00,630 --> 00:41:01,987
+to make them work on a mesh.
+
+886
+00:41:01,987 --> 00:41:04,320
+In any event, I think I've
+already spent all of my time.
+
+887
+00:41:04,320 --> 00:41:09,070
+I can tell you a little bit
+about research in our group.
+
+888
+00:41:09,070 --> 00:41:12,250
+I really lead kind of a weird,
+extremely [INAUDIBLE] group,
+
+889
+00:41:12,250 --> 00:41:15,210
+where some of our students are
+essentially theory students--
+
+890
+00:41:15,210 --> 00:41:17,050
+touch your keyboard.
+
+891
+00:41:17,050 --> 00:41:17,560
+I'm sorry.
+
+892
+00:41:17,560 --> 00:41:19,940
+It was a reflex.
+
+893
+00:41:19,940 --> 00:41:21,050
+But it was fast.
+
+894
+00:41:21,050 --> 00:41:21,550
+All right.
+
+895
+00:41:21,550 --> 00:41:23,650
+So we have some students
+whose background
+
+896
+00:41:23,650 --> 00:41:25,320
+is in math, other
+ones that we're
+
+897
+00:41:25,320 --> 00:41:27,070
+in autonomous driving
+industry and decided
+
+898
+00:41:27,070 --> 00:41:31,568
+to come back and
+work in research.
+
+899
+00:41:31,568 --> 00:41:33,610
+Because of that, we have
+this extremely broad set
+
+900
+00:41:33,610 --> 00:41:35,650
+of research problems,
+everything from the sort
+
+901
+00:41:35,650 --> 00:41:38,830
+of classic machine learning
+problems you might encounter
+
+902
+00:41:38,830 --> 00:41:41,650
+in geometry world-- like if
+I have a self-driving car
+
+903
+00:41:41,650 --> 00:41:44,950
+and I want to identify
+pedestrians and other cars
+
+904
+00:41:44,950 --> 00:41:48,550
+on the road in an efficient
+and accurate fashion.
+
+905
+00:41:48,550 --> 00:41:51,010
+By the way, part of
+that is machine learning
+
+906
+00:41:51,010 --> 00:41:52,847
+and deep whatever, but
+there's another part,
+
+907
+00:41:52,847 --> 00:41:53,680
+which is algorithms.
+
+908
+00:41:53,680 --> 00:41:56,560
+Because actually, what comes
+into your LiDAR scanner
+
+909
+00:41:56,560 --> 00:41:59,110
+is on the order of
+[INAUDIBLE] with points
+
+910
+00:41:59,110 --> 00:42:01,390
+and some minuscule
+fraction of time.
+
+911
+00:42:01,390 --> 00:42:04,120
+And time complexity of
+your learning algorithm
+
+912
+00:42:04,120 --> 00:42:06,127
+actually is really
+critical to get it right,
+
+913
+00:42:06,127 --> 00:42:08,710
+and something that there are a
+lot of open problems right now,
+
+914
+00:42:08,710 --> 00:42:11,560
+because it's really not
+compatible with the hardware
+
+915
+00:42:11,560 --> 00:42:15,130
+architecture that
+these cars often use.
+
+916
+00:42:15,130 --> 00:42:17,430
+We also look at [INAUDIBLE]
+geometry problems,
+
+917
+00:42:17,430 --> 00:42:21,590
+like if I give you data, can
+I find a geometric structure?
+
+918
+00:42:21,590 --> 00:42:24,550
+So it's a classic example of
+natural language processing.
+
+919
+00:42:24,550 --> 00:42:28,540
+When we use words like near
+and far, in terms of semantics
+
+920
+00:42:28,540 --> 00:42:29,930
+and meaning, all the time.
+
+921
+00:42:29,930 --> 00:42:34,180
+The question is, can we actually
+find an embedded of our word
+
+922
+00:42:34,180 --> 00:42:36,820
+data into a geometric
+space to facilitate
+
+923
+00:42:36,820 --> 00:42:39,910
+the statistical algorithms
+that we care about?
+
+924
+00:42:39,910 --> 00:42:42,820
+And of course, we apply geometry
+to lots of practical problems,
+
+925
+00:42:42,820 --> 00:42:45,310
+everything from meshing
+and scientific computing,
+
+926
+00:42:45,310 --> 00:42:47,920
+which I think is sort
+of a classic one--
+
+927
+00:42:47,920 --> 00:42:50,560
+in fact, I think we're the first
+group that sort of enumerated
+
+928
+00:42:50,560 --> 00:42:54,170
+all of the cool things that may
+happen to decahedral meshes,
+
+929
+00:42:54,170 --> 00:42:55,570
+which is this
+bottom figure here.
+
+930
+00:42:55,570 --> 00:42:56,778
+I should show this to people.
+
+931
+00:42:56,778 --> 00:42:59,194
+There's some fun things
+to look at there.
+
+932
+00:42:59,194 --> 00:43:01,600
+To other practical
+problems, like taking--
+
+933
+00:43:01,600 --> 00:43:04,180
+Erik took a zebra and folded it.
+
+934
+00:43:04,180 --> 00:43:08,050
+We can take a zebra and move its
+texture onto a cat or a pig--
+
+935
+00:43:08,050 --> 00:43:09,950
+or, actually, off the
+side of the screen.
+
+936
+00:43:09,950 --> 00:43:12,408
+But if we don't move the paper,
+[INAUDIBLE] for the 3D scan
+
+937
+00:43:12,408 --> 00:43:15,160
+of what it might [INAUDIBLE].
+
+938
+00:43:15,160 --> 00:43:18,610
+In any event, in my five
+minutes remaining here,
+
+939
+00:43:18,610 --> 00:43:22,548
+I thought I would dig into a
+little bit of detail of two--
+
+940
+00:43:22,548 --> 00:43:24,340
+or maybe one application,
+depending on when
+
+941
+00:43:24,340 --> 00:43:26,770
+Jason and Erik get bored.
+
+942
+00:43:26,770 --> 00:43:29,200
+And essentially, my
+message for you guys
+
+943
+00:43:29,200 --> 00:43:31,540
+is, of course, [INAUDIBLE].
+
+944
+00:43:31,540 --> 00:43:34,660
+I'm not really a
+central CS theory group
+
+945
+00:43:34,660 --> 00:43:36,670
+member here at MIT.
+
+946
+00:43:36,670 --> 00:43:39,970
+But unfortunately for you
+guys, 6.006 is unavoidable.
+
+947
+00:43:39,970 --> 00:43:42,250
+Even if you want to go into
+deep learning, statistics,
+
+948
+00:43:42,250 --> 00:43:43,292
+whatever-- data science--
+
+949
+00:43:43,292 --> 00:43:45,375
+you're going to encounter
+the material that you've
+
+950
+00:43:45,375 --> 00:43:46,240
+seen in this course.
+
+951
+00:43:46,240 --> 00:43:48,670
+And in fact, it's really
+the bread and butter
+
+952
+00:43:48,670 --> 00:43:51,550
+of just about everything
+everybody does here
+
+953
+00:43:51,550 --> 00:43:53,000
+in this Data Center.
+
+954
+00:43:53,000 --> 00:43:55,780
+So then, I'll give you two
+quick examples, one of which
+
+955
+00:43:55,780 --> 00:43:59,530
+lifted from my teaching,
+one from my research.
+
+956
+00:43:59,530 --> 00:44:02,020
+If you continue
+with me next fall,
+
+957
+00:44:02,020 --> 00:44:05,230
+we'll teach 6.837, which is
+the Intro to Computer Graphics
+
+958
+00:44:05,230 --> 00:44:05,838
+course.
+
+959
+00:44:05,838 --> 00:44:07,630
+One thing that's always
+amazing to students
+
+960
+00:44:07,630 --> 00:44:09,047
+is, these, algorithms
+that produce
+
+961
+00:44:09,047 --> 00:44:11,680
+these really beautiful
+images, can fit in about 10,
+
+962
+00:44:11,680 --> 00:44:13,520
+20 lines of code.
+
+963
+00:44:13,520 --> 00:44:15,630
+So really, this is
+totally facetious,
+
+964
+00:44:15,630 --> 00:44:17,380
+because if you want
+those beautiful images
+
+965
+00:44:17,380 --> 00:44:18,848
+and you use those
+20 lines of code,
+
+966
+00:44:18,848 --> 00:44:20,890
+you'll be waiting until
+the death of the universe
+
+967
+00:44:20,890 --> 00:44:23,740
+to actually compute
+these things.
+
+968
+00:44:23,740 --> 00:44:26,315
+But in any event, one nice
+one for rendering-- so
+
+969
+00:44:26,315 --> 00:44:27,940
+drawing a bunch of
+shapes [INAUDIBLE],,
+
+970
+00:44:27,940 --> 00:44:32,290
+something called ray casting,
+or its better known cousin,
+
+971
+00:44:32,290 --> 00:44:33,310
+ray tracing.
+
+972
+00:44:33,310 --> 00:44:35,590
+Typically, the difference
+is whether your rays
+
+973
+00:44:35,590 --> 00:44:38,830
+can bounce off of the surface
+and have a secondary thing.
+
+974
+00:44:38,830 --> 00:44:39,715
+Right.
+
+975
+00:44:39,715 --> 00:44:41,090
+Here's the ray
+casting algorithm.
+
+976
+00:44:41,090 --> 00:44:44,560
+Let's say I have a scene built
+out of spheres and cubes.
+
+977
+00:44:44,560 --> 00:44:46,480
+I'm going to have a for
+loop over every pixel
+
+978
+00:44:46,480 --> 00:44:47,920
+on the computer screen.
+
+979
+00:44:47,920 --> 00:44:49,570
+For every pixel,
+I've got to discover
+
+980
+00:44:49,570 --> 00:44:50,950
+what color that should be.
+
+981
+00:44:50,950 --> 00:44:54,160
+So I shoot a ray from my
+eyeball through that pixel
+
+982
+00:44:54,160 --> 00:44:57,330
+and find the first
+object that it runs into.
+
+983
+00:44:57,330 --> 00:44:59,330
+It's not so hard to
+intersect a line of a sphere
+
+984
+00:44:59,330 --> 00:45:01,090
+or a line of a cube.
+
+985
+00:45:01,090 --> 00:45:02,370
+So what is that algorithm?
+
+986
+00:45:02,370 --> 00:45:04,250
+I've given it to you
+on the screen here.
+
+987
+00:45:04,250 --> 00:45:06,040
+Not too bad to think about.
+
+988
+00:45:06,040 --> 00:45:08,290
+And I think you guys
+are all extremely well
+
+989
+00:45:08,290 --> 00:45:10,850
+equipped to analyze
+the runtime of this,
+
+990
+00:45:10,850 --> 00:45:13,210
+which is roughly
+the number of pixels
+
+991
+00:45:13,210 --> 00:45:14,410
+times the number of objects.
+
+992
+00:45:14,410 --> 00:45:15,820
+Because for every
+pixel, I've got
+
+993
+00:45:15,820 --> 00:45:19,440
+to decide what object the ray
+out of my eyeball hits first.
+
+994
+00:45:19,440 --> 00:45:21,660
+So I need a for loop
+over [INAUDIBLE]..
+
+995
+00:45:21,660 --> 00:45:23,360
+Make sense?
+
+996
+00:45:23,360 --> 00:45:23,860
+Cool.
+
+997
+00:45:23,860 --> 00:45:27,590
+So let's look at a
+basic rendering problem.
+
+998
+00:45:27,590 --> 00:45:31,080
+In fact, Erik already secretly
+snuck this one in here.
+
+999
+00:45:31,080 --> 00:45:34,900
+There's a very famous 3D model
+called the Stanford bunny.
+
+1000
+00:45:34,900 --> 00:45:37,060
+The Stanford bunny is
+actually a great example
+
+1001
+00:45:37,060 --> 00:45:38,630
+of a simplicial complex--
+
+1002
+00:45:38,630 --> 00:45:42,190
+in fact, a manifold one,
+triangulated surface.
+
+1003
+00:45:42,190 --> 00:45:45,430
+Actually, I'm not sure it's
+manifold in its original form.
+
+1004
+00:45:45,430 --> 00:45:47,000
+But usually, it is.
+
+1005
+00:45:47,000 --> 00:45:50,540
+And this innocent-looking,
+extremely famous 3D model
+
+1006
+00:45:50,540 --> 00:45:52,280
+is actually quite pernicious.
+
+1007
+00:45:52,280 --> 00:45:56,480
+It's composed of
+69,000 triangles.
+
+1008
+00:45:56,480 --> 00:46:00,590
+And if I wanted
+1080p-- like a high def
+
+1009
+00:46:00,590 --> 00:46:02,630
+rendering of my triangle--
+then, of course,
+
+1010
+00:46:02,630 --> 00:46:04,920
+there's two million
+pixels on the screen.
+
+1011
+00:46:04,920 --> 00:46:06,860
+So if we look at our
+big O expression,
+
+1012
+00:46:06,860 --> 00:46:08,360
+roughly, our
+computation time scales
+
+1013
+00:46:08,360 --> 00:46:10,740
+like the product of
+those two big numbers.
+
+1014
+00:46:10,740 --> 00:46:13,070
+So just to render
+this ugly gray bunny
+
+1015
+00:46:13,070 --> 00:46:15,810
+takes me a pretty
+large amount of time.
+
+1016
+00:46:15,810 --> 00:46:17,810
+And in fact, the reality--
+by the way, the bunny
+
+1017
+00:46:17,810 --> 00:46:19,760
+is this famous test case
+in computer graphics,
+
+1018
+00:46:19,760 --> 00:46:23,180
+so if you take my class, you'll
+be rendering buddies all day.
+
+1019
+00:46:23,180 --> 00:46:24,800
+The reality is,
+we don't want just
+
+1020
+00:46:24,800 --> 00:46:26,090
+grayed, flat-shaded bunnies.
+
+1021
+00:46:26,090 --> 00:46:29,570
+We want bunnies that are
+transparent, and reflecting
+
+1022
+00:46:29,570 --> 00:46:31,940
+stuff, and I shoot my
+bunny with a bullet
+
+1023
+00:46:31,940 --> 00:46:33,830
+and shatters into a
+million pieces, and all
+
+1024
+00:46:33,830 --> 00:46:35,370
+of these cool things.
+
+1025
+00:46:35,370 --> 00:46:37,470
+So of course that,
+ray casting algorithm,
+
+1026
+00:46:37,470 --> 00:46:40,310
+with each one of these new
+graphics features I add,
+
+1027
+00:46:40,310 --> 00:46:43,700
+only adds to the time
+complexity of the technique
+
+1028
+00:46:43,700 --> 00:46:44,775
+that I implement.
+
+1029
+00:46:44,775 --> 00:46:47,150
+So pretty quickly-- and indeed,
+if you write your own ray
+
+1030
+00:46:47,150 --> 00:46:49,970
+tracer at home, which I
+strongly encourage you to do--
+
+1031
+00:46:49,970 --> 00:46:52,580
+what you will discover
+is that a [INAUDIBLE]
+
+1032
+00:46:52,580 --> 00:46:55,083
+would be the technical phrase.
+
+1033
+00:46:55,083 --> 00:46:56,250
+What is our way out of this?
+
+1034
+00:46:56,250 --> 00:46:59,240
+Well, if you take
+it 837, you'll see
+
+1035
+00:46:59,240 --> 00:47:00,770
+that our way out
+of these problems,
+
+1036
+00:47:00,770 --> 00:47:03,080
+in graphics, is data
+structures and algorithms.
+
+1037
+00:47:03,080 --> 00:47:05,240
+It's completely unavoidable.
+
+1038
+00:47:05,240 --> 00:47:07,580
+For instance, obviously, we
+spent quite a bit of time
+
+1039
+00:47:07,580 --> 00:47:10,670
+in this course talking
+about AVL trees.
+
+1040
+00:47:10,670 --> 00:47:13,970
+In 837, we'll spend a big
+chunk of our tours talking
+
+1041
+00:47:13,970 --> 00:47:16,790
+about space partitioning trees.
+
+1042
+00:47:16,790 --> 00:47:20,330
+Here-- I actually forgot
+what kind of tree this is.
+
+1043
+00:47:20,330 --> 00:47:23,180
+I think it's a KD tree.
+
+1044
+00:47:23,180 --> 00:47:24,650
+Doesn't matter.
+
+1045
+00:47:24,650 --> 00:47:26,450
+In any event, one
+thing I could do
+
+1046
+00:47:26,450 --> 00:47:29,810
+is take all of the
+triangles of my bunny,
+
+1047
+00:47:29,810 --> 00:47:33,230
+and I could put the entire
+bunny in a giant cube
+
+1048
+00:47:33,230 --> 00:47:35,780
+with the property that the
+cube is outside the bunny.
+
+1049
+00:47:35,780 --> 00:47:39,810
+Let's say I cast a ray and the
+ray doesn't touch the cube.
+
+1050
+00:47:39,810 --> 00:47:41,770
+Can the ray touch the bunny?
+
+1051
+00:47:41,770 --> 00:47:42,270
+No, right?
+
+1052
+00:47:42,270 --> 00:47:44,200
+It zings right past it.
+
+1053
+00:47:44,200 --> 00:47:46,680
+So suddenly, I just saved myself
+a lot of computation time,
+
+1054
+00:47:46,680 --> 00:47:47,180
+right?
+
+1055
+00:47:47,180 --> 00:47:49,620
+I don't have to iterate over
+all the triangles inside
+
+1056
+00:47:49,620 --> 00:47:51,942
+of the body to see whether
+they hit the ray or not,
+
+1057
+00:47:51,942 --> 00:47:53,400
+because I already
+convinced myself,
+
+1058
+00:47:53,400 --> 00:47:55,590
+by this conservative
+test, that I
+
+1059
+00:47:55,590 --> 00:47:59,830
+didn't hit even the bounding
+box of the whole bunny.
+
+1060
+00:47:59,830 --> 00:48:02,120
+Well, that's sort of a
+nice order 1 speed-up.
+
+1061
+00:48:02,120 --> 00:48:03,640
+But depending on
+how big the bunny
+
+1062
+00:48:03,640 --> 00:48:05,650
+is relative to the size
+of my rendered image,
+
+1063
+00:48:05,650 --> 00:48:09,350
+that might not be a super
+useful efficiency test.
+
+1064
+00:48:09,350 --> 00:48:10,760
+But of course, what could I do?
+
+1065
+00:48:10,760 --> 00:48:12,700
+I could take the box
+containing the bunny,
+
+1066
+00:48:12,700 --> 00:48:15,555
+I could slice it in half,
+and now it's saying,
+
+1067
+00:48:15,555 --> 00:48:17,680
+does my ray hit the front
+or the back of the bunny?
+
+1068
+00:48:17,680 --> 00:48:18,310
+Or maybe both.
+
+1069
+00:48:18,310 --> 00:48:21,530
+That's where you've got to--
+that's where things get gnarly.
+
+1070
+00:48:21,530 --> 00:48:22,605
+And so on.
+
+1071
+00:48:22,605 --> 00:48:24,730
+So now you have this nice
+recursive tree structure,
+
+1072
+00:48:24,730 --> 00:48:26,740
+where I keep taking the
+box containing my bunny
+
+1073
+00:48:26,740 --> 00:48:29,620
+and chopping it in
+half and placing--
+
+1074
+00:48:29,620 --> 00:48:32,750
+in some sense, usually,
+the triangles--
+
+1075
+00:48:32,750 --> 00:48:35,090
+maybe not the leaves of my
+tree, but [INAUDIBLE] that's
+
+1076
+00:48:35,090 --> 00:48:36,510
+probably good enough.
+
+1077
+00:48:36,510 --> 00:48:39,790
+You get a structure like what
+you see on the screen here.
+
+1078
+00:48:39,790 --> 00:48:41,120
+And why should you do that?
+
+1079
+00:48:41,120 --> 00:48:44,710
+Well, remember, it takes pn time
+to render my image of my bunny
+
+1080
+00:48:44,710 --> 00:48:45,850
+normally.
+
+1081
+00:48:45,850 --> 00:48:48,850
+Well, now, the
+picture is actually
+
+1082
+00:48:48,850 --> 00:48:50,710
+misleadingly suggestive.
+
+1083
+00:48:50,710 --> 00:48:53,170
+But you might think that,
+maybe, it takes roughly--
+
+1084
+00:48:53,170 --> 00:48:56,050
+remember, n is the number
+of objects in my scene--
+
+1085
+00:48:56,050 --> 00:48:58,750
+p log n time to
+render my bunny now,
+
+1086
+00:48:58,750 --> 00:49:01,600
+because I can kind of
+traverse the tree of objects
+
+1087
+00:49:01,600 --> 00:49:02,930
+in my scene.
+
+1088
+00:49:02,930 --> 00:49:05,500
+Of course, notice, I put
+a question mark here.
+
+1089
+00:49:05,500 --> 00:49:08,132
+And the devil's in
+the details here.
+
+1090
+00:49:08,132 --> 00:49:10,090
+In fact, I think computer
+graphics people often
+
+1091
+00:49:10,090 --> 00:49:13,580
+believe that their rendering
+algorithm takes p log n time.
+
+1092
+00:49:13,580 --> 00:49:16,630
+That's often not
+possible, although kind
+
+1093
+00:49:16,630 --> 00:49:18,070
+of an interesting
+question, which
+
+1094
+00:49:18,070 --> 00:49:21,370
+is, the heuristics they use for
+building these sorts of trees
+
+1095
+00:49:21,370 --> 00:49:24,050
+often do, on average,
+give them log n time.
+
+1096
+00:49:24,050 --> 00:49:25,750
+And so there's
+something about the data
+
+1097
+00:49:25,750 --> 00:49:28,733
+that's making this problem
+easier than it might seem.
+
+1098
+00:49:28,733 --> 00:49:31,150
+So we'll dig into that a little
+bit in the graphics class.
+
+1099
+00:49:31,150 --> 00:49:33,275
+Of course, you're not going
+to proof as many bounds
+
+1100
+00:49:33,275 --> 00:49:34,915
+as you might in a theory course.
+
+1101
+00:49:34,915 --> 00:49:36,790
+But we're certainly
+building on the intuition
+
+1102
+00:49:36,790 --> 00:49:39,370
+that we've seen in this class
+to build on practical data
+
+1103
+00:49:39,370 --> 00:49:40,023
+structures.
+
+1104
+00:49:40,023 --> 00:49:41,815
+And these data structures
+appear everywhere
+
+1105
+00:49:41,815 --> 00:49:43,150
+in computer graphics.
+
+1106
+00:49:43,150 --> 00:49:47,620
+For instance, directed
+acyclic graphs
+
+1107
+00:49:47,620 --> 00:49:50,650
+appear all over the place in
+computer graphics literature
+
+1108
+00:49:50,650 --> 00:49:52,300
+to describe 3D scenes.
+
+1109
+00:49:52,300 --> 00:49:55,450
+For example, this classroom
+is a stark reminder
+
+1110
+00:49:55,450 --> 00:49:58,630
+of why we need DAGs
+and computer graphics,
+
+1111
+00:49:58,630 --> 00:50:00,580
+because we have all of
+these empty seats here,
+
+1112
+00:50:00,580 --> 00:50:02,990
+and they're all
+copies of one another.
+
+1113
+00:50:02,990 --> 00:50:06,310
+So would it make sense for
+me to store however many,
+
+1114
+00:50:06,310 --> 00:50:08,920
+like, 100 3D molds
+of the same chair?
+
+1115
+00:50:08,920 --> 00:50:10,790
+Probably not.
+
+1116
+00:50:10,790 --> 00:50:12,110
+So instead, what do I do?
+
+1117
+00:50:12,110 --> 00:50:15,220
+I store one instance of a chair,
+and then some instructions
+
+1118
+00:50:15,220 --> 00:50:18,840
+on how to tile it
+into my entire scene.
+
+1119
+00:50:18,840 --> 00:50:20,730
+One way that I can
+do that is to think
+
+1120
+00:50:20,730 --> 00:50:22,890
+of there being a
+node in a graph which
+
+1121
+00:50:22,890 --> 00:50:25,290
+knows how to draw one chair.
+
+1122
+00:50:25,290 --> 00:50:27,210
+And now, I can have a
+bunch of different nodes
+
+1123
+00:50:27,210 --> 00:50:29,252
+in my scene for all of
+the instances of the chair
+
+1124
+00:50:29,252 --> 00:50:32,032
+and then store a different
+transformation for each one.
+
+1125
+00:50:32,032 --> 00:50:33,990
+So if you think about
+the graph structure here,
+
+1126
+00:50:33,990 --> 00:50:37,080
+each of those ones is going to
+point into the same 3D model
+
+1127
+00:50:37,080 --> 00:50:38,830
+of the chair for rendering.
+
+1128
+00:50:38,830 --> 00:50:41,522
+And that makes a directed
+acyclic graph structure
+
+1129
+00:50:41,522 --> 00:50:43,980
+called a scene graph, which
+we'll spend quite a bit of time
+
+1130
+00:50:43,980 --> 00:50:46,890
+talking about in 837, how
+to traverse and construct
+
+1131
+00:50:46,890 --> 00:50:49,950
+all that good stuff.
+
+1132
+00:50:49,950 --> 00:50:52,380
+And there are lots of
+different models of computation
+
+1133
+00:50:52,380 --> 00:50:54,120
+in that universe, as well.
+
+1134
+00:50:54,120 --> 00:50:58,500
+Your graphics card is
+a very specific kind
+
+1135
+00:50:58,500 --> 00:51:00,930
+of parallel processor
+that's kind of like Lucille
+
+1136
+00:51:00,930 --> 00:51:03,960
+Ball on the conveyor belt,
+hammering at the same object
+
+1137
+00:51:03,960 --> 00:51:05,080
+over and over again.
+
+1138
+00:51:05,080 --> 00:51:07,205
+But if you ask it to do
+anything other than the one
+
+1139
+00:51:07,205 --> 00:51:09,490
+thing it knows how to do to
+a bunch of data at a time,
+
+1140
+00:51:09,490 --> 00:51:11,650
+then all of your computation
+grinds to a halt.
+
+1141
+00:51:11,650 --> 00:51:14,310
+This is called Single
+Instruction Multiple Data
+
+1142
+00:51:14,310 --> 00:51:16,350
+parallelism, SIMD.
+
+1143
+00:51:16,350 --> 00:51:17,940
+Numerical algorithms
+matter a lot
+
+1144
+00:51:17,940 --> 00:51:20,190
+for things like
+fluid simulation.
+
+1145
+00:51:20,190 --> 00:51:24,420
+And approximation algorithms
+are quite critical, too.
+
+1146
+00:51:24,420 --> 00:51:26,490
+In computer graphics,
+the complexity
+
+1147
+00:51:26,490 --> 00:51:29,610
+is kind of interesting,
+because of course, your eyeball
+
+1148
+00:51:29,610 --> 00:51:32,730
+is sensitive to
+about 29.97 frames
+
+1149
+00:51:32,730 --> 00:51:35,880
+per second worth of material.
+
+1150
+00:51:35,880 --> 00:51:39,158
+You can choose that time to
+do really well-rendering one
+
+1151
+00:51:39,158 --> 00:51:41,700
+object, but then you take out
+of the time rendering something
+
+1152
+00:51:41,700 --> 00:51:42,960
+else.
+
+1153
+00:51:42,960 --> 00:51:45,090
+There's kind of an
+interesting conservation law
+
+1154
+00:51:45,090 --> 00:51:46,715
+that you have to
+balance when you solve
+
+1155
+00:51:46,715 --> 00:51:49,680
+these kinds of problems, which
+is an interesting balance, now,
+
+1156
+00:51:49,680 --> 00:51:52,920
+between complexity and
+runtime of your algorithm
+
+1157
+00:51:52,920 --> 00:51:54,180
+and perception.
+
+1158
+00:51:54,180 --> 00:51:56,970
+What things can you get away
+with when you draw a scene?
+
+1159
+00:51:56,970 --> 00:51:59,492
+And maybe I can do tons
+of extra computation
+
+1160
+00:51:59,492 --> 00:52:01,700
+to get that extra shadow,
+but it's just not worth it.
+
+1161
+00:52:04,310 --> 00:52:06,770
+I'll quickly sketch out
+another completely different
+
+1162
+00:52:06,770 --> 00:52:09,960
+application of the
+material that we've covered
+
+1163
+00:52:09,960 --> 00:52:12,450
+in 6.006 from my own research.
+
+1164
+00:52:12,450 --> 00:52:13,520
+Again, just like Erik--
+
+1165
+00:52:13,520 --> 00:52:15,728
+I guess, in a funny way,
+both of our groups, I think,
+
+1166
+00:52:15,728 --> 00:52:18,620
+are kind of broad in terms of
+subject material, rather than--
+
+1167
+00:52:18,620 --> 00:52:20,720
+some of our colleagues
+have really laser focus
+
+1168
+00:52:20,720 --> 00:52:23,780
+on one topic or another.
+
+1169
+00:52:23,780 --> 00:52:27,280
+Another Research area that
+I have sort of backed into
+
+1170
+00:52:27,280 --> 00:52:29,780
+is the area of
+political redistricting.
+
+1171
+00:52:29,780 --> 00:52:31,905
+This is relevant in
+the United States.
+
+1172
+00:52:31,905 --> 00:52:33,140
+Recently, I've been
+reading this great proposal
+
+1173
+00:52:33,140 --> 00:52:35,432
+about other countries, which
+is really interesting, how
+
+1174
+00:52:35,432 --> 00:52:37,550
+they do this stuff.
+
+1175
+00:52:37,550 --> 00:52:40,700
+In the US, when we vote
+for people in Congress--
+
+1176
+00:52:40,700 --> 00:52:42,900
+by the way, not
+necessarily for presidents.
+
+1177
+00:52:42,900 --> 00:52:44,870
+This is a common misconception.
+
+1178
+00:52:44,870 --> 00:52:48,470
+But certainly for
+Congress, your state
+
+1179
+00:52:48,470 --> 00:52:50,420
+is divided into little
+regions, each of which
+
+1180
+00:52:50,420 --> 00:52:53,040
+elects one member of the House.
+
+1181
+00:52:53,040 --> 00:52:56,975
+And there's sort of a
+subtle problem if you're not
+
+1182
+00:52:56,975 --> 00:52:58,350
+used to thinking
+about it, or one
+
+1183
+00:52:58,350 --> 00:53:00,642
+that's staring you in the
+face and screaming, depending
+
+1184
+00:53:00,642 --> 00:53:03,823
+on how often you read
+the news and politics.
+
+1185
+00:53:03,823 --> 00:53:05,490
+There is an issue
+called gerrymandering,
+
+1186
+00:53:05,490 --> 00:53:09,030
+where your legislature draws the
+lines for what area on the map
+
+1187
+00:53:09,030 --> 00:53:11,640
+elects a member of Congress.
+
+1188
+00:53:11,640 --> 00:53:13,860
+And depending on how
+you draw the lines,
+
+1189
+00:53:13,860 --> 00:53:15,420
+you can engineer
+different results
+
+1190
+00:53:15,420 --> 00:53:17,220
+for who's likely to get elected.
+
+1191
+00:53:17,220 --> 00:53:19,140
+So for instance, maybe
+there's some minority.
+
+1192
+00:53:19,140 --> 00:53:21,690
+I can cluster them all together
+into one voting district.
+
+1193
+00:53:21,690 --> 00:53:23,460
+Then they will only
+get the opportunity
+
+1194
+00:53:23,460 --> 00:53:24,690
+to elect one person.
+
+1195
+00:53:24,690 --> 00:53:28,770
+But maybe, if I divide the
+space where they live into two,
+
+1196
+00:53:28,770 --> 00:53:30,780
+I managed to engineer
+two districts
+
+1197
+00:53:30,780 --> 00:53:33,060
+with a high probability
+of electing somebody
+
+1198
+00:53:33,060 --> 00:53:36,270
+with their political
+interests in mind.
+
+1199
+00:53:36,270 --> 00:53:38,760
+It turns out that
+political redistricting,
+
+1200
+00:53:38,760 --> 00:53:41,430
+in a broad sense, is a great
+problem, computationally.
+
+1201
+00:53:41,430 --> 00:53:43,270
+Even if you're a totally
+heartless theorist,
+
+1202
+00:53:43,270 --> 00:53:45,282
+there are some really
+fun problems here.
+
+1203
+00:53:45,282 --> 00:53:46,740
+So for example,
+the state of Iowa--
+
+1204
+00:53:46,740 --> 00:53:50,010
+we all pick on Iowa because
+it has a unique law, which
+
+1205
+00:53:50,010 --> 00:53:52,530
+is that districts have to be
+built out of counties, which
+
+1206
+00:53:52,530 --> 00:53:54,790
+are much larger than
+the typical census unit,
+
+1207
+00:53:54,790 --> 00:53:56,710
+so it computationally is easier.
+
+1208
+00:53:56,710 --> 00:53:59,813
+But even in Iowa,
+which is a giant grid--
+
+1209
+00:53:59,813 --> 00:54:01,980
+with the exception of one
+shift in the middle, which
+
+1210
+00:54:01,980 --> 00:54:04,800
+is fascinating to me--
+
+1211
+00:54:04,800 --> 00:54:06,870
+I know [INAUDIBLE], fun fact.
+
+1212
+00:54:06,870 --> 00:54:08,880
+Literally, people were
+making the map of Iowa,
+
+1213
+00:54:08,880 --> 00:54:10,680
+and they worked from the
+bottom up and the top down,
+
+1214
+00:54:10,680 --> 00:54:13,260
+and it meets in the middle
+and their grids were shifted,
+
+1215
+00:54:13,260 --> 00:54:14,790
+and now we're stuck with that.
+
+1216
+00:54:14,790 --> 00:54:16,950
+And it has an interesting effect
+on the topology of the graph,
+
+1217
+00:54:16,950 --> 00:54:18,908
+because it looks like
+squares, but then there's
+
+1218
+00:54:18,908 --> 00:54:20,460
+triangles in the middle.
+
+1219
+00:54:20,460 --> 00:54:23,670
+But in any event,
+even though there's
+
+1220
+00:54:23,670 --> 00:54:25,530
+only 99 counties
+in four districts,
+
+1221
+00:54:25,530 --> 00:54:28,530
+there's approximately
+quintillions of possible ways
+
+1222
+00:54:28,530 --> 00:54:31,620
+you can divide that state into
+four contiguous districts that
+
+1223
+00:54:31,620 --> 00:54:33,630
+satisfy the rules as they were--
+
+1224
+00:54:33,630 --> 00:54:38,472
+at least, if you read the
+code literally in the law.
+
+1225
+00:54:38,472 --> 00:54:39,930
+It seems like
+computers are useful,
+
+1226
+00:54:39,930 --> 00:54:42,240
+but unfortunately, it's
+a little subtle how.
+
+1227
+00:54:42,240 --> 00:54:44,730
+For instance, there's no
+single "best" districting
+
+1228
+00:54:44,730 --> 00:54:46,075
+plan out there.
+
+1229
+00:54:46,075 --> 00:54:48,450
+I can't think of a single
+state with a law that gives you
+
+1230
+00:54:48,450 --> 00:54:54,060
+an objective function, similar
+to whatever cute characters
+
+1231
+00:54:54,060 --> 00:54:55,530
+that we've had in 6.006.
+
+1232
+00:54:55,530 --> 00:54:57,960
+They often have very
+clear objectives in life,
+
+1233
+00:54:57,960 --> 00:55:00,060
+but unfortunately,
+redistricting, that's
+
+1234
+00:55:00,060 --> 00:55:01,050
+very rarely the case.
+
+1235
+00:55:01,050 --> 00:55:03,570
+You have to balance
+contiguity, population balance,
+
+1236
+00:55:03,570 --> 00:55:07,080
+compactness, all of
+these different things.
+
+1237
+00:55:07,080 --> 00:55:09,480
+Reality check number two
+is that, even if somebody
+
+1238
+00:55:09,480 --> 00:55:11,670
+did give you an
+objective function,
+
+1239
+00:55:11,670 --> 00:55:13,870
+for just about any interesting
+objective function,
+
+1240
+00:55:13,870 --> 00:55:17,010
+it's very obvious that
+generating the best possible
+
+1241
+00:55:17,010 --> 00:55:20,190
+districting plan is NP-hard.
+
+1242
+00:55:20,190 --> 00:55:21,840
+And by the way, it
+doesn't even matter,
+
+1243
+00:55:21,840 --> 00:55:24,570
+because the law doesn't
+say that computers have
+
+1244
+00:55:24,570 --> 00:55:26,340
+to draw the best districts.
+
+1245
+00:55:26,340 --> 00:55:28,770
+Even if P equals NP
+really could extract
+
+1246
+00:55:28,770 --> 00:55:32,453
+the best possible districting
+plan using an algorithm,
+
+1247
+00:55:32,453 --> 00:55:34,620
+it doesn't mean you have
+to use it, at least the way
+
+1248
+00:55:34,620 --> 00:55:36,330
+the law's written now.
+
+1249
+00:55:36,330 --> 00:55:38,860
+Interestingly, this is not true
+in certain parts of Mexico,
+
+1250
+00:55:38,860 --> 00:55:41,068
+where they actually make
+you compare your districting
+
+1251
+00:55:41,068 --> 00:55:42,907
+plan against a
+computer-generated one, which
+
+1252
+00:55:42,907 --> 00:55:44,490
+is philosophically
+really interesting,
+
+1253
+00:55:44,490 --> 00:55:46,746
+although in practice, it
+doesn't work terribly well.
+
+1254
+00:55:49,350 --> 00:55:52,233
+Our researchers studied analysis
+of districting plans instead.
+
+1255
+00:55:52,233 --> 00:55:54,150
+So instead of running a
+piece of software that
+
+1256
+00:55:54,150 --> 00:55:56,280
+takes in your state,
+draws your districts,
+
+1257
+00:55:56,280 --> 00:55:57,540
+and then you're done--
+
+1258
+00:55:57,540 --> 00:55:59,460
+instead, we ask
+statistical questions
+
+1259
+00:55:59,460 --> 00:56:01,770
+about, I propose a
+districting plan,
+
+1260
+00:56:01,770 --> 00:56:03,870
+what does it look like
+relative to the space
+
+1261
+00:56:03,870 --> 00:56:07,387
+of the possibilities?
+
+1262
+00:56:07,387 --> 00:56:08,970
+So that, of course,
+begs the question,
+
+1263
+00:56:08,970 --> 00:56:10,570
+what are the possibilities?
+
+1264
+00:56:10,570 --> 00:56:13,020
+So these are the connected
+graph partitions.
+
+1265
+00:56:13,020 --> 00:56:15,990
+Meaning, you have a graph,
+and you take the vertices
+
+1266
+00:56:15,990 --> 00:56:18,158
+and you cluster them together
+in a way where they're
+
+1267
+00:56:18,158 --> 00:56:19,200
+connected to one another.
+
+1268
+00:56:19,200 --> 00:56:22,410
+The one thing that we all agree
+on-- actually, philosophically,
+
+1269
+00:56:22,410 --> 00:56:23,862
+it's questionable why--
+
+1270
+00:56:23,862 --> 00:56:25,320
+is that you should
+be able to start
+
+1271
+00:56:25,320 --> 00:56:27,780
+at any point in your district
+and walk to any other one
+
+1272
+00:56:27,780 --> 00:56:29,277
+without leaving.
+
+1273
+00:56:29,277 --> 00:56:30,735
+These days, with
+the internet, it's
+
+1274
+00:56:30,735 --> 00:56:33,270
+not clear that that's
+actually the best criterion.
+
+1275
+00:56:33,270 --> 00:56:34,980
+But that's a law that,
+I think, is never
+
+1276
+00:56:34,980 --> 00:56:39,828
+going to get passed
+in the near future.
+
+1277
+00:56:39,828 --> 00:56:41,370
+Anyway, I think I'm
+out of time, so I
+
+1278
+00:56:41,370 --> 00:56:44,543
+don't think I'll walk you
+guys through the theory here.
+
+1279
+00:56:44,543 --> 00:56:45,960
+Maybe I'll leave
+it in the slides.
+
+1280
+00:56:45,960 --> 00:56:48,390
+There's a sort of
+very simple proof
+
+1281
+00:56:48,390 --> 00:56:51,030
+that can show that, at least the
+very simplest thing you might
+
+1282
+00:56:51,030 --> 00:56:52,905
+think of for analyzing
+your districting plan,
+
+1283
+00:56:52,905 --> 00:56:55,290
+which is to say,
+you propose a plan,
+
+1284
+00:56:55,290 --> 00:56:57,810
+and now, I want your
+plan to be at least as
+
+1285
+00:56:57,810 --> 00:57:01,350
+good, under some axis, as
+it's a randomly drawn one
+
+1286
+00:57:01,350 --> 00:57:03,810
+from the space of all possible
+connected partitions--
+
+1287
+00:57:03,810 --> 00:57:06,397
+all of the possible ways
+I could draw the lines.
+
+1288
+00:57:06,397 --> 00:57:07,980
+Well, then, it might
+be useful to have
+
+1289
+00:57:07,980 --> 00:57:10,510
+a piece of software that
+could just randomly draw
+
+1290
+00:57:10,510 --> 00:57:11,760
+such a thing.
+
+1291
+00:57:11,760 --> 00:57:13,260
+So in other words,
+to draw something
+
+1292
+00:57:13,260 --> 00:57:15,300
+where the probability
+of any one partition
+
+1293
+00:57:15,300 --> 00:57:18,060
+is 1 over the number
+of partitions.
+
+1294
+00:57:18,060 --> 00:57:19,453
+This seems innocent.
+
+1295
+00:57:19,453 --> 00:57:21,120
+In fact, there's a
+number of papers that
+
+1296
+00:57:21,120 --> 00:57:23,010
+claim to do things like this.
+
+1297
+00:57:23,010 --> 00:57:27,570
+But it turns out that it's
+computationally difficult,
+
+1298
+00:57:27,570 --> 00:57:29,970
+assuming that you believe
+that P doesn't equal NP.
+
+1299
+00:57:29,970 --> 00:57:32,550
+So I'll maybe leave
+some suggestive pictures
+
+1300
+00:57:32,550 --> 00:57:34,440
+in the slide that we can--
+
+1301
+00:57:34,440 --> 00:57:38,760
+if you guys text me, or if we
+have a professor-student chat,
+
+1302
+00:57:38,760 --> 00:57:41,160
+I'm happy to sketch
+it out to you then.
+
+1303
+00:57:41,160 --> 00:57:43,170
+There's a very nice,
+easy proof that
+
+1304
+00:57:43,170 --> 00:57:45,840
+reduces this to
+Hamiltonian cycle,
+
+1305
+00:57:45,840 --> 00:57:48,473
+and shows you that maybe you
+shouldn't trust these tools,
+
+1306
+00:57:48,473 --> 00:57:50,265
+as much as they're
+argued about, literally,
+
+1307
+00:57:50,265 --> 00:57:52,380
+in the Supreme Court a
+couple of months ago.
+
+1308
+00:57:52,380 --> 00:57:53,850
+By the way, it was pretty fun.
+
+1309
+00:57:53,850 --> 00:57:57,420
+Our expert report was referenced
+in the defense of the case
+
+1310
+00:57:57,420 --> 00:57:58,565
+last summer.
+
+1311
+00:57:58,565 --> 00:57:59,940
+And when you read
+the discussion,
+
+1312
+00:57:59,940 --> 00:58:01,320
+you can see the
+judges trying to talk
+
+1313
+00:58:01,320 --> 00:58:02,550
+their way around complexity.
+
+1314
+00:58:02,550 --> 00:58:07,677
+And it's an interesting,
+if somewhat dry, read.
+
+1315
+00:58:07,677 --> 00:58:09,510
+In any event, that's
+just the starting point
+
+1316
+00:58:09,510 --> 00:58:11,385
+for our research, which
+says that, of course,
+
+1317
+00:58:11,385 --> 00:58:13,080
+these sampling problems
+are really hard.
+
+1318
+00:58:13,080 --> 00:58:14,880
+The questions is,
+what can you do?
+
+1319
+00:58:14,880 --> 00:58:17,910
+[INAUDIBLE] or not.
+
+1320
+00:58:17,910 --> 00:58:20,800
+But the real message
+here is, of course,
+
+1321
+00:58:20,800 --> 00:58:22,440
+that this course is unavoidable.
+
+1322
+00:58:22,440 --> 00:58:24,360
+Even in these extremely
+applied problems
+
+1323
+00:58:24,360 --> 00:58:27,990
+showing up in court cases or on
+your graphics card, you still--
+
+1324
+00:58:27,990 --> 00:58:30,540
+complexity and algorithms
+and data structures
+
+1325
+00:58:30,540 --> 00:58:33,230
+are going to come back to play.
+
+1326
+00:58:33,230 --> 00:58:36,090
+So with that, our
+other two instructors
+
+1327
+00:58:36,090 --> 00:58:40,770
+up here for our final farewell--
+suitably distance ourselves.
+
+1328
+00:58:40,770 --> 00:58:42,660
+ERIK DEMAINE: So
+algorithms are everywhere.
+
+1329
+00:58:42,660 --> 00:58:44,625
+I hope you enjoyed this class.
+
+1330
+00:58:44,625 --> 00:58:47,250
+It's been a lot of fun teaching
+you and having you as students.
+
+1331
+00:58:47,250 --> 00:58:49,050
+Even though you're not here
+physically in the room,
+
+1332
+00:58:49,050 --> 00:58:50,460
+we still feel your presence.
+
+1333
+00:58:50,460 --> 00:58:53,680
+And I look forward to
+seeing you all soon.
+
+1334
+00:58:53,680 --> 00:58:57,040
+Thanks for being a
+part of this fun thing.
+
+1335
+00:58:57,040 --> 00:58:59,610
+I want to thank our two--
+
+1336
+00:58:59,610 --> 00:59:03,370
+my two co-instructors for an
+awesome time this semester.
+
+1337
+00:59:03,370 --> 00:59:06,330
+It's been a lot of fun
+teaching to you guys.
+
+1338
+00:59:06,330 --> 00:59:08,575
+JASON KU: Thanks for spending
+006 with us this term.
+
+1339
+00:59:08,575 --> 00:59:09,450
+JUSTIN SOLOMON: Yeah.
+
+1340
+00:59:09,450 --> 00:59:09,850
+Thank you.
+
+1341
+00:59:09,850 --> 00:59:11,260
+And hopefully we'll
+see you again soon.
+
+1342
+00:59:11,260 --> 00:59:12,010
+ERIK DEMAINE: Bye.
+
+1343
+00:59:12,010 --> 00:59:13,270
+JASON KU: Bye.

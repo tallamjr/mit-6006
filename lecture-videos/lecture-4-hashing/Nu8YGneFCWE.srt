@@ -1,0 +1,4536 @@
+1
+00:00:12,910 --> 00:00:17,290
+JASON KU: Welcome to the
+fourth lecture of 6.006.
+
+2
+00:00:17,290 --> 00:00:20,350
+Today we are going to be
+talking about hashing.
+
+3
+00:00:20,350 --> 00:00:24,850
+Last lecture, on Tuesday,
+Professor Solomon
+
+4
+00:00:24,850 --> 00:00:29,080
+was talking about
+set data structures,
+
+5
+00:00:29,080 --> 00:00:33,250
+storing things so that
+you can query items
+
+6
+00:00:33,250 --> 00:00:37,510
+by their key right, by what
+they intrinsically are--
+
+7
+00:00:37,510 --> 00:00:39,610
+versus what Professor
+Demaine was talking
+
+8
+00:00:39,610 --> 00:00:42,280
+about last week, which was
+sequence data structures, where
+
+9
+00:00:42,280 --> 00:00:46,060
+we impose an external
+order on these items
+
+10
+00:00:46,060 --> 00:00:49,600
+and we want you
+to maintain those.
+
+11
+00:00:49,600 --> 00:00:52,780
+I'm not supporting operations
+where I'm looking stuff up
+
+12
+00:00:52,780 --> 00:00:54,290
+based on what they are.
+
+13
+00:00:54,290 --> 00:00:56,910
+That's what the set
+interface is for.
+
+14
+00:00:56,910 --> 00:00:59,410
+So we're going to be talking a
+little bit more about the set
+
+15
+00:00:59,410 --> 00:01:01,810
+interface today.
+
+16
+00:01:01,810 --> 00:01:05,680
+On Tuesday, you saw two
+ways of implementing the set
+
+17
+00:01:05,680 --> 00:01:07,210
+interface--
+
+18
+00:01:07,210 --> 00:01:09,970
+one using just a
+unsorted array-- just,
+
+19
+00:01:09,970 --> 00:01:12,430
+I threw these things
+in an array and I
+
+20
+00:01:12,430 --> 00:01:14,650
+could do a linear
+scan of my items
+
+21
+00:01:14,650 --> 00:01:17,140
+to support basically
+any of these operations.
+
+22
+00:01:17,140 --> 00:01:19,090
+It's a little exercise
+you can go through.
+
+23
+00:01:19,090 --> 00:01:21,640
+I think they show it to you
+in the recitation notes,
+
+24
+00:01:21,640 --> 00:01:26,620
+but if you'd like to implement
+it for yourself, that's fine.
+
+25
+00:01:26,620 --> 00:01:30,100
+And then we saw a slightly
+better data structure, at least
+
+26
+00:01:30,100 --> 00:01:31,780
+for the find operations.
+
+27
+00:01:31,780 --> 00:01:34,660
+Can I look something
+up, whether this key
+
+28
+00:01:34,660 --> 00:01:38,750
+is in my set interface?
+
+29
+00:01:38,750 --> 00:01:39,730
+We can do that faster.
+
+30
+00:01:39,730 --> 00:01:43,450
+We can do that in log n
+time with a build overhead
+
+31
+00:01:43,450 --> 00:01:49,180
+that's about n log n, because we
+showed you three ways to sort.
+
+32
+00:01:49,180 --> 00:01:51,010
+Two of them were n squared.
+
+33
+00:01:51,010 --> 00:01:55,480
+One of them was n log n, which
+is as good as we showed you
+
+34
+00:01:55,480 --> 00:01:57,500
+how to do yesterday.
+
+35
+00:01:57,500 --> 00:02:00,500
+So the question then becomes,
+can I build that data structure
+
+36
+00:02:00,500 --> 00:02:01,080
+faster?
+
+37
+00:02:01,080 --> 00:02:04,580
+That'll be a subject of next
+week's Thursday lecture.
+
+38
+00:02:04,580 --> 00:02:08,210
+But this week we're going to
+concentrate on this static
+
+39
+00:02:08,210 --> 00:02:09,530
+find.
+
+40
+00:02:09,530 --> 00:02:11,900
+we got log n, which is an
+exponential improvement
+
+41
+00:02:11,900 --> 00:02:17,990
+over linear right, but
+the question now becomes,
+
+42
+00:02:17,990 --> 00:02:21,870
+can I do faster than log n time?
+
+43
+00:02:21,870 --> 00:02:24,370
+And what we're going to do at
+the first part of this lecture
+
+44
+00:02:24,370 --> 00:02:26,320
+is show you that, no, you--
+
+45
+00:02:26,320 --> 00:02:27,340
+AUDIENCE: [INAUDIBLE]
+
+46
+00:02:27,340 --> 00:02:28,850
+JASON KU: What's up?
+
+47
+00:02:28,850 --> 00:02:29,350
+No?
+
+48
+00:02:29,350 --> 00:02:35,230
+OK-- that you can't do
+faster than log n time,
+
+49
+00:02:35,230 --> 00:02:38,920
+in the caveat that we are in a
+slightly more restricted model
+
+50
+00:02:38,920 --> 00:02:43,060
+of computation that we
+were-- than what we introduce
+
+51
+00:02:43,060 --> 00:02:46,460
+to you a couple of weeks ago.
+
+52
+00:02:46,460 --> 00:02:50,210
+And then so if we're not in
+that more constrained model
+
+53
+00:02:50,210 --> 00:02:52,070
+of computation, we can
+actually do faster.
+
+54
+00:02:55,490 --> 00:02:57,320
+Log n's already pretty good.
+
+55
+00:02:57,320 --> 00:03:03,460
+Log n is not going to be larger
+than like 30 for any problem
+
+56
+00:03:03,460 --> 00:03:08,350
+that you're going to be
+talking about in the real world
+
+57
+00:03:08,350 --> 00:03:13,720
+on real computers, but a
+factor of 30 is still bad.
+
+58
+00:03:13,720 --> 00:03:17,530
+I would prefer to do faster with
+those constant factors, when
+
+59
+00:03:17,530 --> 00:03:18,235
+I can.
+
+60
+00:03:18,235 --> 00:03:19,360
+It's not a constant factor.
+
+61
+00:03:19,360 --> 00:03:22,090
+It's a logarithmic factor,
+but you get what I'm saying.
+
+62
+00:03:22,090 --> 00:03:24,690
+OK, so what we're
+going to do is first
+
+63
+00:03:24,690 --> 00:03:27,810
+prove that you can't
+do faster for--
+
+64
+00:03:27,810 --> 00:03:32,330
+does everyone understand--
+remember what find key meant?
+
+65
+00:03:32,330 --> 00:03:36,120
+I have a key, I have a bunch of
+items that have keys associated
+
+66
+00:03:36,120 --> 00:03:39,390
+with them, and I want to see
+if one of the items that I'm
+
+67
+00:03:39,390 --> 00:03:42,480
+storing contains a key
+that is the same as the one
+
+68
+00:03:42,480 --> 00:03:43,890
+that I searched for.
+
+69
+00:03:43,890 --> 00:03:46,680
+The item might
+contain other things,
+
+70
+00:03:46,680 --> 00:03:49,080
+but in particular,
+it has a search key
+
+71
+00:03:49,080 --> 00:03:52,620
+that I'm maintaining the
+set on so that it supports
+
+72
+00:03:52,620 --> 00:03:56,010
+find operations, search
+operations based on that key
+
+73
+00:03:56,010 --> 00:03:56,700
+quickly.
+
+74
+00:03:56,700 --> 00:03:58,790
+Does that make sense?
+
+75
+00:03:58,790 --> 00:04:00,970
+So there's the find one
+that we want to improve,
+
+76
+00:04:00,970 --> 00:04:03,310
+and we also want to
+improve this insert delete.
+
+77
+00:04:03,310 --> 00:04:08,410
+We want to be-- make this data
+structural dynamic, because we
+
+78
+00:04:08,410 --> 00:04:11,840
+might do those
+operations quite a bit.
+
+79
+00:04:11,840 --> 00:04:15,410
+And so this lecture's about
+optimizing those three things.
+
+80
+00:04:15,410 --> 00:04:17,740
+OK, so first, I'm
+going to show you
+
+81
+00:04:17,740 --> 00:04:22,150
+that we can't do faster
+than log n for find, which
+
+82
+00:04:22,150 --> 00:04:23,650
+is a little weird.
+
+83
+00:04:23,650 --> 00:04:26,290
+OK, the model of
+computation I'm going
+
+84
+00:04:26,290 --> 00:04:28,600
+to be proving this
+lower bound on--
+
+85
+00:04:31,168 --> 00:04:33,460
+how I'm going to approach
+this is I'm going to say that
+
+86
+00:04:33,460 --> 00:04:37,390
+any way that I store these--
+
+87
+00:04:37,390 --> 00:04:42,380
+the items that I'm storing
+in this data structure--
+
+88
+00:04:42,380 --> 00:04:45,350
+for anyway I saw these
+things, any algorithm
+
+89
+00:04:45,350 --> 00:04:48,500
+of this certain type
+is going to require
+
+90
+00:04:48,500 --> 00:04:50,090
+at least logarithmic time.
+
+91
+00:04:50,090 --> 00:04:52,580
+That's what we're
+going to try to prove.
+
+92
+00:04:52,580 --> 00:04:55,340
+And the model of
+computation that's
+
+93
+00:04:55,340 --> 00:04:58,370
+weaker than what we've been
+talking about previously
+
+94
+00:04:58,370 --> 00:05:00,440
+is what I'm going to call
+the comparison model.
+
+95
+00:05:04,220 --> 00:05:07,730
+And a comparison model
+means-- is that the items,
+
+96
+00:05:07,730 --> 00:05:10,010
+the objects I'm storing--
+
+97
+00:05:10,010 --> 00:05:12,050
+I can kind of think of
+them as black boxes.
+
+98
+00:05:12,050 --> 00:05:15,380
+I don't get to touch these
+things, except the only way
+
+99
+00:05:15,380 --> 00:05:20,060
+that I can distinguish
+between them is to say,
+
+100
+00:05:20,060 --> 00:05:27,820
+given a key and an item, or two
+items, I can do a comparison
+
+101
+00:05:27,820 --> 00:05:28,960
+on those keys.
+
+102
+00:05:28,960 --> 00:05:31,660
+Are these keys the same?
+
+103
+00:05:31,660 --> 00:05:34,060
+Is this key bigger
+than this one?
+
+104
+00:05:34,060 --> 00:05:35,710
+Is it smaller than this one?
+
+105
+00:05:35,710 --> 00:05:40,450
+Those are the only operations
+I get to do with them.
+
+106
+00:05:40,450 --> 00:05:42,430
+Say, if the keys are
+numbers, I don't get
+
+107
+00:05:42,430 --> 00:05:44,740
+to look at what number that is.
+
+108
+00:05:44,740 --> 00:05:46,810
+I just get to take two
+keys and compare them.
+
+109
+00:05:46,810 --> 00:05:49,660
+And actually, all of
+the search algorithms
+
+110
+00:05:49,660 --> 00:05:53,620
+that we saw on Tuesday we're
+comparison sort algorithms.
+
+111
+00:05:53,620 --> 00:05:56,830
+What you did was stepped
+through the program.
+
+112
+00:05:56,830 --> 00:05:59,290
+At some point, you
+came to a branch
+
+113
+00:05:59,290 --> 00:06:01,990
+and you looked at
+two keys, and you
+
+114
+00:06:01,990 --> 00:06:06,340
+branched based on whether one
+key was bigger than another.
+
+115
+00:06:06,340 --> 00:06:07,540
+That was a comparison.
+
+116
+00:06:07,540 --> 00:06:09,280
+And then you move
+some stuff around,
+
+117
+00:06:09,280 --> 00:06:11,440
+but that was the
+general paradigm.
+
+118
+00:06:11,440 --> 00:06:17,540
+Those three sorting operations
+lived in this comparison model.
+
+119
+00:06:17,540 --> 00:06:20,560
+You've got a
+comparison operations,
+
+120
+00:06:20,560 --> 00:06:25,180
+like are they equal,
+less than, greater than,
+
+121
+00:06:25,180 --> 00:06:28,900
+maybe greater than or
+equal, less than or equal?
+
+122
+00:06:28,900 --> 00:06:30,580
+Generally, you have
+all these operations
+
+123
+00:06:30,580 --> 00:06:32,080
+that you could do--
+maybe not equal.
+
+124
+00:06:35,020 --> 00:06:38,200
+But the key thing here
+is that there are only
+
+125
+00:06:38,200 --> 00:06:40,930
+two possible outputs to
+each of these comparitors.
+
+126
+00:06:44,010 --> 00:06:46,740
+There's only one thing
+that I can branch on.
+
+127
+00:06:46,740 --> 00:06:49,830
+It's going to branch
+into two different lines.
+
+128
+00:06:49,830 --> 00:06:52,920
+It's either true and I do
+some other computation,
+
+129
+00:06:52,920 --> 00:06:56,640
+or it's false and I'll do a
+different set of computation.
+
+130
+00:06:56,640 --> 00:06:58,310
+That makes sense?
+
+131
+00:06:58,310 --> 00:06:59,810
+So what I'm going
+to do is I'm going
+
+132
+00:06:59,810 --> 00:07:02,770
+to give you a comparison--
+
+133
+00:07:02,770 --> 00:07:05,090
+an algorithm in the
+comparison model
+
+134
+00:07:05,090 --> 00:07:08,210
+as what I like to
+call a decision tree.
+
+135
+00:07:08,210 --> 00:07:10,620
+So if I specify an
+algorithm to you,
+
+136
+00:07:10,620 --> 00:07:13,160
+the first thing it's going to
+do-- if I don't compare items
+
+137
+00:07:13,160 --> 00:07:15,890
+at all, I'm kind of
+screwed, because I'll never
+
+138
+00:07:15,890 --> 00:07:17,990
+be able to tell if my
+keys in there or not.
+
+139
+00:07:17,990 --> 00:07:21,120
+So I have to do
+some comparisons.
+
+140
+00:07:21,120 --> 00:07:23,690
+So I'll do some computation.
+
+141
+00:07:23,690 --> 00:07:25,430
+Maybe I find out the
+length of the array
+
+142
+00:07:25,430 --> 00:07:28,040
+and I do some constant time
+stuff, but at some point,
+
+143
+00:07:28,040 --> 00:07:31,880
+I'll do a comparison,
+and I'll branch.
+
+144
+00:07:31,880 --> 00:07:35,600
+I'll come to this node,
+and if the comparison--
+
+145
+00:07:35,600 --> 00:07:37,550
+maybe a less than--
+
+146
+00:07:37,550 --> 00:07:41,240
+if it's true, I'm going to go
+this way in my computation,
+
+147
+00:07:41,240 --> 00:07:45,110
+and if it's false, I'm going to
+go this way in my computation.
+
+148
+00:07:45,110 --> 00:07:51,860
+And I'm going to keep doing
+that with various comparisons--
+
+149
+00:07:51,860 --> 00:08:02,710
+sure-- until I get down
+here to some leaf in which I
+
+150
+00:08:02,710 --> 00:08:04,160
+I'm not branching.
+
+151
+00:08:04,160 --> 00:08:07,860
+The internal nodes here are
+representing comparisons,
+
+152
+00:08:07,860 --> 00:08:09,470
+but the leaves
+are representing--
+
+153
+00:08:09,470 --> 00:08:11,360
+I stopped my computation.
+
+154
+00:08:11,360 --> 00:08:13,680
+I'm outputting something.
+
+155
+00:08:13,680 --> 00:08:16,510
+Does that make sense,
+what I'm trying to do?
+
+156
+00:08:16,510 --> 00:08:20,700
+I'm changing my
+algorithm to be put
+
+157
+00:08:20,700 --> 00:08:24,210
+in this kind of graphical
+way, where I'm branching what
+
+158
+00:08:24,210 --> 00:08:28,650
+my program could possibly
+do based on the comparisons
+
+159
+00:08:28,650 --> 00:08:30,000
+that I do.
+
+160
+00:08:30,000 --> 00:08:33,030
+I'm not actually counting
+the rest of the work
+
+161
+00:08:33,030 --> 00:08:35,010
+that the program does.
+
+162
+00:08:35,010 --> 00:08:37,860
+I'm really only looking
+at the comparisons,
+
+163
+00:08:37,860 --> 00:08:41,880
+because I know that I need to
+compare some things eventually
+
+164
+00:08:41,880 --> 00:08:44,970
+to figure out what my items are.
+
+165
+00:08:44,970 --> 00:08:47,340
+And if that's the only way
+I can distinguish items,
+
+166
+00:08:47,340 --> 00:08:49,890
+then I have to do those
+comparisons to find out.
+
+167
+00:08:49,890 --> 00:08:51,540
+Does that make sense?
+
+168
+00:08:51,540 --> 00:08:56,220
+All right, so what I
+have is a binary tree
+
+169
+00:08:56,220 --> 00:08:58,530
+that's representing
+the comparisons done
+
+170
+00:08:58,530 --> 00:08:59,430
+by the algorithm.
+
+171
+00:08:59,430 --> 00:09:01,510
+OK.
+
+172
+00:09:01,510 --> 00:09:04,570
+So it starts at one comparison
+and then it branches.
+
+173
+00:09:04,570 --> 00:09:07,110
+How many leaves must
+I have in my tree?
+
+174
+00:09:10,510 --> 00:09:15,106
+What does that question mean,
+in terms of the program?
+
+175
+00:09:15,106 --> 00:09:16,477
+AUDIENCE: [INAUDIBLE]
+
+176
+00:09:16,477 --> 00:09:17,310
+JASON KU: What's up?
+
+177
+00:09:17,310 --> 00:09:18,720
+AUDIENCE: The number
+of comparisons--
+
+178
+00:09:18,720 --> 00:09:20,160
+JASON KU: The number
+of comparisons-- no,
+
+179
+00:09:20,160 --> 00:09:21,618
+that's the number
+of internal nodes
+
+180
+00:09:21,618 --> 00:09:23,310
+that I have in the algorithm.
+
+181
+00:09:23,310 --> 00:09:25,620
+And actually, the
+number of comparisons
+
+182
+00:09:25,620 --> 00:09:27,510
+that I do in an execution
+of the algorithm
+
+183
+00:09:27,510 --> 00:09:32,942
+is just along a path from
+here to the-- to a leaf.
+
+184
+00:09:32,942 --> 00:09:34,650
+So what do the leaves
+actually represent?
+
+185
+00:09:34,650 --> 00:09:36,290
+Those represent outputs.
+
+186
+00:09:36,290 --> 00:09:39,470
+I'm going to output
+something here.
+
+187
+00:09:39,470 --> 00:09:40,366
+Yep?
+
+188
+00:09:40,366 --> 00:09:41,300
+AUDIENCE: [INAUDIBLE]
+
+189
+00:09:41,300 --> 00:09:42,050
+JASON KU: The number of--
+
+190
+00:09:42,050 --> 00:09:42,550
+OK.
+
+191
+00:09:45,440 --> 00:09:47,570
+So what is the output
+to my search algorithm?
+
+192
+00:09:47,570 --> 00:09:52,660
+Maybe it's the-- an index of
+an item that contains this key.
+
+193
+00:09:52,660 --> 00:09:58,000
+Or maybe I return the
+item is the output--
+
+194
+00:09:58,000 --> 00:09:59,830
+the item of the
+thing I'm storing.
+
+195
+00:09:59,830 --> 00:10:04,720
+And I'm storing n things, so
+I need at least n outputs,
+
+196
+00:10:04,720 --> 00:10:07,870
+because I need to be able
+to return any of the items
+
+197
+00:10:07,870 --> 00:10:11,080
+that I'm storing based on a
+different search parameter,
+
+198
+00:10:11,080 --> 00:10:12,520
+if it's going to be correct.
+
+199
+00:10:12,520 --> 00:10:13,900
+I actually need one more output.
+
+200
+00:10:13,900 --> 00:10:15,150
+Why do I need one more output?
+
+201
+00:10:17,700 --> 00:10:20,620
+If it's not in there--
+
+202
+00:10:20,620 --> 00:10:26,710
+so any correct comparison
+searching algorithm--
+
+203
+00:10:26,710 --> 00:10:30,010
+I'm doing some comparisons
+to find this thing--
+
+204
+00:10:30,010 --> 00:10:34,375
+needs to have at
+least n plus 1 leaves.
+
+205
+00:10:38,280 --> 00:10:41,280
+Otherwise, it can't be correct,
+because I could look up
+
+206
+00:10:41,280 --> 00:10:44,880
+the one that I'm not
+returning in that set
+
+207
+00:10:44,880 --> 00:10:47,950
+and it would never be
+able to return that value.
+
+208
+00:10:47,950 --> 00:10:50,020
+Does that make sense?
+
+209
+00:10:50,020 --> 00:10:50,755
+Yeah?
+
+210
+00:10:50,755 --> 00:10:51,630
+AUDIENCE: [INAUDIBLE]
+
+211
+00:10:51,630 --> 00:10:53,730
+JASON KU: What's n?
+
+212
+00:10:53,730 --> 00:10:55,320
+For a data structure,
+n is the number
+
+213
+00:10:55,320 --> 00:10:58,720
+of things stored in that
+data structure at that time--
+
+214
+00:10:58,720 --> 00:11:00,660
+so the number of items
+in the data structure.
+
+215
+00:11:00,660 --> 00:11:03,060
+That's what it means
+in all of these tables.
+
+216
+00:11:03,060 --> 00:11:05,630
+Any other questions?
+
+217
+00:11:05,630 --> 00:11:09,610
+OK, so now we get
+to the fun part.
+
+218
+00:11:09,610 --> 00:11:13,540
+How many comparisons does
+this algorithm have to do?
+
+219
+00:11:16,660 --> 00:11:17,806
+Yeah, up there--
+
+220
+00:11:17,806 --> 00:11:19,750
+AUDIENCE: [INAUDIBLE]
+
+221
+00:11:19,750 --> 00:11:22,310
+JASON KU: What's up?
+
+222
+00:11:22,310 --> 00:11:25,460
+All right, your colleague is
+jumping ahead for a second,
+
+223
+00:11:25,460 --> 00:11:30,140
+but really, I have to do as many
+comparisons in the worst case
+
+224
+00:11:30,140 --> 00:11:35,340
+as the longest root-to-leaf
+path in this tree--
+
+225
+00:11:35,340 --> 00:11:37,470
+because as I'm executing
+this algorithm,
+
+226
+00:11:37,470 --> 00:11:42,860
+I'll go down this thing,
+always branching down,
+
+227
+00:11:42,860 --> 00:11:44,840
+and at some point,
+I'll get to a leaf.
+
+228
+00:11:44,840 --> 00:11:47,180
+And in the worst
+case, if I happen
+
+229
+00:11:47,180 --> 00:11:51,200
+to need to return this
+particular output,
+
+230
+00:11:51,200 --> 00:11:55,550
+then I'll have to walk down the
+longest thing, just the longest
+
+231
+00:11:55,550 --> 00:11:57,180
+path.
+
+232
+00:11:57,180 --> 00:12:01,580
+So then the longest path is the
+same as the height of the tree,
+
+233
+00:12:01,580 --> 00:12:04,040
+so the question
+then becomes, what
+
+234
+00:12:04,040 --> 00:12:10,790
+is the minimum height of any
+binary tree that has at least n
+
+235
+00:12:10,790 --> 00:12:13,784
+plus 1 leaves?
+
+236
+00:12:13,784 --> 00:12:18,830
+Does everyone understand why
+we're asking that question?
+
+237
+00:12:18,830 --> 00:12:19,643
+Yeah?
+
+238
+00:12:19,643 --> 00:12:22,433
+AUDIENCE: Could you over again
+why it needs n plus 1 leaves?
+
+239
+00:12:22,433 --> 00:12:24,100
+JASON KU: Why it needs
+n plus 1 leaves--
+
+240
+00:12:24,100 --> 00:12:27,640
+if it's a correct algorithm,
+it needs to return--
+
+241
+00:12:27,640 --> 00:12:30,220
+it needs to be able to
+return any of the n items
+
+242
+00:12:30,220 --> 00:12:33,640
+that I'm storing or say that
+the key that I'm looking for
+
+243
+00:12:33,640 --> 00:12:35,740
+is not there--
+
+244
+00:12:35,740 --> 00:12:37,720
+great question.
+
+245
+00:12:37,720 --> 00:12:40,300
+OK, so what is
+the minimum height
+
+246
+00:12:40,300 --> 00:12:44,590
+of any binary tree
+that has n plus 1--
+
+247
+00:12:44,590 --> 00:12:48,247
+at least n plus 1 leaves?
+
+248
+00:12:48,247 --> 00:12:50,080
+You can actually state
+a recurrence for that
+
+249
+00:12:50,080 --> 00:12:50,710
+and solve that.
+
+250
+00:12:50,710 --> 00:12:52,502
+You're going to do that
+in your recitation.
+
+251
+00:12:52,502 --> 00:12:53,980
+But it's log n.
+
+252
+00:12:53,980 --> 00:12:57,950
+The best you can do is if this
+is a balanced binary tree.
+
+253
+00:12:57,950 --> 00:13:10,600
+So the min height is going
+to be at least log n height.
+
+254
+00:13:14,760 --> 00:13:17,500
+Or the min height
+is logarithmic,
+
+255
+00:13:17,500 --> 00:13:19,080
+so it's actually
+theta right here.
+
+256
+00:13:19,080 --> 00:13:21,810
+But if I just said
+height here, I
+
+257
+00:13:21,810 --> 00:13:24,630
+would be lower
+bounding the height.
+
+258
+00:13:24,630 --> 00:13:28,800
+I could have a linear height,
+if I just changed comparisons
+
+259
+00:13:28,800 --> 00:13:34,050
+down one by one, if I was doing
+a linear search, for example.
+
+260
+00:13:34,050 --> 00:13:36,990
+All right, so this is saying
+that, if I'm just restricting
+
+261
+00:13:36,990 --> 00:13:40,680
+to comparisons, I have to
+spend at least logarithmic time
+
+262
+00:13:40,680 --> 00:13:43,680
+to be able to find whether
+this key is in my set.
+
+263
+00:13:46,613 --> 00:13:48,030
+But I don't want
+logarithmic time.
+
+264
+00:13:48,030 --> 00:13:49,930
+I want faster.
+
+265
+00:13:49,930 --> 00:13:51,085
+So how can I do that?
+
+266
+00:13:51,085 --> 00:13:51,960
+AUDIENCE: [INAUDIBLE]
+
+267
+00:13:51,960 --> 00:13:54,660
+JASON KU: I have one operation
+in my model of computation
+
+268
+00:13:54,660 --> 00:13:56,970
+I presented a
+couple of weeks ago
+
+269
+00:13:56,970 --> 00:14:00,480
+that allows me to do faster,
+which allows me to do something
+
+270
+00:14:00,480 --> 00:14:03,240
+stronger than comparisons.
+
+271
+00:14:03,240 --> 00:14:06,720
+Comparisons have a
+constant branching factor.
+
+272
+00:14:06,720 --> 00:14:08,850
+In particular, I can--
+
+273
+00:14:08,850 --> 00:14:11,730
+if I do this operation-- this
+constant time operation--
+
+274
+00:14:11,730 --> 00:14:17,350
+I can branch to two
+different locations.
+
+275
+00:14:17,350 --> 00:14:21,630
+It's like an if kind of
+situation-- if, or else.
+
+276
+00:14:21,630 --> 00:14:24,540
+And in fact, if I had
+constant branching factor
+
+277
+00:14:24,540 --> 00:14:28,360
+for any constant here--
+
+278
+00:14:28,360 --> 00:14:31,210
+if I had three or four, if
+it was bounded by a constant,
+
+279
+00:14:31,210 --> 00:14:32,800
+the height of this
+tree would still
+
+280
+00:14:32,800 --> 00:14:36,070
+be bounded by a log
+base the constant
+
+281
+00:14:36,070 --> 00:14:39,490
+of that number of leaves.
+
+282
+00:14:39,490 --> 00:14:42,220
+So I need, in some sense,
+to be able to branch
+
+283
+00:14:42,220 --> 00:14:45,860
+a non-constant amount.
+
+284
+00:14:45,860 --> 00:14:49,530
+So how can I branch a
+non-constant amount?
+
+285
+00:14:49,530 --> 00:14:51,870
+This is a little tricky.
+
+286
+00:14:51,870 --> 00:14:57,390
+We had this really neat
+operation in the random access
+
+287
+00:14:57,390 --> 00:15:01,440
+machine that we
+could randomly go
+
+288
+00:15:01,440 --> 00:15:03,540
+to any place in memory
+in constant time
+
+289
+00:15:03,540 --> 00:15:04,350
+based on a number.
+
+290
+00:15:08,250 --> 00:15:10,020
+That was a super
+powerful thing, because
+
+291
+00:15:10,020 --> 00:15:12,450
+within a single
+constant time operation,
+
+292
+00:15:12,450 --> 00:15:15,450
+I could go to any
+space in memory.
+
+293
+00:15:15,450 --> 00:15:19,050
+That's potentially much larger
+than linear branching factor,
+
+294
+00:15:19,050 --> 00:15:20,490
+depending on the
+size of my model
+
+295
+00:15:20,490 --> 00:15:22,620
+and the size of my machine.
+
+296
+00:15:22,620 --> 00:15:24,270
+So that's a very
+powerful operation.
+
+297
+00:15:24,270 --> 00:15:27,328
+Can we use that to find quicker?
+
+298
+00:15:27,328 --> 00:15:28,245
+Anyone have any ideas?
+
+299
+00:15:31,420 --> 00:15:32,210
+Sure.
+
+300
+00:15:32,210 --> 00:15:33,103
+AUDIENCE: [INAUDIBLE]
+
+301
+00:15:33,103 --> 00:15:35,270
+JASON KU: We're going to
+get to hashing in a second,
+
+302
+00:15:35,270 --> 00:15:40,640
+but this is a simpler
+concept than hashing--
+
+303
+00:15:40,640 --> 00:15:44,280
+something you probably
+are familiar with already.
+
+304
+00:15:44,280 --> 00:15:46,350
+We've kind of been
+using it implicitly
+
+305
+00:15:46,350 --> 00:15:50,240
+in some of our sequence
+data structure things.
+
+306
+00:15:50,240 --> 00:15:57,860
+What we're going to do is, if
+I have an item that has key 10,
+
+307
+00:15:57,860 --> 00:16:04,110
+I'm going to keep an array and
+store that item 10 spaces away
+
+308
+00:16:04,110 --> 00:16:07,860
+from the front of the
+array, right at index 9,
+
+309
+00:16:07,860 --> 00:16:09,840
+or the 10th index.
+
+310
+00:16:09,840 --> 00:16:11,400
+Does that make sense?
+
+311
+00:16:11,400 --> 00:16:14,770
+If I store that item at
+that location in memory,
+
+312
+00:16:14,770 --> 00:16:19,602
+I can use this random
+access to that location
+
+313
+00:16:19,602 --> 00:16:21,060
+and see if there's
+something there.
+
+314
+00:16:21,060 --> 00:16:23,018
+If there's something
+there, I return that item.
+
+315
+00:16:23,018 --> 00:16:24,930
+Does that make sense?
+
+316
+00:16:24,930 --> 00:16:26,930
+This is what I call a
+direct access array.
+
+317
+00:16:29,700 --> 00:16:32,160
+It's really no different
+than the arrays
+
+318
+00:16:32,160 --> 00:16:38,170
+that we've been talking
+about earlier in the class.
+
+319
+00:16:38,170 --> 00:16:43,690
+We got an array, and
+if I have an item here
+
+320
+00:16:43,690 --> 00:16:50,080
+with key equals 10, I'll stick
+it here in the 10th place.
+
+321
+00:16:50,080 --> 00:16:56,210
+Now, I can only now store
+one item with the key 10
+
+322
+00:16:56,210 --> 00:16:58,940
+in my thing, and that's
+one of the stipulations we
+
+323
+00:16:58,940 --> 00:17:00,500
+had on our set data structures.
+
+324
+00:17:00,500 --> 00:17:03,073
+If we tried to insert
+something with the same key
+
+325
+00:17:03,073 --> 00:17:04,490
+as something already
+stored there,
+
+326
+00:17:04,490 --> 00:17:06,380
+we're going to replace the item.
+
+327
+00:17:06,380 --> 00:17:09,530
+That's what the semantics
+of our set interface was.
+
+328
+00:17:09,530 --> 00:17:10,220
+But that's OK.
+
+329
+00:17:10,220 --> 00:17:14,859
+That's satisfying the
+conditions of our set interface.
+
+330
+00:17:14,859 --> 00:17:17,670
+So if we store it
+there, that's fantastic.
+
+331
+00:17:17,670 --> 00:17:19,589
+How long does it
+take to find, if we
+
+332
+00:17:19,589 --> 00:17:23,240
+have an item with the key 10?
+
+333
+00:17:23,240 --> 00:17:25,700
+It takes constant
+time, worst case--
+
+334
+00:17:25,700 --> 00:17:27,150
+great.
+
+335
+00:17:27,150 --> 00:17:29,385
+How about inserting
+or deleting something?
+
+336
+00:17:29,385 --> 00:17:30,673
+AUDIENCE: [INAUDIBLE]
+
+337
+00:17:30,673 --> 00:17:31,590
+JASON KU: What's that?
+
+338
+00:17:31,590 --> 00:17:32,590
+AUDIENCE: [INAUDIBLE]
+
+339
+00:17:32,590 --> 00:17:34,300
+JASON KU: Again, constant time--
+
+340
+00:17:34,300 --> 00:17:36,273
+we've solved all our problems.
+
+341
+00:17:36,273 --> 00:17:36,940
+This is amazing.
+
+342
+00:17:39,540 --> 00:17:40,620
+OK.
+
+343
+00:17:40,620 --> 00:17:42,090
+What's not amazing about this?
+
+344
+00:17:42,090 --> 00:17:43,800
+Why don't we just do
+this all the time?
+
+345
+00:17:47,550 --> 00:17:50,190
+Yeah?
+
+346
+00:17:50,190 --> 00:17:53,450
+AUDIENCE: You don't know
+how high the numbers go.
+
+347
+00:17:53,450 --> 00:17:56,820
+JASON KU: I don't know
+how high the numbers go.
+
+348
+00:17:56,820 --> 00:17:59,430
+So let's say I'm
+storing, I don't know,
+
+349
+00:17:59,430 --> 00:18:03,720
+a number associated with
+that the 300 or 400 of you
+
+350
+00:18:03,720 --> 00:18:05,220
+that are in this classroom.
+
+351
+00:18:08,290 --> 00:18:10,330
+But I'm storing your MIT IDs.
+
+352
+00:18:10,330 --> 00:18:12,080
+How big are those numbers?
+
+353
+00:18:12,080 --> 00:18:15,190
+Those are like
+nine-digit numbers--
+
+354
+00:18:15,190 --> 00:18:17,370
+pretty long numbers.
+
+355
+00:18:17,370 --> 00:18:21,380
+So what I would need to do--
+and if I was storing your keys
+
+356
+00:18:21,380 --> 00:18:25,460
+as MIT IDs, I
+would need an array
+
+357
+00:18:25,460 --> 00:18:28,380
+that has indices
+that span the tire
+
+358
+00:18:28,380 --> 00:18:33,030
+space of nine-digit numbers.
+
+359
+00:18:33,030 --> 00:18:37,110
+That's like 10 to the--
+
+360
+00:18:37,110 --> 00:18:37,860
+10 to the 9.
+
+361
+00:18:37,860 --> 00:18:38,640
+Thank you.
+
+362
+00:18:38,640 --> 00:18:43,500
+10 to the 9 is the size of
+a direct access road off
+
+363
+00:18:43,500 --> 00:18:50,010
+to build to be able
+to use this technique
+
+364
+00:18:50,010 --> 00:18:54,480
+to create a direct access array
+to search on your MIT IDs,
+
+365
+00:18:54,480 --> 00:18:57,570
+when there's only really
+300 of you in here.
+
+366
+00:18:57,570 --> 00:19:00,870
+So 300 or 400 is
+an n that's much
+
+367
+00:19:00,870 --> 00:19:03,030
+smaller than the
+size of the numbers
+
+368
+00:19:03,030 --> 00:19:04,330
+that I'm trying to store.
+
+369
+00:19:04,330 --> 00:19:06,000
+What I'm going to
+use as a variable
+
+370
+00:19:06,000 --> 00:19:09,030
+to talk about the size of
+the numbers I'm storing--
+
+371
+00:19:09,030 --> 00:19:12,210
+I'm going to say u is the
+maximum size of any number
+
+372
+00:19:12,210 --> 00:19:13,770
+that I'm storing.
+
+373
+00:19:13,770 --> 00:19:17,910
+It's the size of the universe of
+space of keys that I'm storing.
+
+374
+00:19:17,910 --> 00:19:19,320
+Does that make sense?
+
+375
+00:19:19,320 --> 00:19:24,330
+OK, so to instantiate a direct
+access array of that size,
+
+376
+00:19:24,330 --> 00:19:26,920
+I have to allocate
+that amount of space.
+
+377
+00:19:26,920 --> 00:19:31,140
+And so if that is
+much bigger than n,
+
+378
+00:19:31,140 --> 00:19:34,020
+then I'm kind of
+screwed, because I'm
+
+379
+00:19:34,020 --> 00:19:36,030
+using much more space.
+
+380
+00:19:36,030 --> 00:19:40,530
+And these order operations are
+bad also, because essentially,
+
+381
+00:19:40,530 --> 00:19:46,020
+if I am storing these
+things non-continuously,
+
+382
+00:19:46,020 --> 00:19:48,450
+I kind of just have
+to scan down the thing
+
+383
+00:19:48,450 --> 00:19:52,930
+to find the next
+element, for example.
+
+384
+00:19:52,930 --> 00:19:53,972
+OK, what's your question?
+
+385
+00:19:53,972 --> 00:19:55,388
+AUDIENCE: Is a
+direct access array
+
+386
+00:19:55,388 --> 00:19:56,890
+a sequence data structure?
+
+387
+00:19:56,890 --> 00:19:59,532
+JASON KU: A direct access
+array is a set data structure.
+
+388
+00:19:59,532 --> 00:20:01,240
+That's why it's a set
+interface up there.
+
+389
+00:20:05,670 --> 00:20:09,390
+Your colleague is asking whether
+you can use a direct accessory
+
+390
+00:20:09,390 --> 00:20:10,320
+to implement a set--
+
+391
+00:20:10,320 --> 00:20:11,580
+I mean a sequence.
+
+392
+00:20:11,580 --> 00:20:14,790
+And actually, I think you'll
+see in your recitation notes,
+
+393
+00:20:14,790 --> 00:20:19,140
+you have code that can
+take a set data structure
+
+394
+00:20:19,140 --> 00:20:20,850
+and implement sequence
+data structure,
+
+395
+00:20:20,850 --> 00:20:23,370
+and take sequence data structure
+and implement a set data
+
+396
+00:20:23,370 --> 00:20:24,723
+structure.
+
+397
+00:20:24,723 --> 00:20:26,890
+They just won't necessarily
+have very good run time.
+
+398
+00:20:26,890 --> 00:20:29,440
+So this direct access
+array semantics
+
+399
+00:20:29,440 --> 00:20:34,055
+is really just good for these
+specific set operations.
+
+400
+00:20:34,055 --> 00:20:35,100
+Does that makes sense?
+
+401
+00:20:35,100 --> 00:20:35,600
+Yeah?
+
+402
+00:20:35,600 --> 00:20:36,980
+AUDIENCE: What is u?
+
+403
+00:20:36,980 --> 00:20:39,410
+JASON KU: u is this the
+size of the largest key
+
+404
+00:20:39,410 --> 00:20:40,910
+that I'm allowed to store.
+
+405
+00:20:40,910 --> 00:20:42,920
+That makes sense?
+
+406
+00:20:42,920 --> 00:20:47,375
+The direct access array is
+supporting up to u size keys.
+
+407
+00:20:47,375 --> 00:20:48,920
+Does that make sense?
+
+408
+00:20:48,920 --> 00:20:51,750
+OK, we're going to
+move on for a second.
+
+409
+00:20:51,750 --> 00:20:52,860
+That's the problem, right?
+
+410
+00:20:52,860 --> 00:20:59,475
+When u largest key--
+
+411
+00:21:01,980 --> 00:21:04,650
+we're assuming integers here--
+
+412
+00:21:04,650 --> 00:21:10,200
+integer keys-- so in
+the comparison model,
+
+413
+00:21:10,200 --> 00:21:12,600
+we could store any
+arbitrary objects
+
+414
+00:21:12,600 --> 00:21:14,460
+that supported a comparison.
+
+415
+00:21:14,460 --> 00:21:17,850
+Here we really need
+to have integer keys,
+
+416
+00:21:17,850 --> 00:21:21,810
+or else we're not going to be
+able to use those as addresses.
+
+417
+00:21:21,810 --> 00:21:25,740
+So we're making an
+assumption on the inputs
+
+418
+00:21:25,740 --> 00:21:27,600
+that I can only
+store integers now.
+
+419
+00:21:27,600 --> 00:21:29,820
+I can't store
+arbitrary objects--
+
+420
+00:21:29,820 --> 00:21:31,530
+items with keys.
+
+421
+00:21:31,530 --> 00:21:34,800
+And in particular, I also
+need to-- this is a subtlety
+
+422
+00:21:34,800 --> 00:21:36,870
+that's in the word RAM model--
+
+423
+00:21:36,870 --> 00:21:39,960
+how can I be assured
+that these keys can
+
+424
+00:21:39,960 --> 00:21:41,400
+be looked up in constant time?
+
+425
+00:21:44,130 --> 00:21:46,190
+I have this little CPU.
+
+426
+00:21:46,190 --> 00:21:49,310
+It's got some number of
+registers it can act upon.
+
+427
+00:21:49,310 --> 00:21:52,604
+How big is those registers?
+
+428
+00:21:52,604 --> 00:21:53,580
+AUDIENCE: [INAUDIBLE]
+
+429
+00:21:53,580 --> 00:21:54,205
+JASON KU: What?
+
+430
+00:21:56,360 --> 00:21:59,390
+Right now, they're 64 bits,
+but in general, they're w.
+
+431
+00:21:59,390 --> 00:22:04,790
+They're the size of your
+word on your machine.
+
+432
+00:22:04,790 --> 00:22:09,290
+2 to the w is the number
+of dresses I can access.
+
+433
+00:22:09,290 --> 00:22:11,930
+If I'm going to be able to
+use this direct accessory,
+
+434
+00:22:11,930 --> 00:22:19,220
+I need to make sure that the
+u is less than 2 to the w,
+
+435
+00:22:19,220 --> 00:22:22,970
+if I want these operations
+to run in constant time.
+
+436
+00:22:22,970 --> 00:22:25,670
+If I have kids that are
+much larger than this,
+
+437
+00:22:25,670 --> 00:22:28,730
+I'm going to need to
+do something else,
+
+438
+00:22:28,730 --> 00:22:30,410
+but this is kind
+of the assumption.
+
+439
+00:22:30,410 --> 00:22:34,010
+In this class, when we give
+you an array of integers,
+
+440
+00:22:34,010 --> 00:22:35,570
+or an array of
+strings, or something
+
+441
+00:22:35,570 --> 00:22:38,780
+like that on your
+problem or on an exam,
+
+442
+00:22:38,780 --> 00:22:41,990
+the assumption is,
+unless we give you bounds
+
+443
+00:22:41,990 --> 00:22:45,530
+on the size of those things--
+
+444
+00:22:45,530 --> 00:22:47,690
+like the number of
+characters in your string
+
+445
+00:22:47,690 --> 00:22:49,370
+or the size of the
+number in the--
+
+446
+00:22:49,370 --> 00:22:53,690
+you can assume that those things
+will fit in one word of memory.
+
+447
+00:22:58,690 --> 00:23:04,040
+w is the word size of your
+machine, the number of bits
+
+448
+00:23:04,040 --> 00:23:08,960
+that your machine can do
+operations on in constant time.
+
+449
+00:23:08,960 --> 00:23:10,560
+Any other questions?
+
+450
+00:23:10,560 --> 00:23:12,390
+OK, so we have this problem.
+
+451
+00:23:12,390 --> 00:23:15,710
+We're using way too
+much space, when we
+
+452
+00:23:15,710 --> 00:23:18,320
+have a large universe of keys.
+
+453
+00:23:18,320 --> 00:23:24,140
+So how do we get around
+that Problem any ideas?
+
+454
+00:23:28,930 --> 00:23:29,928
+Sure.
+
+455
+00:23:29,928 --> 00:23:31,345
+AUDIENCE: Instead
+of [INAUDIBLE]..
+
+456
+00:23:36,180 --> 00:23:39,210
+JASON KU: OK, so what
+your colleague is saying--
+
+457
+00:23:39,210 --> 00:23:43,110
+instead of just storing
+one value at each place,
+
+458
+00:23:43,110 --> 00:23:47,170
+maybe store more than one value.
+
+459
+00:23:47,170 --> 00:23:50,590
+If we're using
+this idea, where I
+
+460
+00:23:50,590 --> 00:23:53,920
+am storing my key at
+the index of the key,
+
+461
+00:23:53,920 --> 00:23:55,750
+that's getting
+around the us having
+
+462
+00:23:55,750 --> 00:23:58,480
+to have unique keys
+in our data structure.
+
+463
+00:23:58,480 --> 00:24:02,590
+It's not getting around
+this space usage problem.
+
+464
+00:24:02,590 --> 00:24:04,740
+Does that make sense?
+
+465
+00:24:04,740 --> 00:24:09,000
+We will end up storing
+multiple things at indices,
+
+466
+00:24:09,000 --> 00:24:13,290
+but there's another trick that
+I'm looking for right now.
+
+467
+00:24:13,290 --> 00:24:16,230
+We have a lot of
+space that we would
+
+468
+00:24:16,230 --> 00:24:19,710
+need to allocate for
+this data structure.
+
+469
+00:24:19,710 --> 00:24:22,870
+What's an alternative?
+
+470
+00:24:22,870 --> 00:24:25,880
+Instead of allocating a
+lot of space, we allocate--
+
+471
+00:24:28,460 --> 00:24:30,785
+less space.
+
+472
+00:24:30,785 --> 00:24:31,910
+Let's allocate less space.
+
+473
+00:24:31,910 --> 00:24:32,410
+All right.
+
+474
+00:24:36,270 --> 00:24:38,145
+This is our space of keys, u.
+
+475
+00:24:40,920 --> 00:24:47,040
+But instead, I want to store
+those things in a direct access
+
+476
+00:24:47,040 --> 00:24:53,902
+array of maybe size n, something
+like the order of the things
+
+477
+00:24:53,902 --> 00:24:55,110
+that I'm going to be storing.
+
+478
+00:24:55,110 --> 00:24:57,480
+I'm going to relax
+that and say we're
+
+479
+00:24:57,480 --> 00:25:00,780
+going to make this
+a length m that's
+
+480
+00:25:00,780 --> 00:25:04,950
+around the size of the
+things I'm storing.
+
+481
+00:25:07,757 --> 00:25:09,590
+And what I'm going to
+do is I'm going to try
+
+482
+00:25:09,590 --> 00:25:12,110
+to map this space of keys--
+
+483
+00:25:12,110 --> 00:25:16,160
+this large space of
+keys, from 0 to u minus 1
+
+484
+00:25:16,160 --> 00:25:18,620
+or something like that--
+
+485
+00:25:18,620 --> 00:25:21,870
+down to arrange
+that 0 to m minus 1.
+
+486
+00:25:24,570 --> 00:25:26,860
+I'm going to want a function--
+
+487
+00:25:26,860 --> 00:25:29,100
+this is what I'm
+going to call h--
+
+488
+00:25:29,100 --> 00:25:37,150
+which maps this range
+down to a smaller range.
+
+489
+00:25:40,700 --> 00:25:41,630
+Does that make sense?
+
+490
+00:25:41,630 --> 00:25:43,130
+I'm going to have
+some function that
+
+491
+00:25:43,130 --> 00:25:44,960
+takes that large base of keys--
+
+492
+00:25:44,960 --> 00:25:46,130
+sticks them down here.
+
+493
+00:25:48,760 --> 00:25:55,130
+And instead of staring
+at an index of the key,
+
+494
+00:25:55,130 --> 00:25:58,810
+I'm going to put the key through
+this function, the key space,
+
+495
+00:25:58,810 --> 00:26:02,510
+into a compressed
+space and store it
+
+496
+00:26:02,510 --> 00:26:05,190
+at that index location.
+
+497
+00:26:05,190 --> 00:26:06,670
+Does that make sense?
+
+498
+00:26:06,670 --> 00:26:07,527
+Sure.
+
+499
+00:26:07,527 --> 00:26:10,330
+AUDIENCE: [INAUDIBLE]
+
+500
+00:26:10,330 --> 00:26:12,020
+JASON KU: Your colleague is--
+
+501
+00:26:12,020 --> 00:26:15,910
+comes up with the question I
+was going to ask right away,
+
+502
+00:26:15,910 --> 00:26:17,930
+which was, what's
+the problem here?
+
+503
+00:26:17,930 --> 00:26:21,250
+The problem is it's the
+potential that we might be--
+
+504
+00:26:21,250 --> 00:26:26,130
+have to store more than
+one thing at the same index
+
+505
+00:26:26,130 --> 00:26:27,930
+location.
+
+506
+00:26:27,930 --> 00:26:31,560
+If I have a function that
+matches this big space down
+
+507
+00:26:31,560 --> 00:26:36,450
+to this small
+space, I got to have
+
+508
+00:26:36,450 --> 00:26:40,530
+multiple of these things going
+to the same places here, right?
+
+509
+00:26:40,530 --> 00:26:44,130
+It can't be objective.
+
+510
+00:26:44,130 --> 00:26:45,870
+But just based on
+pigeonhole principle,
+
+511
+00:26:45,870 --> 00:26:47,490
+I have more of these things.
+
+512
+00:26:47,490 --> 00:26:50,140
+At least two of them have to
+go to something over here.
+
+513
+00:26:50,140 --> 00:26:54,930
+In fact, if I have, say, u
+is bigger than n squared,
+
+514
+00:26:54,930 --> 00:26:58,180
+for example, there--
+
+515
+00:26:58,180 --> 00:27:00,430
+for any function I
+give you that maps
+
+516
+00:27:00,430 --> 00:27:05,110
+this large space down to the
+small space, n of these things
+
+517
+00:27:05,110 --> 00:27:08,050
+will map to the same place.
+
+518
+00:27:08,050 --> 00:27:11,770
+So if I choose a
+bad function here,
+
+519
+00:27:11,770 --> 00:27:16,130
+then I'll have to store n things
+at the same index location.
+
+520
+00:27:16,130 --> 00:27:19,330
+And if I go there,
+I have to check
+
+521
+00:27:19,330 --> 00:27:21,125
+to see whether any of
+those are the things
+
+522
+00:27:21,125 --> 00:27:22,000
+that I'm looking for.
+
+523
+00:27:22,000 --> 00:27:23,680
+I haven't gained anything.
+
+524
+00:27:23,680 --> 00:27:27,160
+I really want a hash function
+that will evenly distribute
+
+525
+00:27:27,160 --> 00:27:29,140
+keys over this space.
+
+526
+00:27:32,430 --> 00:27:34,320
+Does that make sense?
+
+527
+00:27:34,320 --> 00:27:35,800
+But we have a problem here.
+
+528
+00:27:35,800 --> 00:27:37,980
+If we need to store
+multiple things
+
+529
+00:27:37,980 --> 00:27:41,610
+at a given location in memory--
+
+530
+00:27:41,610 --> 00:27:42,270
+can't do that.
+
+531
+00:27:42,270 --> 00:27:44,470
+I have one thing
+I can put there.
+
+532
+00:27:44,470 --> 00:27:46,650
+So I have two options
+on how to deal--
+
+533
+00:27:46,650 --> 00:27:49,140
+what I call collisions.
+
+534
+00:27:49,140 --> 00:27:52,860
+If I have two items
+here, like a and b,
+
+535
+00:27:52,860 --> 00:27:58,750
+these are different keys
+in my universe of space.
+
+536
+00:27:58,750 --> 00:28:02,140
+But it's possible that
+they both map down
+
+537
+00:28:02,140 --> 00:28:07,240
+to some hash that
+has the same value.
+
+538
+00:28:10,950 --> 00:28:14,020
+If I first hash a, and a is--
+
+539
+00:28:14,020 --> 00:28:17,470
+I put a there, where do I put b?
+
+540
+00:28:22,170 --> 00:28:25,640
+There are two options.
+
+541
+00:28:25,640 --> 00:28:28,920
+AUDIENCE: Is the second
+data structure [INAUDIBLE]
+
+542
+00:28:28,920 --> 00:28:31,770
+so that it can
+store [INAUDIBLE]??
+
+543
+00:28:31,770 --> 00:28:34,410
+JASON KU: OK, so what
+your colleague is saying--
+
+544
+00:28:34,410 --> 00:28:36,200
+can I store this one
+is a linked list,
+
+545
+00:28:36,200 --> 00:28:40,930
+and then I can just insert a
+guy right next to where it was?
+
+546
+00:28:40,930 --> 00:28:43,630
+What's the problem there?
+
+547
+00:28:43,630 --> 00:28:48,550
+Are linked lists good with
+direct accessing by an index?
+
+548
+00:28:48,550 --> 00:28:51,040
+No, they're terrible
+with get_at and set_at
+
+549
+00:28:51,040 --> 00:28:53,140
+They take linear time there.
+
+550
+00:28:53,140 --> 00:28:55,570
+So really, the whole
+point of direct this array
+
+551
+00:28:55,570 --> 00:28:57,370
+is that there is an
+array underneath,
+
+552
+00:28:57,370 --> 00:28:59,830
+and I can do this
+index arithmetic
+
+553
+00:28:59,830 --> 00:29:01,590
+and go down to the next thing.
+
+554
+00:29:01,590 --> 00:29:03,340
+So I really don't want
+to replace a linked
+
+555
+00:29:03,340 --> 00:29:07,460
+list as this data structure.
+
+556
+00:29:07,460 --> 00:29:07,960
+Yeah?
+
+557
+00:29:10,510 --> 00:29:11,556
+What's up?
+
+558
+00:29:11,556 --> 00:29:13,990
+AUDIENCE: [INAUDIBLE]
+
+559
+00:29:13,990 --> 00:29:15,730
+JASON KU: We can make
+it really unlikely.
+
+560
+00:29:15,730 --> 00:29:17,380
+Sure.
+
+561
+00:29:17,380 --> 00:29:19,840
+I don't know what likely
+means, because I'm
+
+562
+00:29:19,840 --> 00:29:22,438
+giving you a hash function--
+one hash function.
+
+563
+00:29:22,438 --> 00:29:23,980
+And I don't know
+what the inputs are.
+
+564
+00:29:23,980 --> 00:29:26,200
+Yeah?
+
+565
+00:29:26,200 --> 00:29:26,890
+Go ahead.
+
+566
+00:29:26,890 --> 00:29:31,630
+AUDIENCE: [INAUDIBLE]
+
+567
+00:29:31,630 --> 00:29:32,740
+JASON KU: OK, right.
+
+568
+00:29:32,740 --> 00:29:36,770
+So there are actually
+two solutions here.
+
+569
+00:29:36,770 --> 00:29:42,520
+One is I-- maybe, if I
+choose m to be larger than n,
+
+570
+00:29:42,520 --> 00:29:45,210
+there's going to be
+extra space in here.
+
+571
+00:29:45,210 --> 00:29:49,460
+I'll just stick it somewhere
+else in the existing array.
+
+572
+00:29:49,460 --> 00:29:52,740
+How I find an open space
+is a little complicated,
+
+573
+00:29:52,740 --> 00:29:57,710
+but this is a technique
+called open addressing, which
+
+574
+00:29:57,710 --> 00:30:00,350
+is much more common
+than the technique
+
+575
+00:30:00,350 --> 00:30:04,250
+we're going to be talking
+about today in implementations.
+
+576
+00:30:04,250 --> 00:30:07,640
+Python uses an open addressing
+scheme, which is essentially,
+
+577
+00:30:07,640 --> 00:30:12,680
+find another place in the
+array to put this collision.
+
+578
+00:30:12,680 --> 00:30:15,320
+Open addressing is notoriously
+difficult to analyze,
+
+579
+00:30:15,320 --> 00:30:17,153
+so we're not going to
+do that in this class.
+
+580
+00:30:17,153 --> 00:30:19,160
+There's a much easier
+technique that-- we
+
+581
+00:30:19,160 --> 00:30:23,290
+have an implementation for you
+in the recitation handouts.
+
+582
+00:30:23,290 --> 00:30:26,080
+It's what your
+colleague up here--
+
+583
+00:30:26,080 --> 00:30:27,730
+I can't find him--
+
+584
+00:30:27,730 --> 00:30:29,620
+over there was saying--
+
+585
+00:30:29,620 --> 00:30:31,360
+was, instead of storing
+it somewhere else
+
+586
+00:30:31,360 --> 00:30:35,657
+in the existing direct
+access array down here,
+
+587
+00:30:35,657 --> 00:30:37,240
+which we usually
+call the hash table--
+
+588
+00:30:41,110 --> 00:30:43,690
+instead of storing it somewhere
+else in that hash table,
+
+589
+00:30:43,690 --> 00:30:47,170
+we'll instead, at that
+key, store a pointer
+
+590
+00:30:47,170 --> 00:30:51,790
+to another data structure,
+some other data structure that
+
+591
+00:30:51,790 --> 00:30:54,370
+can store a bunch of things--
+just like any sequence data
+
+592
+00:30:54,370 --> 00:30:56,410
+structure, like a dynamic
+array, or linked list,
+
+593
+00:30:56,410 --> 00:30:57,610
+or anything right.
+
+594
+00:30:57,610 --> 00:30:59,980
+All I need to do is be able
+to stick a bunch of things
+
+595
+00:30:59,980 --> 00:31:03,490
+on there when there
+are collisions,
+
+596
+00:31:03,490 --> 00:31:05,890
+and then, when I go up
+to look for that thing,
+
+597
+00:31:05,890 --> 00:31:09,400
+I'll just look through all
+of the things in that data
+
+598
+00:31:09,400 --> 00:31:11,780
+structure and see
+if my key exists.
+
+599
+00:31:11,780 --> 00:31:13,060
+Does that make sense?
+
+600
+00:31:13,060 --> 00:31:16,210
+Now, we want to make sure
+that those additional data
+
+601
+00:31:16,210 --> 00:31:19,870
+structures, which
+I'll call chains--
+
+602
+00:31:19,870 --> 00:31:24,880
+we want to make sure that
+those chains are short.
+
+603
+00:31:24,880 --> 00:31:27,070
+I don't want them to be long.
+
+604
+00:31:27,070 --> 00:31:29,680
+So what I'm going to do is,
+when I have this collision here,
+
+605
+00:31:29,680 --> 00:31:31,595
+instead I'll have
+a pointer to some--
+
+606
+00:31:31,595 --> 00:31:33,970
+I don't know-- maybe make it
+a dynamic array, or a linked
+
+607
+00:31:33,970 --> 00:31:35,720
+list, or something like that.
+
+608
+00:31:35,720 --> 00:31:38,590
+And I'll put a here
+and I'll b here.
+
+609
+00:31:38,590 --> 00:31:46,470
+And then later, when I look
+up key K, or look up a or b--
+
+610
+00:31:46,470 --> 00:31:48,120
+let's look up b--
+
+611
+00:31:48,120 --> 00:31:51,187
+I'll go to this hash value here.
+
+612
+00:31:51,187 --> 00:31:52,770
+I'll put it through
+the hash function.
+
+613
+00:31:52,770 --> 00:31:54,000
+I'll go to this index.
+
+614
+00:31:54,000 --> 00:31:56,820
+I'll go to the data structure,
+the chain associated
+
+615
+00:31:56,820 --> 00:31:59,620
+to that index, and I'll
+look at all of these items.
+
+616
+00:31:59,620 --> 00:32:01,170
+I'm just going to
+do a linear find.
+
+617
+00:32:01,170 --> 00:32:01,920
+I'm going to look.
+
+618
+00:32:04,470 --> 00:32:06,000
+I could put any
+data structure here,
+
+619
+00:32:06,000 --> 00:32:08,760
+but I'm going to look at
+this one, see if it's b.
+
+620
+00:32:08,760 --> 00:32:09,960
+It's not b.
+
+621
+00:32:09,960 --> 00:32:11,550
+Look at this one-- it is b.
+
+622
+00:32:11,550 --> 00:32:12,600
+I return yes.
+
+623
+00:32:12,600 --> 00:32:13,540
+Does that make sense?
+
+624
+00:32:13,540 --> 00:32:15,120
+So this is an idea
+called chaining.
+
+625
+00:32:15,120 --> 00:32:16,800
+I can put anything I want there.
+
+626
+00:32:16,800 --> 00:32:20,280
+Commonly, we talk about
+putting a linked list there,
+
+627
+00:32:20,280 --> 00:32:24,240
+but you can put a
+dynamic array there.
+
+628
+00:32:24,240 --> 00:32:27,773
+You can put a sorted array
+there to make it easier
+
+629
+00:32:27,773 --> 00:32:29,190
+to check whether
+the key is there.
+
+630
+00:32:29,190 --> 00:32:30,690
+You can put anything
+you want there.
+
+631
+00:32:30,690 --> 00:32:32,640
+The point of this
+lecture is going
+
+632
+00:32:32,640 --> 00:32:35,880
+to try to show that there's
+a choice of hash function
+
+633
+00:32:35,880 --> 00:32:42,240
+I can make that make sure
+that these chains are small so
+
+634
+00:32:42,240 --> 00:32:45,150
+that it really doesn't
+matter how I saw them there,
+
+635
+00:32:45,150 --> 00:32:46,853
+because I can just--
+
+636
+00:32:46,853 --> 00:32:49,020
+if there's a constant number
+of things stored there,
+
+637
+00:32:49,020 --> 00:32:52,220
+I can just look at all of
+them and do whatever I want,
+
+638
+00:32:52,220 --> 00:32:53,510
+and still get constant time.
+
+639
+00:32:53,510 --> 00:32:54,010
+Yeah?
+
+640
+00:32:54,010 --> 00:33:01,920
+AUDIENCE: So does that means
+that, when you have [INAUDIBLE]
+
+641
+00:33:01,920 --> 00:33:05,680
+let's just say, for some
+reason, the number of things
+
+642
+00:33:05,680 --> 00:33:10,808
+[INAUDIBLE] is that most of
+them get multiple [INAUDIBLE]..
+
+643
+00:33:10,808 --> 00:33:13,295
+Is it just a data structure
+that only holds one thing?
+
+644
+00:33:13,295 --> 00:33:13,920
+JASON KU: Yeah.
+
+645
+00:33:13,920 --> 00:33:16,530
+So what your colleague
+is saying is,
+
+646
+00:33:16,530 --> 00:33:19,950
+at initialization,
+what is stored here?
+
+647
+00:33:19,950 --> 00:33:22,590
+Initially, it points to
+an empty data structure.
+
+648
+00:33:22,590 --> 00:33:25,530
+I'm just going to initialize
+all of these things to have--
+
+649
+00:33:25,530 --> 00:33:27,287
+now, you get some overhead here.
+
+650
+00:33:27,287 --> 00:33:29,370
+We're paying something for
+this-- some extra space
+
+651
+00:33:29,370 --> 00:33:31,770
+and having pointer and
+another data structure
+
+652
+00:33:31,770 --> 00:33:32,760
+at all of these things.
+
+653
+00:33:32,760 --> 00:33:34,590
+Or you could have
+the semantics where,
+
+654
+00:33:34,590 --> 00:33:36,420
+if I only have one
+thing here, I'm
+
+655
+00:33:36,420 --> 00:33:38,880
+going to store that
+thing at this location,
+
+656
+00:33:38,880 --> 00:33:41,320
+but if I have multiple, it
+points to a data structure.
+
+657
+00:33:41,320 --> 00:33:44,100
+These are kind of complicated
+implementation details,
+
+658
+00:33:44,100 --> 00:33:46,740
+but you get the basic idea.
+
+659
+00:33:46,740 --> 00:33:49,260
+If I just have a 0
+size data structure
+
+660
+00:33:49,260 --> 00:33:50,760
+at all of these
+things, I'm still
+
+661
+00:33:50,760 --> 00:33:54,510
+going to have a constant
+factor overhead.
+
+662
+00:33:54,510 --> 00:33:57,150
+It's still going to be a
+linear size data structure,
+
+663
+00:33:57,150 --> 00:33:59,950
+as long as m is linear in n.
+
+664
+00:33:59,950 --> 00:34:01,700
+Does that makes sense?
+
+665
+00:34:01,700 --> 00:34:02,360
+OK.
+
+666
+00:34:02,360 --> 00:34:05,030
+So how do we pick a
+good hash function?
+
+667
+00:34:05,030 --> 00:34:08,719
+I already told you
+that any fixed hash
+
+668
+00:34:08,719 --> 00:34:12,560
+function I give you is going
+to experience collisions.
+
+669
+00:34:12,560 --> 00:34:20,190
+And if u is large, then there's
+the possibility that I--
+
+670
+00:34:20,190 --> 00:34:23,800
+for some input, all of
+the things in my set
+
+671
+00:34:23,800 --> 00:34:27,790
+go directly to the same
+hashed index value.
+
+672
+00:34:27,790 --> 00:34:29,040
+So that ain't great.
+
+673
+00:34:29,040 --> 00:34:30,510
+Let's ignore that for a second.
+
+674
+00:34:30,510 --> 00:34:33,900
+What's the easiest
+way to get down
+
+675
+00:34:33,900 --> 00:34:36,677
+from this large space of
+keys down to a small one?
+
+676
+00:34:36,677 --> 00:34:38,260
+What's the easiest
+thing you could do?
+
+677
+00:34:38,260 --> 00:34:38,489
+Yeah?
+
+678
+00:34:38,489 --> 00:34:38,969
+AUDIENCE: [INAUDIBLE]
+
+679
+00:34:38,969 --> 00:34:40,322
+JASON KU: Modulus-- great.
+
+680
+00:34:40,322 --> 00:34:41,780
+This is called the
+division method.
+
+681
+00:34:51,239 --> 00:34:54,000
+And what its function
+is is essentially,
+
+682
+00:34:54,000 --> 00:34:56,340
+it's going to take
+a key and it's
+
+683
+00:34:56,340 --> 00:35:04,500
+going to say equal
+to be K mod m.
+
+684
+00:35:04,500 --> 00:35:06,570
+I'm going to take
+something of a large space,
+
+685
+00:35:06,570 --> 00:35:09,690
+and I'm going to mod it so
+that it just wraps around--
+
+686
+00:35:13,520 --> 00:35:15,110
+perfectly valid thing to do.
+
+687
+00:35:15,110 --> 00:35:18,610
+It satisfies what we're
+doing in a hash table.
+
+688
+00:35:18,610 --> 00:35:24,965
+And if my kids are completely
+uniformly distributed--
+
+689
+00:35:24,965 --> 00:35:28,830
+if, when I use my hash
+function, all of the keys
+
+690
+00:35:28,830 --> 00:35:35,130
+here are uniformly distributed
+over this larger space, then
+
+691
+00:35:35,130 --> 00:35:38,250
+actually, this isn't
+such a bad thing.
+
+692
+00:35:38,250 --> 00:35:42,420
+But that's imposing some kind
+of distribution requirements
+
+693
+00:35:42,420 --> 00:35:43,860
+on the type of
+inputs I'm allowed
+
+694
+00:35:43,860 --> 00:35:45,402
+to use with this
+hash function for it
+
+695
+00:35:45,402 --> 00:35:48,030
+to have good performance.
+
+696
+00:35:48,030 --> 00:35:53,340
+But this plus a little bit
+of extra mixing and bit
+
+697
+00:35:53,340 --> 00:35:58,230
+manipulation is essentially
+what Python does.
+
+698
+00:35:58,230 --> 00:36:00,720
+Essentially, all it
+does is jumbles up
+
+699
+00:36:00,720 --> 00:36:05,760
+that key for some fixed
+amount of jumbling,
+
+700
+00:36:05,760 --> 00:36:11,590
+and then mods it m,
+and sticks it there.
+
+701
+00:36:11,590 --> 00:36:15,570
+It's hard coded in the Python
+library, what this hash
+
+702
+00:36:15,570 --> 00:36:21,480
+function is, and so there
+exist some sequences of inserts
+
+703
+00:36:21,480 --> 00:36:24,540
+into a hash table
+in Python which
+
+704
+00:36:24,540 --> 00:36:26,850
+will be really bad in
+terms of performance,
+
+705
+00:36:26,850 --> 00:36:30,030
+because these chain links are
+the amount number of collisions
+
+706
+00:36:30,030 --> 00:36:35,030
+that I'll get at a single
+hash is going to be large.
+
+707
+00:36:35,030 --> 00:36:36,830
+But they do that
+for other reasons.
+
+708
+00:36:36,830 --> 00:36:38,810
+They want a deterministic
+hash function.
+
+709
+00:36:38,810 --> 00:36:41,750
+They want something that
+I do the program again--
+
+710
+00:36:41,750 --> 00:36:45,080
+it's going to do the
+same thing underneath.
+
+711
+00:36:45,080 --> 00:36:47,360
+But sometimes Python
+gets it wrong.
+
+712
+00:36:47,360 --> 00:36:50,150
+But if your data
+that you're storing
+
+713
+00:36:50,150 --> 00:36:53,210
+is sufficiently uncorrelated
+to the hash function
+
+714
+00:36:53,210 --> 00:36:54,380
+that they've chosen--
+
+715
+00:36:54,380 --> 00:36:56,270
+which, usually, it is--
+
+716
+00:36:56,270 --> 00:36:58,490
+this is a pretty
+good performance.
+
+717
+00:36:58,490 --> 00:37:03,090
+But this is not a
+practical class.
+
+718
+00:37:03,090 --> 00:37:05,890
+Well, it is a practical
+class, but one of the things
+
+719
+00:37:05,890 --> 00:37:07,540
+that we are--
+
+720
+00:37:07,540 --> 00:37:09,280
+that's the emphasis
+of this class
+
+721
+00:37:09,280 --> 00:37:13,690
+is making sure we can prove that
+this is good in theory as well.
+
+722
+00:37:13,690 --> 00:37:17,590
+I don't want to know that
+sometimes this will be good.
+
+723
+00:37:17,590 --> 00:37:21,400
+I really want to know
+that, if I choose--
+
+724
+00:37:21,400 --> 00:37:26,830
+if I make this data structure
+and I put some inputs on it,
+
+725
+00:37:26,830 --> 00:37:30,790
+I want a running time that
+is independent on what
+
+726
+00:37:30,790 --> 00:37:34,300
+inputs I decided to use,
+independent of what keys
+
+727
+00:37:34,300 --> 00:37:35,993
+I decided to store.
+
+728
+00:37:35,993 --> 00:37:36,910
+Does that makes sense?
+
+729
+00:37:40,990 --> 00:37:44,250
+But it's impossible for me to
+pick a fixed hash function that
+
+730
+00:37:44,250 --> 00:37:45,750
+will achieve this,
+because I just
+
+731
+00:37:45,750 --> 00:37:48,420
+told you that, if u is large--
+
+732
+00:37:48,420 --> 00:37:52,380
+this is u-- if u is
+large, then there
+
+733
+00:37:52,380 --> 00:37:55,185
+exists inputs that map
+everything to one place.
+
+734
+00:37:57,930 --> 00:37:58,998
+I'm screwed, right?
+
+735
+00:37:58,998 --> 00:38:00,540
+There's no way to
+solve this problem.
+
+736
+00:38:03,120 --> 00:38:06,180
+That's true if I want a
+deterministic hash function--
+
+737
+00:38:06,180 --> 00:38:07,710
+I want the thing
+to be repeatable,
+
+738
+00:38:07,710 --> 00:38:09,870
+to do the same thing
+over and over again
+
+739
+00:38:09,870 --> 00:38:12,430
+for any set of inputs.
+
+740
+00:38:12,430 --> 00:38:14,680
+What can I do instead?
+
+741
+00:38:14,680 --> 00:38:18,480
+Weaken my notion of what
+constant time is to do better--
+
+742
+00:38:22,260 --> 00:38:24,570
+OK, use a non-deterministic--
+
+743
+00:38:24,570 --> 00:38:26,610
+what does
+non-deterministic mean?
+
+744
+00:38:26,610 --> 00:38:31,560
+It means don't choose a
+hash function up front--
+
+745
+00:38:31,560 --> 00:38:34,230
+choose one randomly later.
+
+746
+00:38:34,230 --> 00:38:35,880
+So have the user--
+
+747
+00:38:35,880 --> 00:38:38,370
+they pick whatever inputs
+they're going to do,
+
+748
+00:38:38,370 --> 00:38:40,660
+and then I'm going to pick
+a hash function randomly.
+
+749
+00:38:40,660 --> 00:38:42,910
+They don't know which hash
+function I'm going to pick,
+
+750
+00:38:42,910 --> 00:38:45,930
+so it's hard for them to
+give me an input that's bad.
+
+751
+00:38:49,020 --> 00:38:52,530
+I'm going to choose a
+random hash function.
+
+752
+00:38:52,530 --> 00:38:55,620
+Can I choose a hash
+function from the space
+
+753
+00:38:55,620 --> 00:38:58,160
+of all hash functions?
+
+754
+00:38:58,160 --> 00:39:00,490
+What is the space of all
+hash functions of this form?
+
+755
+00:39:03,380 --> 00:39:06,865
+For every one of these values,
+I give a value in here.
+
+756
+00:39:10,640 --> 00:39:12,860
+For each one of these
+independently random number
+
+757
+00:39:12,860 --> 00:39:15,920
+between this range, how many
+such hash functions are there?
+
+758
+00:39:19,140 --> 00:39:25,050
+m to the this number--
+that's a lot of things.
+
+759
+00:39:25,050 --> 00:39:26,780
+So I can't do that.
+
+760
+00:39:26,780 --> 00:39:29,070
+What I can do is fix a
+family of hash functions
+
+761
+00:39:29,070 --> 00:39:32,390
+where, if I choose
+one from-- randomly,
+
+762
+00:39:32,390 --> 00:39:33,780
+I get good performance.
+
+763
+00:39:33,780 --> 00:39:36,530
+And so the hash function
+I'm going to use,
+
+764
+00:39:36,530 --> 00:39:39,620
+and we're going to spend
+the rest of the time on,
+
+765
+00:39:39,620 --> 00:39:43,490
+is what I call a
+universal hash function.
+
+766
+00:39:43,490 --> 00:39:47,390
+It satisfies what we call
+a universal hash property--
+
+767
+00:39:47,390 --> 00:39:53,930
+so universal hash function.
+
+768
+00:39:53,930 --> 00:39:56,960
+And this is a little bit
+of a weird nomenclature,
+
+769
+00:39:56,960 --> 00:40:01,310
+because I'm defining this to you
+as the universal hash function,
+
+770
+00:40:01,310 --> 00:40:05,960
+but actually, universal
+is a descriptor.
+
+771
+00:40:05,960 --> 00:40:09,720
+There exist many
+universal hash functions.
+
+772
+00:40:09,720 --> 00:40:12,000
+This just happens to be
+an example of one of them.
+
+773
+00:40:12,000 --> 00:40:12,500
+OK?
+
+774
+00:40:23,420 --> 00:40:27,920
+So here's the hash function--
+
+775
+00:40:27,920 --> 00:40:32,640
+doesn't look actually
+all that different.
+
+776
+00:40:32,640 --> 00:40:36,910
+Goodness gracious-- how
+many parentheses are there--
+
+777
+00:40:36,910 --> 00:40:41,470
+mod p, mod m.
+
+778
+00:40:41,470 --> 00:40:41,970
+OK.
+
+779
+00:40:41,970 --> 00:40:44,850
+So it's kind of doing the same
+thing as what's happening up
+
+780
+00:40:44,850 --> 00:40:52,640
+here, but before modding by m,
+I'm multiplying it by a number,
+
+781
+00:40:52,640 --> 00:40:55,780
+I'm adding a number, I'm
+taking it mod another number,
+
+782
+00:40:55,780 --> 00:40:57,640
+and then I'm getting by m.
+
+783
+00:40:57,640 --> 00:40:58,790
+This is a little weird.
+
+784
+00:40:58,790 --> 00:41:02,020
+And not only that-- this is
+still a fixed hash function.
+
+785
+00:41:02,020 --> 00:41:03,170
+I don't want that.
+
+786
+00:41:03,170 --> 00:41:10,480
+I want to generalize this to
+be a family of hash functions,
+
+787
+00:41:10,480 --> 00:41:21,160
+which are this habk for
+some random choice of a,
+
+788
+00:41:21,160 --> 00:41:26,765
+b in this larger range.
+
+789
+00:41:29,790 --> 00:41:34,590
+All right, this is a
+lot of notation here.
+
+790
+00:41:34,590 --> 00:41:40,350
+Essentially what this is
+saying is, I have a has family.
+
+791
+00:41:40,350 --> 00:41:43,530
+It's parameterized by the
+length of my hash function
+
+792
+00:41:43,530 --> 00:41:48,840
+and some fixed large random
+prime that's bigger than u.
+
+793
+00:41:48,840 --> 00:41:52,410
+I'm going to pick some
+large prime number,
+
+794
+00:41:52,410 --> 00:41:55,500
+and that's going to be fixed
+when I make the hash table.
+
+795
+00:41:58,940 --> 00:42:02,660
+And then, when I
+instantiate the hash table,
+
+796
+00:42:02,660 --> 00:42:06,320
+I'm going to choose
+randomly one of these things
+
+797
+00:42:06,320 --> 00:42:10,490
+by choosing a random a and
+a random b from this range.
+
+798
+00:42:10,490 --> 00:42:12,284
+Does that makes sense?
+
+799
+00:42:12,284 --> 00:42:16,450
+AUDIENCE: [INAUDIBLE]
+
+800
+00:42:16,450 --> 00:42:19,590
+JASON KU: This is
+a not equal to 0.
+
+801
+00:42:19,590 --> 00:42:22,568
+If I had 0 here, I lose
+the key information,
+
+802
+00:42:22,568 --> 00:42:23,360
+and that's no good.
+
+803
+00:42:26,940 --> 00:42:27,830
+Does this make sense?
+
+804
+00:42:27,830 --> 00:42:30,300
+So what this is doing
+is multiplying this key
+
+805
+00:42:30,300 --> 00:42:34,080
+by some random number,
+adding some random number,
+
+806
+00:42:34,080 --> 00:42:37,790
+modding by this prime,
+and then modding
+
+807
+00:42:37,790 --> 00:42:39,680
+by the size of my thing.
+
+808
+00:42:39,680 --> 00:42:41,810
+So it's doing a
+bunch of jumbling,
+
+809
+00:42:41,810 --> 00:42:43,610
+and there's some
+randomness involved here.
+
+810
+00:42:43,610 --> 00:42:46,250
+I'm choosing the hash
+function by choosing an a,
+
+811
+00:42:46,250 --> 00:42:47,670
+b randomly from this thing.
+
+812
+00:42:47,670 --> 00:42:53,170
+So when I start
+up my program, I'm
+
+813
+00:42:53,170 --> 00:42:56,320
+going to instantiate this
+thing with some random a and b,
+
+814
+00:42:56,320 --> 00:42:58,340
+not deterministically.
+
+815
+00:42:58,340 --> 00:43:01,930
+The user, when they're
+using this thing,
+
+816
+00:43:01,930 --> 00:43:04,420
+doesn't know which
+a and b I picked,
+
+817
+00:43:04,420 --> 00:43:07,930
+so it's really hard for them
+to give me a bad example.
+
+818
+00:43:07,930 --> 00:43:11,020
+And this universal
+hash function--
+
+819
+00:43:11,020 --> 00:43:13,870
+this universal hash family,
+shall we say-- really,
+
+820
+00:43:13,870 --> 00:43:17,050
+this is a family of functions,
+and I'm choosing one randomly
+
+821
+00:43:17,050 --> 00:43:20,130
+within that family--
+
+822
+00:43:20,130 --> 00:43:21,120
+is universal.
+
+823
+00:43:21,120 --> 00:43:26,910
+And universality says that--
+
+824
+00:43:26,910 --> 00:43:30,420
+what is the property
+of universality?
+
+825
+00:43:30,420 --> 00:43:34,830
+It means that the probability,
+by choosing a hash function
+
+826
+00:43:34,830 --> 00:43:43,530
+from this hash family,
+that a certain key collides
+
+827
+00:43:43,530 --> 00:43:52,500
+with another key is less than
+or equal to 1/m for all--
+
+828
+00:43:52,500 --> 00:43:57,870
+any different two
+keys in my universe.
+
+829
+00:44:02,145 --> 00:44:03,020
+Does that make sense?
+
+830
+00:44:05,730 --> 00:44:10,170
+Basically, this thing has the
+property that, if I randomly--
+
+831
+00:44:10,170 --> 00:44:16,900
+for any two keys that I
+pick in my universe space,
+
+832
+00:44:16,900 --> 00:44:19,180
+if I randomly choose
+a hash function,
+
+833
+00:44:19,180 --> 00:44:22,030
+the probability that
+these things collide
+
+834
+00:44:22,030 --> 00:44:23,830
+is less than 1/m.
+
+835
+00:44:23,830 --> 00:44:25,000
+Why is that good?
+
+836
+00:44:25,000 --> 00:44:26,830
+This is, in some
+sense, a measure
+
+837
+00:44:26,830 --> 00:44:30,250
+of how well distributed
+these things are.
+
+838
+00:44:30,250 --> 00:44:35,560
+I want these things to
+collide with 1/m probability
+
+839
+00:44:35,560 --> 00:44:39,100
+so that these things
+don't collide very--
+
+840
+00:44:39,100 --> 00:44:41,470
+it's not very likely for
+these things to collide.
+
+841
+00:44:41,470 --> 00:44:43,220
+Does that make sense?
+
+842
+00:44:43,220 --> 00:44:46,990
+So we want proof that
+this hash family satisfies
+
+843
+00:44:46,990 --> 00:44:48,370
+this universality property.
+
+844
+00:44:48,370 --> 00:44:50,080
+You'll do that in 046.
+
+845
+00:44:50,080 --> 00:44:54,460
+But we can use this
+result to show that,
+
+846
+00:44:54,460 --> 00:44:58,840
+if we use a universal--
+this universal hash family,
+
+847
+00:44:58,840 --> 00:45:01,510
+that the length of our change--
+
+848
+00:45:01,510 --> 00:45:06,450
+chains is expected to
+be constant length.
+
+849
+00:45:06,450 --> 00:45:10,050
+So we're going to use this
+property to prove that.
+
+850
+00:45:10,050 --> 00:45:11,310
+How do we prove that?
+
+851
+00:45:11,310 --> 00:45:15,180
+We're going to do a
+little probability.
+
+852
+00:45:15,180 --> 00:45:16,710
+So how are we going
+to prove that?
+
+853
+00:45:16,710 --> 00:45:20,040
+I'm going to define a random
+variable, an indicator
+
+854
+00:45:20,040 --> 00:45:20,760
+random variable.
+
+855
+00:45:20,760 --> 00:45:23,790
+Does anyone remember what an
+indicator in a variable is?
+
+856
+00:45:23,790 --> 00:45:28,350
+Yeah, it's a variable that,
+with some amount of probability,
+
+857
+00:45:28,350 --> 00:45:33,230
+is 1, and 1 minus
+that probability is 0.
+
+858
+00:45:33,230 --> 00:45:35,120
+So I'm going to
+define this indicator
+
+859
+00:45:35,120 --> 00:45:44,310
+random variable xij is a random
+variable over my choice--
+
+860
+00:45:44,310 --> 00:45:50,610
+over choice of a hash
+function in my has family.
+
+861
+00:45:50,610 --> 00:45:52,120
+And what does this mean?
+
+862
+00:45:52,120 --> 00:46:04,750
+It means xij equals 1,
+if hash Ki equals hKj--
+
+863
+00:46:04,750 --> 00:46:09,850
+these things collide--
+and 0 otherwise.
+
+864
+00:46:13,410 --> 00:46:18,380
+So I'm choosing randomly
+over this hash family.
+
+865
+00:46:18,380 --> 00:46:22,520
+If, for two keys--
+
+866
+00:46:22,520 --> 00:46:24,200
+key i and and j--
+
+867
+00:46:24,200 --> 00:46:27,650
+if these things collide,
+that's going to be 1.
+
+868
+00:46:27,650 --> 00:46:29,580
+If they don't, then it's 0.
+
+869
+00:46:29,580 --> 00:46:30,530
+OK?
+
+870
+00:46:30,530 --> 00:46:34,070
+Then, how can we write
+a formula for the length
+
+871
+00:46:34,070 --> 00:46:37,490
+of a chain in this model?
+
+872
+00:46:37,490 --> 00:46:39,335
+So the size of a chain--
+
+873
+00:46:43,440 --> 00:46:46,470
+or let's put it here--
+
+874
+00:46:46,470 --> 00:46:55,350
+the size of the chain at i--
+
+875
+00:46:55,350 --> 00:46:58,360
+at i in my hash table--
+
+876
+00:46:58,360 --> 00:47:00,310
+is going to equal--
+
+877
+00:47:00,310 --> 00:47:03,010
+I'm going to call that
+the random variable xi--
+
+878
+00:47:03,010 --> 00:47:07,352
+that's going to equal the
+sum over j equals 0 to--
+
+879
+00:47:10,000 --> 00:47:17,140
+what is it-- over, I think,
+u minus 1 of summation--
+
+880
+00:47:17,140 --> 00:47:20,960
+or sorry-- of xij.
+
+881
+00:47:20,960 --> 00:47:33,410
+So basically, if I
+fix this location i,
+
+882
+00:47:33,410 --> 00:47:35,270
+this is where this key goes.
+
+883
+00:47:38,490 --> 00:47:38,990
+Sorry.
+
+884
+00:47:38,990 --> 00:47:44,480
+This is the size of
+chain at h of Ki.
+
+885
+00:47:44,480 --> 00:47:45,230
+Sorry.
+
+886
+00:47:45,230 --> 00:47:49,310
+So I look at wherever
+Ki goes is hashed,
+
+887
+00:47:49,310 --> 00:47:52,010
+and I see how many
+things collide with it.
+
+888
+00:47:52,010 --> 00:47:55,070
+I'm just summing over
+all of these things,
+
+889
+00:47:55,070 --> 00:47:58,750
+because this is 1 if there's a
+collision and 0 if there's not.
+
+890
+00:47:58,750 --> 00:48:00,490
+Does that make sense?
+
+891
+00:48:00,490 --> 00:48:04,470
+So this is the size of the chain
+at the index location mapped
+
+892
+00:48:04,470 --> 00:48:06,220
+to by Ki.
+
+893
+00:48:09,940 --> 00:48:13,030
+So here's where your
+probability comes in.
+
+894
+00:48:13,030 --> 00:48:15,160
+What's the expected
+value of this chain
+
+895
+00:48:15,160 --> 00:48:18,610
+length over my random choice?
+
+896
+00:48:18,610 --> 00:48:22,300
+Expected value of
+choosing a hash function
+
+897
+00:48:22,300 --> 00:48:25,810
+from this universal hash
+family of this chain length--
+
+898
+00:48:29,230 --> 00:48:31,090
+I can put in my definition here.
+
+899
+00:48:31,090 --> 00:48:38,330
+That's the expected value of
+the summation over j of xij.
+
+900
+00:48:45,690 --> 00:48:49,670
+What do I know about
+expectations and summations?
+
+901
+00:48:53,220 --> 00:48:56,952
+If these variables are
+independent from each other--
+
+902
+00:48:56,952 --> 00:48:58,840
+AUDIENCE: [INAUDIBLE]
+
+903
+00:48:58,840 --> 00:49:00,544
+JASON KU: Say what?
+
+904
+00:49:00,544 --> 00:49:02,710
+AUDIENCE: [INAUDIBLE]
+
+905
+00:49:02,710 --> 00:49:05,500
+JASON KU: Linearity
+of expectation--
+
+906
+00:49:05,500 --> 00:49:08,710
+basically, the expectation sum
+of these independent random
+
+907
+00:49:08,710 --> 00:49:10,420
+variables is the
+same as the summation
+
+908
+00:49:10,420 --> 00:49:12,520
+of their expectations.
+
+909
+00:49:12,520 --> 00:49:14,710
+So this is equal
+to the summation
+
+910
+00:49:14,710 --> 00:49:18,655
+over j of the expectations
+of these individual ones.
+
+911
+00:49:26,870 --> 00:49:32,480
+One of these j's
+is the same as i.
+
+912
+00:49:32,480 --> 00:49:37,400
+j loops over all of the
+things from 0 to u minus 1.
+
+913
+00:49:37,400 --> 00:49:47,520
+One of them is i, so when xhi is
+hj, what is the expected value
+
+914
+00:49:47,520 --> 00:49:49,440
+that they collide?
+
+915
+00:49:49,440 --> 00:49:52,800
+1-- so I'm going
+to refactor this
+
+916
+00:49:52,800 --> 00:49:59,460
+as being this, where j
+does not equal i, plus 1.
+
+917
+00:49:59,460 --> 00:50:00,780
+Are people OK with that?
+
+918
+00:50:00,780 --> 00:50:04,200
+Because if i equals--
+
+919
+00:50:04,200 --> 00:50:08,040
+if j and i are equal,
+they definitely collide.
+
+920
+00:50:08,040 --> 00:50:10,410
+They're the same key.
+
+921
+00:50:10,410 --> 00:50:13,650
+So I'm expected to have
+one guy there, which
+
+922
+00:50:13,650 --> 00:50:16,680
+was the original key, xi.
+
+923
+00:50:16,680 --> 00:50:22,920
+But otherwise, we can use
+this universal property
+
+924
+00:50:22,920 --> 00:50:27,420
+that says, if they're not
+equal and they collide--
+
+925
+00:50:27,420 --> 00:50:30,330
+which is exactly this case--
+
+926
+00:50:30,330 --> 00:50:35,340
+the probability that
+that happens is 1/m.
+
+927
+00:50:35,340 --> 00:50:38,340
+And since it's an
+indicator random variable,
+
+928
+00:50:38,340 --> 00:50:41,370
+the expectation is
+there are outcomes
+
+929
+00:50:41,370 --> 00:50:45,300
+times their probabilities--
+so 1 times that probability
+
+930
+00:50:45,300 --> 00:50:51,060
+plus 0 times 1 minus that
+probability, which is just 1/m.
+
+931
+00:50:51,060 --> 00:50:58,960
+So now we get the
+summation of 1/m for j
+
+932
+00:50:58,960 --> 00:51:02,395
+not equal to i plus 1.
+
+933
+00:51:08,130 --> 00:51:10,590
+Oh, and this-- sorry.
+
+934
+00:51:10,590 --> 00:51:11,970
+I did this wrong.
+
+935
+00:51:11,970 --> 00:51:12,810
+This isn't u.
+
+936
+00:51:12,810 --> 00:51:13,980
+This is n.
+
+937
+00:51:13,980 --> 00:51:17,760
+We're storing n keys.
+
+938
+00:51:17,760 --> 00:51:20,490
+OK, so now I'm looping over j--
+
+939
+00:51:20,490 --> 00:51:22,240
+this over all of those things.
+
+940
+00:51:22,240 --> 00:51:23,430
+How many things are there?
+
+941
+00:51:23,430 --> 00:51:26,210
+n minus 1 things, right?
+
+942
+00:51:26,210 --> 00:51:32,720
+So this should equal 1
+plus n minus 1 over m.
+
+943
+00:51:32,720 --> 00:51:35,900
+So that's what
+universality gives us.
+
+944
+00:51:35,900 --> 00:51:41,980
+So as long as we choose
+m to be larger than n,
+
+945
+00:51:41,980 --> 00:51:44,980
+or at least linear
+in n, then we're
+
+946
+00:51:44,980 --> 00:51:49,720
+expected to have our
+chain lengths be constant,
+
+947
+00:51:49,720 --> 00:51:54,900
+because this thing becomes a
+constant if m is at least order
+
+948
+00:51:54,900 --> 00:51:55,400
+n.
+
+949
+00:51:55,400 --> 00:51:57,750
+Does that make sense?
+
+950
+00:51:57,750 --> 00:51:58,610
+OK.
+
+951
+00:51:58,610 --> 00:52:00,360
+The last thing I'm
+going to leave you with
+
+952
+00:52:00,360 --> 00:52:02,400
+is, how do we make
+this thing dynamic?
+
+953
+00:52:02,400 --> 00:52:05,400
+If we're growing
+the number of things
+
+954
+00:52:05,400 --> 00:52:07,590
+we're storing in
+this thing, it's
+
+955
+00:52:07,590 --> 00:52:10,920
+possible that, as we
+grow n for a fixed m,
+
+956
+00:52:10,920 --> 00:52:13,140
+this thing will stop being--
+
+957
+00:52:13,140 --> 00:52:15,990
+m will stop being
+linear in n, right?
+
+958
+00:52:15,990 --> 00:52:20,040
+Well, then all we have to
+do is, if we get too far,
+
+959
+00:52:20,040 --> 00:52:22,620
+we rebuild the entire thing--
+
+960
+00:52:22,620 --> 00:52:24,540
+the entire hash
+table with the new m,
+
+961
+00:52:24,540 --> 00:52:27,330
+just like we did
+with a dynamic array.
+
+962
+00:52:27,330 --> 00:52:28,830
+And you can prove--
+
+963
+00:52:28,830 --> 00:52:31,260
+we're not going to
+do that here, but you
+
+964
+00:52:31,260 --> 00:52:35,970
+can prove that you won't do that
+operation too often, if you're
+
+965
+00:52:35,970 --> 00:52:37,660
+resizing in the right way.
+
+966
+00:52:37,660 --> 00:52:40,020
+And so you just
+rebuild completely
+
+967
+00:52:40,020 --> 00:52:42,210
+after a certain
+number of operations.
+
+968
+00:52:42,210 --> 00:52:44,010
+OK, so that's hashing.
+
+969
+00:52:44,010 --> 00:52:45,510
+Next week, we're
+going to be talking
+
+970
+00:52:45,510 --> 00:52:48,890
+about doing a faster sort.

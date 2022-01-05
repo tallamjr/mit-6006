@@ -1,0 +1,5721 @@
+1
+00:00:00,000 --> 00:00:04,850
+[CREAKING] [CLICKING]
+[SQUEAKING] [RUSTLING]
+
+2
+00:00:04,850 --> 00:00:07,760
+[CLICKING]
+
+3
+00:00:12,120 --> 00:00:13,870
+JUSTIN SOLOMON: We
+just started a new unit
+
+4
+00:00:13,870 --> 00:00:16,239
+on graph theory,
+which is going to be
+
+5
+00:00:16,239 --> 00:00:20,343
+sort of our focus for the next
+couple of lectures in 6006.
+
+6
+00:00:20,343 --> 00:00:22,510
+And so I thought we'd give
+it a little bit of review
+
+7
+00:00:22,510 --> 00:00:24,468
+at the beginning the
+lecture because, as usual,
+
+8
+00:00:24,468 --> 00:00:26,470
+I've muddled together
+a lot of notions
+
+9
+00:00:26,470 --> 00:00:30,160
+in our previous lecture, and
+then start with some new ideas.
+
+10
+00:00:30,160 --> 00:00:31,910
+So basically, in our
+previous lecture,
+
+11
+00:00:31,910 --> 00:00:35,020
+we talked about an algorithm
+called breadth-first search.
+
+12
+00:00:35,020 --> 00:00:37,120
+And then almost always
+you see that paired
+
+13
+00:00:37,120 --> 00:00:39,550
+with a second algorithm
+called depth-first search.
+
+14
+00:00:39,550 --> 00:00:42,220
+And following tradition,
+and basically logic,
+
+15
+00:00:42,220 --> 00:00:46,270
+we'll do the same
+thing in 006 today.
+
+16
+00:00:46,270 --> 00:00:48,100
+But in any event,
+for today we'll
+
+17
+00:00:48,100 --> 00:00:50,030
+stick to the technical material.
+
+18
+00:00:50,030 --> 00:00:52,180
+So as a little bit of
+review, I guess actually,
+
+19
+00:00:52,180 --> 00:00:53,827
+the one thing I didn't
+do on this slide
+
+20
+00:00:53,827 --> 00:00:54,910
+was actually draw a graph.
+
+21
+00:00:54,910 --> 00:00:57,410
+So we should probably
+start with that.
+
+22
+00:00:57,410 --> 00:01:03,010
+So if you recall, graph is a
+collection of nodes or vertices
+
+23
+00:01:03,010 --> 00:01:03,640
+depending--
+
+24
+00:01:03,640 --> 00:01:05,723
+I don't know, is it like
+a European American thing
+
+25
+00:01:05,723 --> 00:01:08,780
+or something-- and edges.
+
+26
+00:01:08,780 --> 00:01:10,810
+So here's an example,
+which as usual, I'm
+
+27
+00:01:10,810 --> 00:01:13,660
+not managing to draw
+particularly clearly.
+
+28
+00:01:13,660 --> 00:01:15,900
+So this graph is
+kind of like a cycle.
+
+29
+00:01:15,900 --> 00:01:19,480
+So I have directed edges
+here, here, here, and here.
+
+30
+00:01:19,480 --> 00:01:21,760
+And of course, there are
+many kind of variations
+
+31
+00:01:21,760 --> 00:01:22,950
+on the theme, right?
+
+32
+00:01:22,950 --> 00:01:25,660
+So our basic sort of
+definition of a graph
+
+33
+00:01:25,660 --> 00:01:27,808
+is that we have
+some set V, which
+
+34
+00:01:27,808 --> 00:01:28,975
+is like the set of vertices.
+
+35
+00:01:32,080 --> 00:01:35,245
+And then we have a set
+E, which is set of edges.
+
+36
+00:01:38,940 --> 00:01:41,490
+And this was a
+subset of V cross V.
+
+37
+00:01:41,490 --> 00:01:44,820
+And this is nothing more than
+fancy notation for saying
+
+38
+00:01:44,820 --> 00:01:47,520
+that an edge is a pair
+of vertices, like a from
+
+39
+00:01:47,520 --> 00:01:48,725
+and a to vertex.
+
+40
+00:01:48,725 --> 00:01:50,850
+Of course, there are many
+variations on this theme.
+
+41
+00:01:50,850 --> 00:01:54,220
+You could have a directed
+versus an undirected graph.
+
+42
+00:01:54,220 --> 00:01:57,180
+So this one is directed, meaning
+the edges look like arrows.
+
+43
+00:01:57,180 --> 00:02:00,240
+If they didn't have arrowheads,
+they'd be undirected.
+
+44
+00:02:00,240 --> 00:02:02,610
+We define something called a
+simple graph where you have
+
+45
+00:02:02,610 --> 00:02:04,860
+essentially no repeated edges.
+
+46
+00:02:04,860 --> 00:02:06,510
+So for instance, you
+can't do something
+
+47
+00:02:06,510 --> 00:02:09,953
+like this where you have
+the same edge twice.
+
+48
+00:02:09,953 --> 00:02:12,120
+And then there are a couple
+of different definitions
+
+49
+00:02:12,120 --> 00:02:13,300
+that were kind of useful.
+
+50
+00:02:13,300 --> 00:02:17,550
+So in particular-- I'm going
+to erase this, whoops--
+
+51
+00:02:17,550 --> 00:02:18,570
+useless edge here.
+
+52
+00:02:21,950 --> 00:02:23,970
+Maybe make my graph
+slightly more interesting.
+
+53
+00:02:23,970 --> 00:02:28,020
+So add another edge going
+in the reverse direction.
+
+54
+00:02:28,020 --> 00:02:29,940
+So maybe I have--
+
+55
+00:02:29,940 --> 00:02:36,500
+I'm going to give my vertices
+labels. x, y, z, and w.
+
+56
+00:02:36,500 --> 00:02:39,020
+Then we talked
+about the neighbors
+
+57
+00:02:39,020 --> 00:02:42,110
+of a given vertex, which
+are the vertices that you
+
+58
+00:02:42,110 --> 00:02:45,840
+can reach by following edges
+in or out of your vertex.
+
+59
+00:02:45,840 --> 00:02:48,350
+So in particular, the
+outgoing neighbors,
+
+60
+00:02:48,350 --> 00:02:51,710
+which we sort of implicitly
+defined in our previous lecture
+
+61
+00:02:51,710 --> 00:02:57,423
+but didn't call it out, we're
+going to notate with Adj+.
+
+62
+00:02:57,423 --> 00:02:59,090
+And these are all of
+the things that you
+
+63
+00:02:59,090 --> 00:03:02,250
+can reach by going out of
+a vertex into the next one.
+
+64
+00:03:02,250 --> 00:03:07,100
+So for example, Adj+ of
+w is going to be the set
+
+65
+00:03:07,100 --> 00:03:08,030
+of vertices.
+
+66
+00:03:08,030 --> 00:03:12,270
+We'll notice I can get from
+w to y and also from w to z.
+
+67
+00:03:12,270 --> 00:03:12,770
+Yeah.
+
+68
+00:03:12,770 --> 00:03:14,010
+So.
+
+69
+00:03:14,010 --> 00:03:16,440
+Nope, nope.
+
+70
+00:03:16,440 --> 00:03:19,120
+y comma z.
+
+71
+00:03:19,120 --> 00:03:21,070
+OK.
+
+72
+00:03:21,070 --> 00:03:24,382
+So to continue just our tiny
+amount of review for the day,
+
+73
+00:03:24,382 --> 00:03:26,590
+remember that a graph--
+there are many different ways
+
+74
+00:03:26,590 --> 00:03:28,013
+to represent a graph.
+
+75
+00:03:28,013 --> 00:03:29,680
+The sort of brain
+dead one would be just
+
+76
+00:03:29,680 --> 00:03:31,090
+like a big long list of edges.
+
+77
+00:03:31,090 --> 00:03:32,908
+But of course,
+for our algorithms
+
+78
+00:03:32,908 --> 00:03:34,450
+it's not a particularly
+efficient way
+
+79
+00:03:34,450 --> 00:03:38,240
+to check things like, does
+this edge exist in my graph.
+
+80
+00:03:38,240 --> 00:03:40,570
+So the basic
+representation that I
+
+81
+00:03:40,570 --> 00:03:42,770
+think we're mostly working
+from in this course
+
+82
+00:03:42,770 --> 00:03:46,300
+is to think of a graph like a
+set of vertices, each of which
+
+83
+00:03:46,300 --> 00:03:47,970
+maps to another set of vertices.
+
+84
+00:03:47,970 --> 00:03:51,790
+So roughly every vertex
+maybe stores its outgoing set
+
+85
+00:03:51,790 --> 00:03:53,280
+of edges.
+
+86
+00:03:53,280 --> 00:03:55,990
+And so this is kind of
+nice because, of course,
+
+87
+00:03:55,990 --> 00:03:57,980
+very quickly we can
+answer questions like,
+
+88
+00:03:57,980 --> 00:03:59,980
+is this edge inside
+of our graph?
+
+89
+00:03:59,980 --> 00:04:01,510
+Or we can iterate
+over the neighbors
+
+90
+00:04:01,510 --> 00:04:03,968
+of a vertex and so on, which
+are the kind of typical things
+
+91
+00:04:03,968 --> 00:04:06,610
+that we do in a lot
+of graph algorithms.
+
+92
+00:04:06,610 --> 00:04:09,410
+And then finally, in
+our previous lecture,
+
+93
+00:04:09,410 --> 00:04:10,900
+we started talking about paths.
+
+94
+00:04:10,900 --> 00:04:13,600
+So a path is like
+a chain of vertices
+
+95
+00:04:13,600 --> 00:04:16,630
+that can get me from one vertex
+to the other only following
+
+96
+00:04:16,630 --> 00:04:18,339
+edges of my graph.
+
+97
+00:04:18,339 --> 00:04:20,256
+There is a term that
+I think I forgot
+
+98
+00:04:20,256 --> 00:04:22,089
+to define last time
+because it didn't really
+
+99
+00:04:22,089 --> 00:04:25,630
+matter a ton, which is a
+simple path, which is just
+
+100
+00:04:25,630 --> 00:04:28,588
+a path that doesn't have the
+same vertex more than once.
+
+101
+00:04:28,588 --> 00:04:30,880
+And then, of course, there
+are many different questions
+
+102
+00:04:30,880 --> 00:04:33,670
+you could ask about a
+graph that are basically
+
+103
+00:04:33,670 --> 00:04:35,600
+different problems
+involving computing paths.
+
+104
+00:04:35,600 --> 00:04:38,300
+So for instance, the shortest
+path between two vertices
+
+105
+00:04:38,300 --> 00:04:41,110
+is sort of our canonical
+one in graph theory.
+
+106
+00:04:41,110 --> 00:04:44,030
+Or you could ask questions
+about reachability and so on.
+
+107
+00:04:44,030 --> 00:04:48,820
+So there's our basic review
+from our previous lecture.
+
+108
+00:04:48,820 --> 00:04:52,790
+Does our course staff have any
+questions about things so far?
+
+109
+00:04:52,790 --> 00:04:53,940
+Excellent.
+
+110
+00:04:53,940 --> 00:04:54,440
+OK.
+
+111
+00:04:54,440 --> 00:04:56,660
+And there's one additional
+piece of terminology
+
+112
+00:04:56,660 --> 00:04:59,450
+that I fudged a little
+bit last time-- or rather,
+
+113
+00:04:59,450 --> 00:05:02,250
+my co-instructor suggested a
+bit of an attitude adjustment.
+
+114
+00:05:02,250 --> 00:05:05,190
+So I thought I'd better
+clarify really quick.
+
+115
+00:05:05,190 --> 00:05:07,280
+There's this interesting
+phrase, linear time,
+
+116
+00:05:07,280 --> 00:05:10,640
+which we all know and love
+in computer science theory.
+
+117
+00:05:10,640 --> 00:05:13,172
+And this sort of implicit thing,
+especially in this course,
+
+118
+00:05:13,172 --> 00:05:14,630
+is that when we
+say linear time, we
+
+119
+00:05:14,630 --> 00:05:16,680
+mean in the size of the input.
+
+120
+00:05:16,680 --> 00:05:17,180
+Right?
+
+121
+00:05:17,180 --> 00:05:20,180
+And so if we have a linear
+time graph algorithm, well,
+
+122
+00:05:20,180 --> 00:05:22,712
+how much space does it
+take to store a graph?
+
+123
+00:05:22,712 --> 00:05:24,920
+Well, we need a list of
+vertices and a list of edges,
+
+124
+00:05:24,920 --> 00:05:26,310
+if nothing else.
+
+125
+00:05:26,310 --> 00:05:29,453
+So a reasonable way to interpret
+this phrase linear time
+
+126
+00:05:29,453 --> 00:05:31,370
+is that it's an algorithm
+that looks like what
+
+127
+00:05:31,370 --> 00:05:33,000
+we've shown on the screen.
+
+128
+00:05:33,000 --> 00:05:35,060
+The times proportional
+to maybe the sum
+
+129
+00:05:35,060 --> 00:05:37,370
+of the number of vertices
+and the number of edges.
+
+130
+00:05:37,370 --> 00:05:40,130
+If that makes you uncomfortable
+like it does for me because one
+
+131
+00:05:40,130 --> 00:05:41,960
+of these can kind of
+scale on the other,
+
+132
+00:05:41,960 --> 00:05:43,980
+I think it's always
+fine to add more detail.
+
+133
+00:05:43,980 --> 00:05:44,480
+Right?
+
+134
+00:05:44,480 --> 00:05:46,310
+So if you want to
+say, linear in the sum
+
+135
+00:05:46,310 --> 00:05:49,440
+of the number of vertices and
+edges, that's perfectly fine.
+
+136
+00:05:49,440 --> 00:05:51,290
+But if you see
+this phrase, that's
+
+137
+00:05:51,290 --> 00:05:52,610
+how you should interpret it.
+
+138
+00:05:52,610 --> 00:05:55,520
+Hopefully that's a
+fair way to put it.
+
+139
+00:05:55,520 --> 00:05:57,270
+Excellent.
+
+140
+00:05:57,270 --> 00:05:57,770
+OK.
+
+141
+00:05:57,770 --> 00:06:01,110
+So last time, we talked about an
+algorithm called breadth-first
+
+142
+00:06:01,110 --> 00:06:01,610
+search--
+
+143
+00:06:01,610 --> 00:06:04,160
+BFS, for those in the know.
+
+144
+00:06:04,160 --> 00:06:06,830
+Breadth-first search
+is an algorithm.
+
+145
+00:06:06,830 --> 00:06:08,540
+And the reason we
+use the word breadth
+
+146
+00:06:08,540 --> 00:06:10,910
+is because it's kind of,
+remember, we talked about level
+
+147
+00:06:10,910 --> 00:06:13,700
+sets last time because we talked
+about breadth-first search
+
+148
+00:06:13,700 --> 00:06:16,640
+in the context of
+computing shortest paths.
+
+149
+00:06:16,640 --> 00:06:20,210
+And in particular, we have
+our source node all the way
+
+150
+00:06:20,210 --> 00:06:21,410
+on the left-hand side.
+
+151
+00:06:21,410 --> 00:06:23,750
+And then breadth-first search
+constructed all the nodes
+
+152
+00:06:23,750 --> 00:06:24,940
+that were distance 1 away.
+
+153
+00:06:24,940 --> 00:06:25,440
+Right.
+
+154
+00:06:25,440 --> 00:06:28,190
+That's the first level set, and
+then all the distance 2 away,
+
+155
+00:06:28,190 --> 00:06:30,890
+and then all the distance
+3 away, and so on.
+
+156
+00:06:30,890 --> 00:06:33,080
+So in particular,
+the level set L3
+
+157
+00:06:33,080 --> 00:06:34,910
+isn't visited until
+we're completely
+
+158
+00:06:34,910 --> 00:06:37,670
+done with level set L2.
+
+159
+00:06:37,670 --> 00:06:40,880
+Today, we're going to define
+another algorithm, which
+
+160
+00:06:40,880 --> 00:06:43,220
+is called depth-first search,
+which doesn't do that,
+
+161
+00:06:43,220 --> 00:06:45,357
+but rather, starts with
+its first vertex and just
+
+162
+00:06:45,357 --> 00:06:47,940
+starts walking all the way out
+until it can't do that anymore.
+
+163
+00:06:47,940 --> 00:06:49,232
+And then it kind of backtracks.
+
+164
+00:06:49,232 --> 00:06:50,940
+That's one way to
+think about it.
+
+165
+00:06:50,940 --> 00:06:53,330
+And so somehow, in
+breadth-first search,
+
+166
+00:06:53,330 --> 00:06:55,320
+we're like, drawing
+concentric circles.
+
+167
+00:06:55,320 --> 00:06:57,320
+In depth-first search,
+we're doing the opposite.
+
+168
+00:06:57,320 --> 00:06:58,550
+We're like, shooting
+outward until we
+
+169
+00:06:58,550 --> 00:07:00,410
+reach the outer boundary,
+and then exploring
+
+170
+00:07:00,410 --> 00:07:01,500
+the graph that way.
+
+171
+00:07:01,500 --> 00:07:02,000
+OK.
+
+172
+00:07:02,000 --> 00:07:03,740
+And these are sort
+of the two extremes
+
+173
+00:07:03,740 --> 00:07:08,060
+in terms of graph search kind
+of techniques that are typically
+
+174
+00:07:08,060 --> 00:07:10,340
+used under the basic building
+blocks for algorithms
+
+175
+00:07:10,340 --> 00:07:11,430
+in graph theory.
+
+176
+00:07:11,430 --> 00:07:14,570
+So in order to motivate and
+think about depth-first search,
+
+177
+00:07:14,570 --> 00:07:16,760
+we're going to define
+a second problem, which
+
+178
+00:07:16,760 --> 00:07:20,070
+is closely related to shortest
+path, but not exactly the same.
+
+179
+00:07:20,070 --> 00:07:22,170
+And that's the
+reachability problem.
+
+180
+00:07:22,170 --> 00:07:26,310
+So here I have the world's
+simplest directed graph.
+
+181
+00:07:26,310 --> 00:07:28,340
+So the black things
+are the edges.
+
+182
+00:07:28,340 --> 00:07:31,940
+And the circles are the
+nodes or the vertices.
+
+183
+00:07:31,940 --> 00:07:34,670
+And I've marked one
+special node in blue.
+
+184
+00:07:34,670 --> 00:07:37,070
+And his name is the source node.
+
+185
+00:07:37,070 --> 00:07:38,810
+And now the question
+I want to ask
+
+186
+00:07:38,810 --> 00:07:41,300
+is, what are all of the
+other nodes in my graph
+
+187
+00:07:41,300 --> 00:07:44,120
+that I can reach by
+following edges--
+
+188
+00:07:44,120 --> 00:07:47,460
+directed edges--
+starting with the source?
+
+189
+00:07:47,460 --> 00:07:49,070
+So obviously, I
+can get to the node
+
+190
+00:07:49,070 --> 00:07:50,680
+in the lower right, no problem.
+
+191
+00:07:50,680 --> 00:07:52,220
+And of course once
+I get there, I
+
+192
+00:07:52,220 --> 00:07:54,590
+can traverse and
+edge upward to get
+
+193
+00:07:54,590 --> 00:07:57,170
+to that second green vertex.
+
+194
+00:07:57,170 --> 00:07:59,210
+Notice that I was
+really sneaky and evil,
+
+195
+00:07:59,210 --> 00:08:01,790
+and I drew edges in this
+graph that might make you
+
+196
+00:08:01,790 --> 00:08:04,010
+think that the red
+node is reachable.
+
+197
+00:08:04,010 --> 00:08:05,510
+The red one being
+on the upper left.
+
+198
+00:08:05,510 --> 00:08:07,385
+I'm realizing now that
+for colorblind people,
+
+199
+00:08:07,385 --> 00:08:09,350
+this isn't a great slide.
+
+200
+00:08:09,350 --> 00:08:12,110
+But of course,
+because all the edges
+
+201
+00:08:12,110 --> 00:08:14,840
+from the red vertex on
+the left here point out,
+
+202
+00:08:14,840 --> 00:08:18,170
+I can't actually reach it
+from the blue source node.
+
+203
+00:08:18,170 --> 00:08:20,030
+So the reachability
+problem is just
+
+204
+00:08:20,030 --> 00:08:24,110
+asking, which nodes can I
+reach from a given source?
+
+205
+00:08:24,110 --> 00:08:25,500
+Pretty straightforward, I think.
+
+206
+00:08:25,500 --> 00:08:27,730
+Of course, there are
+many ways to solve this.
+
+207
+00:08:27,730 --> 00:08:28,230
+Right?
+
+208
+00:08:28,230 --> 00:08:30,860
+In fact, one way we
+could do it would
+
+209
+00:08:30,860 --> 00:08:32,159
+be to use our previous lecture.
+
+210
+00:08:32,159 --> 00:08:34,700
+We could compute the shortest
+path distance from the source
+
+211
+00:08:34,700 --> 00:08:35,992
+to all the other nodes.
+
+212
+00:08:35,992 --> 00:08:37,909
+And then what would the
+length of the shortest
+
+213
+00:08:37,909 --> 00:08:40,429
+path from the source to
+an unreachable node be?
+
+214
+00:08:40,429 --> 00:08:42,890
+Any thoughts from
+our audience here?
+
+215
+00:08:42,890 --> 00:08:43,640
+Infinity.
+
+216
+00:08:43,640 --> 00:08:46,130
+Thank you, Professor Demaine.
+
+217
+00:08:46,130 --> 00:08:47,120
+Right.
+
+218
+00:08:47,120 --> 00:08:51,260
+So in addition to this, of
+course, a totally reasonable
+
+219
+00:08:51,260 --> 00:08:54,017
+question, thinking back to
+our shortest path lecture,
+
+220
+00:08:54,017 --> 00:08:55,850
+there are sort of two
+queries we might make.
+
+221
+00:08:55,850 --> 00:08:56,350
+Right?
+
+222
+00:08:56,350 --> 00:08:58,670
+One is just what is the
+length of the shortest path?
+
+223
+00:08:58,670 --> 00:09:01,070
+The other is like, what is
+the actual shortest path
+
+224
+00:09:01,070 --> 00:09:03,770
+from the source
+to a given vertex?
+
+225
+00:09:03,770 --> 00:09:06,380
+We can ask a very similar
+thing here, which is like, OK.
+
+226
+00:09:06,380 --> 00:09:09,440
+You tell me that the green
+guy is reachable, but how?
+
+227
+00:09:09,440 --> 00:09:12,680
+Give me a path as evidence
+or a certificate, if you
+
+228
+00:09:12,680 --> 00:09:14,520
+want to be fancy about it.
+
+229
+00:09:14,520 --> 00:09:17,750
+So in order to do that, just
+like last time, remember,
+
+230
+00:09:17,750 --> 00:09:19,550
+we defined a particular
+data structure that
+
+231
+00:09:19,550 --> 00:09:21,110
+was the shortest path tree.
+
+232
+00:09:21,110 --> 00:09:22,880
+We can do something
+very similar here.
+
+233
+00:09:22,880 --> 00:09:26,270
+In particular, this is like the
+extent of my PowerPoint skills
+
+234
+00:09:26,270 --> 00:09:28,010
+here.
+
+235
+00:09:28,010 --> 00:09:32,270
+If I have a
+reachability problem,
+
+236
+00:09:32,270 --> 00:09:33,470
+I can additionally store--
+
+237
+00:09:33,470 --> 00:09:35,480
+I can decorate every
+node in my graph
+
+238
+00:09:35,480 --> 00:09:37,680
+with one other piece
+of information,
+
+239
+00:09:37,680 --> 00:09:41,000
+which is the previous
+node along some path
+
+240
+00:09:41,000 --> 00:09:43,770
+from my source to that thing.
+
+241
+00:09:43,770 --> 00:09:44,270
+Right?
+
+242
+00:09:44,270 --> 00:09:46,160
+And just like last
+time, if I want
+
+243
+00:09:46,160 --> 00:09:50,430
+to get an actual path from the
+source to w, what could I do?
+
+244
+00:09:50,430 --> 00:09:52,070
+I can start with w
+and then just keep
+
+245
+00:09:52,070 --> 00:09:53,840
+following those
+parent relationships
+
+246
+00:09:53,840 --> 00:09:55,660
+until I get back to the source.
+
+247
+00:09:55,660 --> 00:09:58,250
+Then if I flip the order
+of that list of vertices,
+
+248
+00:09:58,250 --> 00:10:02,590
+I get a path from the source
+to the target that's valid.
+
+249
+00:10:02,590 --> 00:10:04,340
+So this object is
+called a path tree, just
+
+250
+00:10:04,340 --> 00:10:06,740
+like we talked-- or a
+parent tree, rather.
+
+251
+00:10:06,740 --> 00:10:08,963
+Just like we talked about
+in our last lecture,
+
+252
+00:10:08,963 --> 00:10:11,630
+there's no reason why this thing
+should ever have a cycle in it.
+
+253
+00:10:11,630 --> 00:10:14,640
+It's certainly a tree.
+
+254
+00:10:14,640 --> 00:10:15,140
+Right.
+
+255
+00:10:15,140 --> 00:10:18,200
+So that's the basic
+reachability problem.
+
+256
+00:10:18,200 --> 00:10:20,780
+And in addition to that, we
+can compute this object P,
+
+257
+00:10:20,780 --> 00:10:23,390
+which is going to give me
+sort of information about how
+
+258
+00:10:23,390 --> 00:10:24,863
+any given node was reachable.
+
+259
+00:10:24,863 --> 00:10:26,780
+There's a slight difference
+between the parent
+
+260
+00:10:26,780 --> 00:10:30,170
+tree that I've defined here and
+the shortest path tree, which
+
+261
+00:10:30,170 --> 00:10:33,140
+I defined last time, which
+is, I'm not going to require
+
+262
+00:10:33,140 --> 00:10:35,930
+that the shortest path I
+get-- oh, man-- the path
+
+263
+00:10:35,930 --> 00:10:40,490
+I get when I backtrack along
+my tree P is the shortest path,
+
+264
+00:10:40,490 --> 00:10:43,760
+it's just a path because for
+the reachability problem,
+
+265
+00:10:43,760 --> 00:10:45,560
+I actually don't care.
+
+266
+00:10:45,560 --> 00:10:48,320
+Like, I could have a weird,
+circuitous, crazy long path.
+
+267
+00:10:48,320 --> 00:10:52,260
+And it still tells me
+that a node is reachable.
+
+268
+00:10:52,260 --> 00:10:52,760
+Right.
+
+269
+00:10:52,760 --> 00:10:55,890
+So that's our basic set
+up and our data structure.
+
+270
+00:10:55,890 --> 00:10:59,042
+And now we can introduce a
+problem to solve reachability.
+
+271
+00:10:59,042 --> 00:11:00,500
+Again, we already
+have an algorithm
+
+272
+00:11:00,500 --> 00:11:03,170
+for doing that, which is
+to compute shortest paths.
+
+273
+00:11:03,170 --> 00:11:05,390
+And remember that our
+shortest path algorithm
+
+274
+00:11:05,390 --> 00:11:07,490
+from previous lecture
+took linear time
+
+275
+00:11:07,490 --> 00:11:08,810
+and the size of the input.
+
+276
+00:11:08,810 --> 00:11:11,330
+It took v plus e time.
+
+277
+00:11:11,330 --> 00:11:13,288
+Now the question is, can
+we do a little better?
+
+278
+00:11:13,288 --> 00:11:15,580
+The answer, obviously, is
+yes, because I just asked it,
+
+279
+00:11:15,580 --> 00:11:16,880
+and I gave you this problem.
+
+280
+00:11:16,880 --> 00:11:18,030
+OK.
+
+281
+00:11:18,030 --> 00:11:22,010
+And here's a technique for doing
+that, which unsurprisingly,
+
+282
+00:11:22,010 --> 00:11:23,780
+is a recursive algorithm.
+
+283
+00:11:23,780 --> 00:11:27,830
+I'm going to swap my notes
+for my handwritten notes.
+
+284
+00:11:27,830 --> 00:11:30,920
+And this algorithm is
+called depth-first search.
+
+285
+00:11:30,920 --> 00:11:33,515
+And here's the basic strategy.
+
+286
+00:11:33,515 --> 00:11:34,890
+I'm going to choose
+a source node
+
+287
+00:11:34,890 --> 00:11:36,817
+and label that Node 1 here.
+
+288
+00:11:36,817 --> 00:11:38,900
+I suppose it actually would
+have made sense for me
+
+289
+00:11:38,900 --> 00:11:40,250
+to actually 0 index this.
+
+290
+00:11:40,250 --> 00:11:43,010
+Maybe in the slides
+I'll fix it later.
+
+291
+00:11:43,010 --> 00:11:46,910
+But in any event, I'm going
+to mark my source node.
+
+292
+00:11:46,910 --> 00:11:50,630
+And now I'm going to look at
+every node, every edge coming
+
+293
+00:11:50,630 --> 00:11:53,300
+out of that node, and I'm
+going to visit it recursively.
+
+294
+00:11:53,300 --> 00:11:57,560
+So that's our sort of for loop
+inside of this function visit.
+
+295
+00:11:57,560 --> 00:11:59,240
+And then for each
+neighboring node,
+
+296
+00:11:59,240 --> 00:12:01,470
+if I haven't visited it
+before, in other words,
+
+297
+00:12:01,470 --> 00:12:03,590
+I currently haven't
+given it a parent.
+
+298
+00:12:03,590 --> 00:12:05,108
+That's our if statement here.
+
+299
+00:12:05,108 --> 00:12:07,400
+Then I'm going to say, well,
+now they do have a parent.
+
+300
+00:12:07,400 --> 00:12:08,840
+And that parent is me.
+
+301
+00:12:08,840 --> 00:12:10,477
+And I'm going to recurse.
+
+302
+00:12:10,477 --> 00:12:11,810
+You guys see what this is doing?
+
+303
+00:12:11,810 --> 00:12:14,390
+It's kind of crawling
+outward inside of our graph.
+
+304
+00:12:14,390 --> 00:12:17,600
+So let's do the
+example on the screen.
+
+305
+00:12:17,600 --> 00:12:20,990
+And I purposefully designed this
+experiment-- or this example--
+
+306
+00:12:20,990 --> 00:12:23,480
+to look a little bit different
+from breadth-first search,
+
+307
+00:12:23,480 --> 00:12:26,000
+at least if you choose to
+do the ordering that I did.
+
+308
+00:12:26,000 --> 00:12:28,010
+So here's our graph.
+
+309
+00:12:28,010 --> 00:12:34,290
+1, 2, 5, 3, 4.
+
+310
+00:12:34,290 --> 00:12:34,790
+OK.
+
+311
+00:12:34,790 --> 00:12:37,198
+And let's think about
+the traversal order
+
+312
+00:12:37,198 --> 00:12:38,990
+that the depth-first
+search is going to do.
+
+313
+00:12:38,990 --> 00:12:39,460
+Right.
+
+314
+00:12:39,460 --> 00:12:40,335
+So here's our source.
+
+315
+00:12:43,090 --> 00:12:44,860
+And now what does the source do?
+
+316
+00:12:44,860 --> 00:12:47,360
+It rec-- so let's think
+about our recursion tree.
+
+317
+00:12:47,360 --> 00:12:50,360
+So we have the source
+all the way up in here.
+
+318
+00:12:50,360 --> 00:12:52,810
+And now he's going to
+start calling the visit
+
+319
+00:12:52,810 --> 00:12:54,850
+function recursively.
+
+320
+00:12:54,850 --> 00:12:56,500
+So.
+
+321
+00:12:56,500 --> 00:12:59,500
+And I'll go ahead and
+number these the same as
+
+322
+00:12:59,500 --> 00:13:00,100
+on the screen.
+
+323
+00:13:02,700 --> 00:13:04,680
+Well, he has one
+outgoing neighbor,
+
+324
+00:13:04,680 --> 00:13:06,133
+and it hasn't been visited yet.
+
+325
+00:13:06,133 --> 00:13:08,550
+So of course, the very first
+recursive call that I'll make
+
+326
+00:13:08,550 --> 00:13:10,990
+is to that neighbor 2.
+
+327
+00:13:10,990 --> 00:13:14,393
+Now the neighbor
+2 also recurses.
+
+328
+00:13:14,393 --> 00:13:16,060
+Hopefully this kind
+of schematic picture
+
+329
+00:13:16,060 --> 00:13:18,610
+makes some sense, what
+I'm trying to draw here.
+
+330
+00:13:18,610 --> 00:13:22,540
+And well now, the 2 has
+two neighbors, a 3 and a 5.
+
+331
+00:13:22,540 --> 00:13:24,040
+So let's say that
+we choose 3 first.
+
+332
+00:13:27,000 --> 00:13:29,277
+Well, the 3 now
+recurses and calls 4.
+
+333
+00:13:29,277 --> 00:13:31,110
+And then the recursion
+tree is kind of done.
+
+334
+00:13:31,110 --> 00:13:32,610
+So now it goes back out.
+
+335
+00:13:32,610 --> 00:13:36,480
+And then finally,
+well, now, the 3--
+
+336
+00:13:36,480 --> 00:13:38,590
+or, oh, boy.
+
+337
+00:13:38,590 --> 00:13:39,090
+Yeah.
+
+338
+00:13:39,090 --> 00:13:41,940
+The 2 looks at his next
+neighbor, which is the 5
+
+339
+00:13:41,940 --> 00:13:43,800
+and visits that recursively.
+
+340
+00:13:43,800 --> 00:13:46,830
+Notice that this is not
+following the level sets.
+
+341
+00:13:46,830 --> 00:13:47,460
+Right?
+
+342
+00:13:47,460 --> 00:13:49,620
+The depth-first search
+algorithm got all the way
+
+343
+00:13:49,620 --> 00:13:52,740
+to the end of my tree
+in the recursive calls
+
+344
+00:13:52,740 --> 00:13:54,840
+and then kind of backed
+its way out to the 2
+
+345
+00:13:54,840 --> 00:13:56,225
+before calling the 5.
+
+346
+00:13:56,225 --> 00:13:57,600
+These are not the
+same technique.
+
+347
+00:13:57,600 --> 00:14:01,085
+One goes all the way to the end
+and then kind of backtracks.
+
+348
+00:14:01,085 --> 00:14:02,460
+When I say backtrack,
+what I mean
+
+349
+00:14:02,460 --> 00:14:04,803
+is the recursion is
+kind of unraveling.
+
+350
+00:14:04,803 --> 00:14:07,470
+Whereas in breadth-first search,
+I visit everything in one level
+
+351
+00:14:07,470 --> 00:14:09,300
+set before I work my way out.
+
+352
+00:14:09,300 --> 00:14:12,080
+That distinction make sense?
+
+353
+00:14:12,080 --> 00:14:12,590
+OK.
+
+354
+00:14:12,590 --> 00:14:14,882
+So of course, we need to
+prove that this algorithm does
+
+355
+00:14:14,882 --> 00:14:16,410
+something useful.
+
+356
+00:14:16,410 --> 00:14:17,430
+So let's do that now.
+
+357
+00:14:17,430 --> 00:14:21,170
+So in particular, we
+need a correctness proof.
+
+358
+00:14:21,170 --> 00:14:26,990
+So our claim is
+going to be that--
+
+359
+00:14:26,990 --> 00:14:36,740
+let's see here-- the depth-first
+search algorithm visits all,
+
+360
+00:14:36,740 --> 00:14:45,740
+I guess reachable v,
+and that it correctly
+
+361
+00:14:45,740 --> 00:14:47,900
+sets the parent in the process.
+
+362
+00:14:56,650 --> 00:14:57,370
+OK.
+
+363
+00:14:57,370 --> 00:15:00,862
+So in order to prove
+this, of course,
+
+364
+00:15:00,862 --> 00:15:02,570
+as with almost everything
+in this course,
+
+365
+00:15:02,570 --> 00:15:04,630
+we're going to use induction.
+
+366
+00:15:04,630 --> 00:15:06,880
+And in particular,
+what we're going to do
+
+367
+00:15:06,880 --> 00:15:10,095
+is do induction on the
+distance from the source.
+
+368
+00:15:10,095 --> 00:15:11,470
+So we're going to
+say that, like,
+
+369
+00:15:11,470 --> 00:15:16,510
+for all vertices in
+distance k from the source,
+
+370
+00:15:16,510 --> 00:15:17,630
+this statement is true.
+
+371
+00:15:17,630 --> 00:15:20,050
+And then we're going to
+prove this inductively on k.
+
+372
+00:15:20,050 --> 00:15:20,590
+OK?
+
+373
+00:15:20,590 --> 00:15:26,770
+So we want to do
+induction on k, which
+
+374
+00:15:26,770 --> 00:15:33,020
+is the distance to
+the source vertex.
+
+375
+00:15:33,020 --> 00:15:35,410
+So as with all of
+our inductive proofs,
+
+376
+00:15:35,410 --> 00:15:38,570
+we have to do our base case
+and then our inductive step.
+
+377
+00:15:38,570 --> 00:15:42,460
+So in the base case, k equals 0.
+
+378
+00:15:42,460 --> 00:15:44,140
+This is a hella
+easy case because,
+
+379
+00:15:44,140 --> 00:15:46,720
+of course, what
+is the thing that
+
+380
+00:15:46,720 --> 00:15:49,970
+is distance 0 from the source?
+
+381
+00:15:49,970 --> 00:15:50,970
+It's the source!
+
+382
+00:15:50,970 --> 00:15:51,470
+Yeah.
+
+383
+00:15:51,470 --> 00:15:53,750
+And take a look at our
+strategy all the way
+
+384
+00:15:53,750 --> 00:15:55,010
+at the top of the slide.
+
+385
+00:15:55,010 --> 00:15:58,347
+We explicitly set the correct
+parent for the source,
+
+386
+00:15:58,347 --> 00:16:00,680
+and in some sense, visit it
+because the very first thing
+
+387
+00:16:00,680 --> 00:16:02,455
+we do is call visit of s.
+
+388
+00:16:02,455 --> 00:16:04,080
+So there's kind of
+nothing to say here.
+
+389
+00:16:04,080 --> 00:16:04,520
+Yeah?
+
+390
+00:16:04,520 --> 00:16:06,470
+Or there's plenty to say if
+you write it on your homework.
+
+391
+00:16:06,470 --> 00:16:08,150
+But your lazy
+instructor is going
+
+392
+00:16:08,150 --> 00:16:10,310
+to write a check mark here.
+
+393
+00:16:10,310 --> 00:16:12,630
+OK.
+
+394
+00:16:12,630 --> 00:16:14,460
+So now we have to do
+our inductive step.
+
+395
+00:16:20,350 --> 00:16:23,100
+So what does that mean?
+
+396
+00:16:23,100 --> 00:16:25,050
+We're going to assume
+that our statement is
+
+397
+00:16:25,050 --> 00:16:27,203
+true for all nodes
+within a distance k.
+
+398
+00:16:27,203 --> 00:16:29,370
+And then we're going to
+prove that the same thing is
+
+399
+00:16:29,370 --> 00:16:32,220
+true for all nodes within
+a distance k plus 1.
+
+400
+00:16:32,220 --> 00:16:33,360
+OK.
+
+401
+00:16:33,360 --> 00:16:35,110
+So let's do that.
+
+402
+00:16:35,110 --> 00:16:43,390
+Let's consider a vertex v
+that's distance k plus 1 away.
+
+403
+00:16:43,390 --> 00:16:45,990
+So in other words, the
+distance from the source to v
+
+404
+00:16:45,990 --> 00:16:48,750
+is equal to k plus 1.
+
+405
+00:16:48,750 --> 00:16:49,750
+And what's our goal?
+
+406
+00:16:49,750 --> 00:16:52,630
+Our goal is to show that the
+parent of v is set correctly.
+
+407
+00:16:52,630 --> 00:16:53,130
+Yeah?
+
+408
+00:16:55,740 --> 00:16:57,170
+What was that?
+
+409
+00:16:57,170 --> 00:16:58,827
+AUDIENCE: [INAUDIBLE].
+
+410
+00:16:58,827 --> 00:16:59,910
+JUSTIN SOLOMON: Oh, sorry.
+
+411
+00:16:59,910 --> 00:17:02,340
+I forgot that the distances
+in this class are in order.
+
+412
+00:17:02,340 --> 00:17:02,610
+Yeah.
+
+413
+00:17:02,610 --> 00:17:03,610
+That's absolutely right.
+
+414
+00:17:03,610 --> 00:17:07,075
+So it should be the
+distance from s to v. Yeah.
+
+415
+00:17:07,075 --> 00:17:07,575
+Sorry.
+
+416
+00:17:07,575 --> 00:17:09,825
+I'm really not used to
+thinking about directed graphs.
+
+417
+00:17:09,825 --> 00:17:12,730
+But that's a good fix.
+
+418
+00:17:12,730 --> 00:17:13,660
+OK.
+
+419
+00:17:13,660 --> 00:17:15,589
+So now what can we do?
+
+420
+00:17:15,589 --> 00:17:19,369
+Well, there's this
+number is distance here.
+
+421
+00:17:19,369 --> 00:17:22,810
+So in particular, the
+shortest path from s to v.
+
+422
+00:17:22,810 --> 00:17:25,602
+So remember our argument
+last time that essentially,
+
+423
+00:17:25,602 --> 00:17:28,060
+when we look at shortest path
+and we kind of truncate by 1,
+
+424
+00:17:28,060 --> 00:17:29,880
+it's still shortest path?
+
+425
+00:17:29,880 --> 00:17:31,630
+That property doesn't
+matter so much here.
+
+426
+00:17:31,630 --> 00:17:33,100
+But at least we
+know that there's
+
+427
+00:17:33,100 --> 00:17:37,090
+another vertex on the path,
+which is 1 distance from one
+
+428
+00:17:37,090 --> 00:17:39,430
+less away.
+
+429
+00:17:39,430 --> 00:17:45,910
+So let's take u, which
+is also a vertex,
+
+430
+00:17:45,910 --> 00:17:54,820
+to be the previous node on
+the shortest path from s
+
+431
+00:17:54,820 --> 00:17:57,140
+to v. Right.
+
+432
+00:17:57,140 --> 00:18:01,790
+And so in particular, we know
+that the distance from s to u
+
+433
+00:18:01,790 --> 00:18:02,630
+is equal to k.
+
+434
+00:18:02,630 --> 00:18:05,750
+And conveniently, of course,
+by our inductive hypothesis
+
+435
+00:18:05,750 --> 00:18:09,780
+here, we know that our
+property is true for this guy.
+
+436
+00:18:09,780 --> 00:18:10,590
+OK.
+
+437
+00:18:10,590 --> 00:18:13,540
+So now our algorithm,
+what do we know?
+
+438
+00:18:13,540 --> 00:18:15,840
+Well, because our
+property is true,
+
+439
+00:18:15,840 --> 00:18:17,880
+the visit function at
+some point in its life
+
+440
+00:18:17,880 --> 00:18:20,030
+is called on this vertex u.
+
+441
+00:18:20,030 --> 00:18:22,650
+That's sort of what
+our induction assumes.
+
+442
+00:18:22,650 --> 00:18:26,070
+So we have two cases.
+
+443
+00:18:26,070 --> 00:18:26,580
+Right.
+
+444
+00:18:26,580 --> 00:18:35,520
+So when we visit u, we know
+that when we call this visit
+
+445
+00:18:35,520 --> 00:18:40,080
+function, well, remember that
+v kind of by definition is
+
+446
+00:18:40,080 --> 00:18:41,400
+in Adj+ of u.
+
+447
+00:18:41,400 --> 00:18:41,900
+Right.
+
+448
+00:18:41,900 --> 00:18:51,450
+So in particular, DGS
+is going to consider v
+
+449
+00:18:51,450 --> 00:18:53,520
+when it gets called.
+
+450
+00:18:53,520 --> 00:18:55,360
+OK.
+
+451
+00:18:55,360 --> 00:18:56,710
+And now there's two cases.
+
+452
+00:18:56,710 --> 00:18:57,790
+Right?
+
+453
+00:18:57,790 --> 00:19:07,400
+So either when this happens,
+P of v does not equal None.
+
+454
+00:19:07,400 --> 00:19:07,947
+Right.
+
+455
+00:19:07,947 --> 00:19:09,030
+Well, what does that mean?
+
+456
+00:19:09,030 --> 00:19:12,320
+Well, it means that we already
+kind of found a suitable parent
+
+457
+00:19:12,320 --> 00:19:15,960
+for v. And we're in good shape.
+
+458
+00:19:15,960 --> 00:19:21,720
+Otherwise, p of v
+does equal None.
+
+459
+00:19:21,720 --> 00:19:23,910
+Well, in this case, the
+very next line of code
+
+460
+00:19:23,910 --> 00:19:25,350
+correctly sets the parent.
+
+461
+00:19:25,350 --> 00:19:27,030
+And we're all set.
+
+462
+00:19:27,030 --> 00:19:31,300
+So in both of these two cases,
+we show that the parent of u
+
+463
+00:19:31,300 --> 00:19:33,690
+was set correctly either
+by that line of code
+
+464
+00:19:33,690 --> 00:19:35,890
+right here or just previously.
+
+465
+00:19:35,890 --> 00:19:40,090
+And so in either case,
+our induction is done.
+
+466
+00:19:40,090 --> 00:19:40,840
+All right.
+
+467
+00:19:40,840 --> 00:19:42,970
+I guess given the
+feedback I received
+
+468
+00:19:42,970 --> 00:19:47,920
+from our previous lecture, we
+now can end our LaTeX suitably.
+
+469
+00:19:47,920 --> 00:19:48,520
+OK.
+
+470
+00:19:48,520 --> 00:19:49,880
+So what did we just show?
+
+471
+00:19:49,880 --> 00:19:52,990
+We showed that the depth-first
+search algorithm can dig around
+
+472
+00:19:52,990 --> 00:19:55,420
+in a graph and tell me
+all of the things that
+
+473
+00:19:55,420 --> 00:19:58,900
+are searchable, or rather, are
+reachable from a given source,
+
+474
+00:19:58,900 --> 00:20:01,330
+just basically by calling
+visit on that source
+
+475
+00:20:01,330 --> 00:20:04,010
+and then expanding
+outward recursively.
+
+476
+00:20:04,010 --> 00:20:04,510
+OK.
+
+477
+00:20:04,510 --> 00:20:06,910
+So I think this is
+certainly straightforward
+
+478
+00:20:06,910 --> 00:20:08,790
+from an intuitive perspective.
+
+479
+00:20:08,790 --> 00:20:10,290
+It's easy to get
+lost when you write
+
+480
+00:20:10,290 --> 00:20:12,755
+these kind of formal
+induction proofs
+
+481
+00:20:12,755 --> 00:20:14,880
+because they always feel
+a tiny bit like tautology.
+
+482
+00:20:14,880 --> 00:20:17,005
+So you should go home and
+kind of convince yourself
+
+483
+00:20:17,005 --> 00:20:18,050
+that it's not.
+
+484
+00:20:18,050 --> 00:20:18,550
+OK.
+
+485
+00:20:18,550 --> 00:20:20,300
+So of course, what do
+we do in this class?
+
+486
+00:20:20,300 --> 00:20:22,470
+We always follow the same
+kind of boring pattern.
+
+487
+00:20:22,470 --> 00:20:24,660
+The first thing we do,
+define an algorithm.
+
+488
+00:20:24,660 --> 00:20:27,160
+Second thing we do, make sure
+that it's the right algorithm.
+
+489
+00:20:27,160 --> 00:20:28,702
+What's the third
+thing we need to do?
+
+490
+00:20:28,702 --> 00:20:29,577
+AUDIENCE: Analyze it.
+
+491
+00:20:29,577 --> 00:20:30,868
+JUSTIN SOLOMON: Analyze it.
+
+492
+00:20:30,868 --> 00:20:31,410
+That's right.
+
+493
+00:20:31,410 --> 00:20:34,110
+In particular, make sure that
+it finishes before the heat
+
+494
+00:20:34,110 --> 00:20:35,670
+death of the universe.
+
+495
+00:20:35,670 --> 00:20:38,640
+And indeed, depth-first
+research doesn't really
+
+496
+00:20:38,640 --> 00:20:41,080
+take all that long,
+which is a good thing.
+
+497
+00:20:41,080 --> 00:20:43,450
+So let's think about this a bit.
+
+498
+00:20:43,450 --> 00:20:46,160
+So what's going to
+end up happening
+
+499
+00:20:46,160 --> 00:20:49,280
+in depth-first
+search, well, we're
+
+500
+00:20:49,280 --> 00:20:52,250
+going to visit every vertex
+at most once, kind of
+
+501
+00:20:52,250 --> 00:20:54,110
+by definition here.
+
+502
+00:20:54,110 --> 00:20:56,870
+And in each case, we're going
+to just visit its neighboring
+
+503
+00:20:56,870 --> 00:20:58,070
+edges.
+
+504
+00:20:58,070 --> 00:21:01,490
+Can we ever traverse an
+edge more than one time?
+
+505
+00:21:01,490 --> 00:21:01,990
+No.
+
+506
+00:21:01,990 --> 00:21:02,140
+Right.
+
+507
+00:21:02,140 --> 00:21:03,910
+Because the visit
+function only ever gets
+
+508
+00:21:03,910 --> 00:21:05,960
+called one time per vertex.
+
+509
+00:21:05,960 --> 00:21:07,600
+And our edges are directed.
+
+510
+00:21:07,600 --> 00:21:08,110
+Right.
+
+511
+00:21:08,110 --> 00:21:12,220
+So kind think about the from
+of every edge, the from vertex
+
+512
+00:21:12,220 --> 00:21:13,690
+is only ever visited one time.
+
+513
+00:21:13,690 --> 00:21:17,290
+And hence, every edge is
+only visited one time.
+
+514
+00:21:17,290 --> 00:21:19,030
+Do we ever visit-- ah, yes.
+
+515
+00:21:19,030 --> 00:21:21,030
+AUDIENCE: Does DFS work
+for an undirected graph?
+
+516
+00:21:21,030 --> 00:21:22,530
+JUSTIN SOLOMON: An
+undirected graph.
+
+517
+00:21:22,530 --> 00:21:23,080
+Absolutely.
+
+518
+00:21:23,080 --> 00:21:25,847
+So there's sort of different
+ways to think about it.
+
+519
+00:21:25,847 --> 00:21:27,430
+One is to think of
+an undirected graph
+
+520
+00:21:27,430 --> 00:21:29,085
+like a directed
+graph with two edges
+
+521
+00:21:29,085 --> 00:21:30,460
+pointed either
+way, which I think
+
+522
+00:21:30,460 --> 00:21:32,740
+is in this class how we
+actually kind of notated it
+
+523
+00:21:32,740 --> 00:21:33,740
+in the previous lecture.
+
+524
+00:21:36,100 --> 00:21:36,600
+Yeah.
+
+525
+00:21:36,600 --> 00:21:38,933
+Actually, that's probably a
+reasonable way to reduce it.
+
+526
+00:21:38,933 --> 00:21:41,010
+So let's stick with that.
+
+527
+00:21:41,010 --> 00:21:41,790
+Right.
+
+528
+00:21:41,790 --> 00:21:44,220
+Now, does DFS ever
+visit a vertex
+
+529
+00:21:44,220 --> 00:21:46,140
+that is not reachable
+from the source?
+
+530
+00:21:48,720 --> 00:21:51,030
+Well, the answer is no
+because all I ever do
+
+531
+00:21:51,030 --> 00:21:52,680
+is recursively call
+on my neighbors.
+
+532
+00:21:52,680 --> 00:21:55,470
+And so kind of by definition,
+if I'm not reachable,
+
+533
+00:21:55,470 --> 00:21:57,612
+DFS will never see it.
+
+534
+00:21:57,612 --> 00:21:59,320
+So if I think about
+my runtime carefully,
+
+535
+00:21:59,320 --> 00:22:01,980
+it's not quite the same
+as breadth-first search.
+
+536
+00:22:01,980 --> 00:22:05,870
+Remember that breadth-first
+search took v plus e time.
+
+537
+00:22:05,870 --> 00:22:09,140
+In depth-first search, it
+just takes order e time
+
+538
+00:22:09,140 --> 00:22:12,050
+because I'm expanding outward
+from the source vertex,
+
+539
+00:22:12,050 --> 00:22:14,930
+hitting every edge
+adjacent to every vertex
+
+540
+00:22:14,930 --> 00:22:16,400
+that I've seen so far.
+
+541
+00:22:16,400 --> 00:22:19,010
+But I never reach a
+vertex that I haven't--
+
+542
+00:22:19,010 --> 00:22:20,270
+that isn't reachable.
+
+543
+00:22:20,270 --> 00:22:20,990
+Right?
+
+544
+00:22:20,990 --> 00:22:24,170
+And so because this only ever
+touches every edge one time,
+
+545
+00:22:24,170 --> 00:22:25,837
+we're in good shape.
+
+546
+00:22:25,837 --> 00:22:26,920
+And I see a question here.
+
+547
+00:22:26,920 --> 00:22:27,420
+Yeah.
+
+548
+00:22:27,420 --> 00:22:29,390
+AUDIENCE: Does
+BFS reach vertices
+
+549
+00:22:29,390 --> 00:22:31,550
+that are not reachable?
+
+550
+00:22:31,550 --> 00:22:33,380
+JUSTIN SOLOMON: Does
+BFS reach vertices
+
+551
+00:22:33,380 --> 00:22:36,460
+that are not reachable?
+
+552
+00:22:36,460 --> 00:22:38,090
+I guess not, now
+that you mention it.
+
+553
+00:22:38,090 --> 00:22:40,900
+But at least in my
+boring proof of order
+
+554
+00:22:40,900 --> 00:22:43,900
+v time last time, our
+very first step of BFS,
+
+555
+00:22:43,900 --> 00:22:47,080
+reserve space
+proportional to v, which
+
+556
+00:22:47,080 --> 00:22:49,777
+is enough to already make
+that runtime correct.
+
+557
+00:22:49,777 --> 00:22:50,360
+Good question.
+
+558
+00:22:50,360 --> 00:22:50,560
+Yeah.
+
+559
+00:22:50,560 --> 00:22:52,270
+So I guess the way that
+we've talked about it where
+
+560
+00:22:52,270 --> 00:22:54,700
+you can stretch one little
+set after a time, if you
+
+561
+00:22:54,700 --> 00:22:56,640
+think of that as
+reachability, then no.
+
+562
+00:22:56,640 --> 00:22:58,330
+It doesn't reach
+it in the for loop.
+
+563
+00:22:58,330 --> 00:23:00,790
+But just by construction,
+when we started
+
+564
+00:23:00,790 --> 00:23:04,267
+we already took the time that
+we're talking about here.
+
+565
+00:23:04,267 --> 00:23:06,350
+So notice these run times
+aren't exactly the same.
+
+566
+00:23:06,350 --> 00:23:09,430
+So for example, if my
+graph has no edges,
+
+567
+00:23:09,430 --> 00:23:14,320
+BFS still is going to
+take time because it still
+
+568
+00:23:14,320 --> 00:23:17,068
+has to take order
+v time, at least
+
+569
+00:23:17,068 --> 00:23:19,360
+in the sort of brain-dead
+way that we've implemented it
+
+570
+00:23:19,360 --> 00:23:19,750
+last time.
+
+571
+00:23:19,750 --> 00:23:21,500
+Obviously, in that
+case, we could probably
+
+572
+00:23:21,500 --> 00:23:23,020
+do something better.
+
+573
+00:23:23,020 --> 00:23:26,080
+Whereas the way that we've
+defined the DFS algorithm,
+
+574
+00:23:26,080 --> 00:23:28,510
+it only takes edge time.
+
+575
+00:23:28,510 --> 00:23:30,380
+I see confusion on
+my instructor's face.
+
+576
+00:23:30,380 --> 00:23:30,880
+No?
+
+577
+00:23:30,880 --> 00:23:31,630
+OK.
+
+578
+00:23:31,630 --> 00:23:33,538
+Good.
+
+579
+00:23:33,538 --> 00:23:35,080
+The one thing to
+notice is that these
+
+580
+00:23:35,080 --> 00:23:38,230
+are algorithms for slightly
+different tasks in some sense.
+
+581
+00:23:38,230 --> 00:23:40,660
+The way that we wrote down
+breadth-first search last time,
+
+582
+00:23:40,660 --> 00:23:42,658
+conveniently, it gives
+us the shortest path.
+
+583
+00:23:42,658 --> 00:23:44,950
+There are breadth-first search
+algorithms that doesn't.
+
+584
+00:23:44,950 --> 00:23:48,610
+I think in this class we kind of
+think of breadth-first search--
+
+585
+00:23:48,610 --> 00:23:50,960
+we motivate it in terms of
+the shortest path problem.
+
+586
+00:23:50,960 --> 00:23:53,470
+But it's just kind of a
+strategy of working outwards
+
+587
+00:23:53,470 --> 00:23:55,900
+from a vertex.
+
+588
+00:23:55,900 --> 00:23:57,700
+Whereas here, the way
+we've written down
+
+589
+00:23:57,700 --> 00:24:00,372
+depth-first search, there's no
+reason why the path that we get
+
+590
+00:24:00,372 --> 00:24:01,330
+should be the shortest.
+
+591
+00:24:01,330 --> 00:24:01,830
+Right?
+
+592
+00:24:01,830 --> 00:24:05,440
+So to think of a
+really extreme example,
+
+593
+00:24:05,440 --> 00:24:07,030
+let's say that I
+have a cycle graph.
+
+594
+00:24:11,140 --> 00:24:14,150
+So I get a big loop like this.
+
+595
+00:24:14,150 --> 00:24:16,660
+Let's say that I do
+depth-first search
+
+596
+00:24:16,660 --> 00:24:18,310
+starting from this vertex.
+
+597
+00:24:18,310 --> 00:24:19,930
+Well, what will happen?
+
+598
+00:24:19,930 --> 00:24:23,650
+Well, this guy will call
+its neighbor recursively,
+
+599
+00:24:23,650 --> 00:24:25,690
+who will then call its
+neighbor recursively,
+
+600
+00:24:25,690 --> 00:24:29,060
+who will then call his neighbor
+recursively, and so on.
+
+601
+00:24:29,060 --> 00:24:32,440
+So of course, when I do
+depth-first search, when
+
+602
+00:24:32,440 --> 00:24:35,320
+I get to this vertex,
+there's a chain of 1, 2, 3, 4
+
+603
+00:24:35,320 --> 00:24:37,450
+vertices behind it.
+
+604
+00:24:37,450 --> 00:24:41,470
+Is that the shortest path from
+the source to the target here?
+
+605
+00:24:41,470 --> 00:24:42,250
+Well, clearly not.
+
+606
+00:24:42,250 --> 00:24:42,610
+Right?
+
+607
+00:24:42,610 --> 00:24:44,020
+I could have
+traversed that edge.
+
+608
+00:24:44,020 --> 00:24:46,140
+I just chose not to.
+
+609
+00:24:46,140 --> 00:24:47,798
+OK.
+
+610
+00:24:47,798 --> 00:24:49,590
+So that's the depth-first
+search algorithm.
+
+611
+00:24:49,590 --> 00:24:51,510
+It's just essentially
+a recursive strategy
+
+612
+00:24:51,510 --> 00:24:54,570
+where I traverse
+all my neighbors,
+
+613
+00:24:54,570 --> 00:24:56,940
+and each of my neighbors
+traverses their neighbors,
+
+614
+00:24:56,940 --> 00:24:58,870
+and so on.
+
+615
+00:24:58,870 --> 00:24:59,370
+OK.
+
+616
+00:24:59,370 --> 00:25:01,162
+So why might we want
+to use this algorithm?
+
+617
+00:25:01,162 --> 00:25:04,000
+Well, we've already solved
+the reachability problem.
+
+618
+00:25:04,000 --> 00:25:07,440
+So let's solve a few more things
+using the same basic strategy
+
+619
+00:25:07,440 --> 00:25:08,800
+here.
+
+620
+00:25:08,800 --> 00:25:12,053
+So there's some notions
+that we've sort of--
+
+621
+00:25:12,053 --> 00:25:14,470
+actually, in some sense, already
+used in the lecture here.
+
+622
+00:25:14,470 --> 00:25:15,887
+But we might as
+well call them out
+
+623
+00:25:15,887 --> 00:25:19,240
+for what they are, which is
+this idea of connectivity.
+
+624
+00:25:19,240 --> 00:25:21,430
+So a graph is
+connected if there's
+
+625
+00:25:21,430 --> 00:25:25,480
+a path getting from every
+vertex to every other vertex.
+
+626
+00:25:25,480 --> 00:25:26,380
+Right.
+
+627
+00:25:26,380 --> 00:25:28,060
+Now connectivity
+in a directed graph
+
+628
+00:25:28,060 --> 00:25:30,805
+is kind of a weird object.
+
+629
+00:25:30,805 --> 00:25:32,680
+Like, for instance,
+think of a directed graph
+
+630
+00:25:32,680 --> 00:25:33,790
+with just two edges.
+
+631
+00:25:33,790 --> 00:25:38,440
+And one edge goes from u to
+v. Then I can get from v to u,
+
+632
+00:25:38,440 --> 00:25:39,790
+but not vise versa.
+
+633
+00:25:39,790 --> 00:25:42,460
+That's kind of a weird notion.
+
+634
+00:25:42,460 --> 00:25:46,480
+So here in 6006 we'll mostly
+worry about connectivity only
+
+635
+00:25:46,480 --> 00:25:48,550
+for undirected graphs
+because they're--
+
+636
+00:25:48,550 --> 00:25:52,210
+the vertices just basically come
+in like, big connected clumps.
+
+637
+00:25:52,210 --> 00:25:54,640
+Or the more technical term
+for a big connected clump
+
+638
+00:25:54,640 --> 00:25:56,250
+is a connected component.
+
+639
+00:25:56,250 --> 00:25:56,750
+Yeah?
+
+640
+00:25:56,750 --> 00:25:58,740
+So let's see an example.
+
+641
+00:25:58,740 --> 00:26:02,750
+So let's say that I
+have a graph, which has
+
+642
+00:26:02,750 --> 00:26:08,120
+an edge and then a triangle.
+
+643
+00:26:08,120 --> 00:26:09,283
+This is one graph.
+
+644
+00:26:09,283 --> 00:26:09,950
+Do you see that?
+
+645
+00:26:09,950 --> 00:26:11,480
+There's a collection
+of vertices,
+
+646
+00:26:11,480 --> 00:26:13,730
+and there's a
+collection of edges.
+
+647
+00:26:13,730 --> 00:26:16,460
+But it has two
+connected components--
+
+648
+00:26:16,460 --> 00:26:19,560
+the guy on the right
+and the guy on the left,
+
+649
+00:26:19,560 --> 00:26:22,130
+meaning that each
+vertex here is reachable
+
+650
+00:26:22,130 --> 00:26:23,480
+from every other vertex here.
+
+651
+00:26:23,480 --> 00:26:25,790
+Each vertex here is reachable
+from every vertex here.
+
+652
+00:26:25,790 --> 00:26:28,070
+But there's no edge that
+goes from the triangle
+
+653
+00:26:28,070 --> 00:26:29,550
+to the line segment.
+
+654
+00:26:29,550 --> 00:26:30,260
+Yeah?
+
+655
+00:26:30,260 --> 00:26:32,730
+And so in the connected
+components problem,
+
+656
+00:26:32,730 --> 00:26:35,420
+we're given a graph
+like this guy.
+
+657
+00:26:35,420 --> 00:26:37,080
+And initially, we
+don't, you know--
+
+658
+00:26:37,080 --> 00:26:37,580
+OK.
+
+659
+00:26:37,580 --> 00:26:39,372
+When I draw it like
+this, it's pretty clear
+
+660
+00:26:39,372 --> 00:26:42,620
+that my graph has two
+connected components.
+
+661
+00:26:42,620 --> 00:26:45,080
+Maybe my graph-embedding
+algorithm failed
+
+662
+00:26:45,080 --> 00:26:46,910
+and it drew an edge like that.
+
+663
+00:26:46,910 --> 00:26:48,140
+Well, then maybe--
+
+664
+00:26:48,140 --> 00:26:49,730
+I don't know-- it's still
+pretty obvious that there's
+
+665
+00:26:49,730 --> 00:26:50,772
+two connected components.
+
+666
+00:26:50,772 --> 00:26:52,850
+But you can imagine
+a universe where
+
+667
+00:26:52,850 --> 00:26:54,290
+you don't know that a priori.
+
+668
+00:26:54,290 --> 00:26:56,150
+And the problem
+you're trying to solve
+
+669
+00:26:56,150 --> 00:26:58,460
+is just to enumerate all
+these clumps of vertices
+
+670
+00:26:58,460 --> 00:27:02,270
+that are reachable from one
+another in an undirected graph.
+
+671
+00:27:02,270 --> 00:27:05,600
+And conveniently, we can
+use depth-first search
+
+672
+00:27:05,600 --> 00:27:07,790
+to solve this problem
+pretty easily.
+
+673
+00:27:07,790 --> 00:27:08,690
+Right?
+
+674
+00:27:08,690 --> 00:27:10,310
+So how could we do it?
+
+675
+00:27:10,310 --> 00:27:14,750
+Well, in some sense how can we
+find one connected component?
+
+676
+00:27:14,750 --> 00:27:18,838
+So let's say that I just
+choose a vertex in my graph.
+
+677
+00:27:18,838 --> 00:27:20,380
+Well, what do I know
+about everything
+
+678
+00:27:20,380 --> 00:27:23,330
+in its connected component?
+
+679
+00:27:23,330 --> 00:27:25,047
+Well, it's reachable
+from that vertex.
+
+680
+00:27:25,047 --> 00:27:27,380
+Remember, we just solved the
+reachability problem, which
+
+681
+00:27:27,380 --> 00:27:29,960
+says, if I have a
+vertex, I can now
+
+682
+00:27:29,960 --> 00:27:31,460
+tell you all the
+other vertices that
+
+683
+00:27:31,460 --> 00:27:33,540
+are reachable from this guy.
+
+684
+00:27:33,540 --> 00:27:38,273
+So I could call DFS on, well,
+any vertex of this cycle here.
+
+685
+00:27:38,273 --> 00:27:39,440
+Call the reachability thing.
+
+686
+00:27:39,440 --> 00:27:43,370
+And I know that for every vertex
+there's one of two things.
+
+687
+00:27:43,370 --> 00:27:46,730
+Either the vertex has a
+parent in that object P,
+
+688
+00:27:46,730 --> 00:27:48,510
+or it's the source.
+
+689
+00:27:48,510 --> 00:27:50,660
+So I can very easily find
+the connected component
+
+690
+00:27:50,660 --> 00:27:51,980
+corresponding to that vertex.
+
+691
+00:27:51,980 --> 00:27:53,930
+Does that makes sense?
+
+692
+00:27:53,930 --> 00:27:56,290
+Have I found all the
+connected components?
+
+693
+00:27:56,290 --> 00:27:56,790
+No.
+
+694
+00:27:56,790 --> 00:27:57,630
+I found one.
+
+695
+00:27:57,630 --> 00:28:00,030
+I found the one corresponding
+to the arbitrary vertex
+
+696
+00:28:00,030 --> 00:28:02,080
+that I just chose.
+
+697
+00:28:02,080 --> 00:28:04,530
+So how could I fix this?
+
+698
+00:28:04,530 --> 00:28:05,530
+Well, it's super simple.
+
+699
+00:28:05,530 --> 00:28:08,290
+I could put a for loop on
+the outside, which just loops
+
+700
+00:28:08,290 --> 00:28:10,390
+over all the vertices, maybe.
+
+701
+00:28:10,390 --> 00:28:13,240
+And if that vertex is not part
+of a connected component yet,
+
+702
+00:28:13,240 --> 00:28:15,500
+then I need to make a new one.
+
+703
+00:28:15,500 --> 00:28:17,410
+So then I call DFS
+on that vertex.
+
+704
+00:28:17,410 --> 00:28:19,360
+I collect all the
+vertices that I got.
+
+705
+00:28:19,360 --> 00:28:19,990
+And I iterate.
+
+706
+00:28:19,990 --> 00:28:22,780
+So this is the algorithm
+that in this class
+
+707
+00:28:22,780 --> 00:28:24,965
+we're going to call full DFS.
+
+708
+00:28:24,965 --> 00:28:26,590
+By the way, you could
+do the same thing
+
+709
+00:28:26,590 --> 00:28:27,882
+with full breadth-first search.
+
+710
+00:28:27,882 --> 00:28:30,490
+That's perfectly fine.
+
+711
+00:28:30,490 --> 00:28:32,180
+Just kind of by analogy here.
+
+712
+00:28:32,180 --> 00:28:32,680
+Right.
+
+713
+00:28:32,680 --> 00:28:36,340
+So what is full D--
+
+714
+00:28:36,340 --> 00:28:38,890
+oh, this chalk is easier.
+
+715
+00:28:38,890 --> 00:28:42,960
+Well, I'm going to iterate
+over all my vertices.
+
+716
+00:28:42,960 --> 00:28:44,730
+Where I stands for for loop.
+
+717
+00:28:44,730 --> 00:28:48,510
+Of-- right.
+
+718
+00:28:48,510 --> 00:28:55,650
+So if v is unvisited,
+then I'm going
+
+719
+00:28:55,650 --> 00:29:01,020
+to do to DFS starting at v. I
+guess we used visit to refer
+
+720
+00:29:01,020 --> 00:29:02,580
+to this in the previous slide.
+
+721
+00:29:02,580 --> 00:29:03,955
+And that's going
+to kind of flood
+
+722
+00:29:03,955 --> 00:29:06,160
+fill that whole
+connected component.
+
+723
+00:29:06,160 --> 00:29:08,458
+And then I can collect
+that connected component
+
+724
+00:29:08,458 --> 00:29:09,000
+and continue.
+
+725
+00:29:09,000 --> 00:29:11,320
+We have to be a little bit
+careful because, of course,
+
+726
+00:29:11,320 --> 00:29:13,030
+we don't want like,
+checking things--
+
+727
+00:29:13,030 --> 00:29:15,810
+something to be visited to
+somehow take a bunch of time
+
+728
+00:29:15,810 --> 00:29:17,948
+and make my algorithm
+slower than it needs to be.
+
+729
+00:29:17,948 --> 00:29:19,740
+But of course, we have
+a set data structure
+
+730
+00:29:19,740 --> 00:29:22,780
+that we know can do that
+and order one time at least
+
+731
+00:29:22,780 --> 00:29:25,240
+in expectation.
+
+732
+00:29:25,240 --> 00:29:26,400
+OK.
+
+733
+00:29:26,400 --> 00:29:29,580
+So this is the
+full DFS algorithm.
+
+734
+00:29:29,580 --> 00:29:30,510
+It's really simple.
+
+735
+00:29:30,510 --> 00:29:33,540
+Of DFS because I called
+DGS on every vertex.
+
+736
+00:29:33,540 --> 00:29:36,790
+And it's full because I
+looped over all the vertices.
+
+737
+00:29:36,790 --> 00:29:37,290
+Right.
+
+738
+00:29:37,290 --> 00:29:40,530
+And so if we think about it, how
+much time does this algorithm
+
+739
+00:29:40,530 --> 00:29:41,870
+take?
+
+740
+00:29:41,870 --> 00:29:45,150
+It's little bit sneaky
+because somehow I
+
+741
+00:29:45,150 --> 00:29:47,027
+have a for loop over
+all the vertices.
+
+742
+00:29:47,027 --> 00:29:49,110
+Then I could imagine a
+universe where I get, like,
+
+743
+00:29:49,110 --> 00:29:51,943
+vertices times some other number
+because there's a for loop,
+
+744
+00:29:51,943 --> 00:29:53,610
+and then there's
+something inside of it.
+
+745
+00:29:53,610 --> 00:29:55,318
+I think that's how
+we're used to thinking
+
+746
+00:29:55,318 --> 00:29:58,345
+about runtime of for loops.
+
+747
+00:29:58,345 --> 00:29:59,970
+But in this case,
+that actually doesn't
+
+748
+00:29:59,970 --> 00:30:02,410
+happen because there's never
+a case where an edge gets
+
+749
+00:30:02,410 --> 00:30:04,060
+traversed more than one time.
+
+750
+00:30:04,060 --> 00:30:07,320
+Because if I'm in one connected
+component, then by definition,
+
+751
+00:30:07,320 --> 00:30:09,580
+I can't be in another
+connected component.
+
+752
+00:30:09,580 --> 00:30:10,080
+Right?
+
+753
+00:30:10,080 --> 00:30:12,510
+And so what happens
+is, in some sense,
+
+754
+00:30:12,510 --> 00:30:15,090
+this innocent
+looking call to DFS--
+
+755
+00:30:15,090 --> 00:30:17,370
+I suppose if you were like
+a LISP or a programmer,
+
+756
+00:30:17,370 --> 00:30:18,662
+you somehow wouldn't like this.
+
+757
+00:30:18,662 --> 00:30:20,970
+It has a side effect,
+which is that I marked
+
+758
+00:30:20,970 --> 00:30:23,010
+all the vertices in that
+connected component as
+
+759
+00:30:23,010 --> 00:30:24,480
+"don't touch me again."
+
+760
+00:30:24,480 --> 00:30:25,080
+Right.
+
+761
+00:30:25,080 --> 00:30:29,240
+And so implicitly I kind of
+removed edges in this process.
+
+762
+00:30:29,240 --> 00:30:30,840
+So if you think
+through it carefully,
+
+763
+00:30:30,840 --> 00:30:34,140
+the runtime of this
+full DFS algorithm
+
+764
+00:30:34,140 --> 00:30:37,710
+is v plus e time
+because every edge is
+
+765
+00:30:37,710 --> 00:30:40,270
+touched no more than one time.
+
+766
+00:30:40,270 --> 00:30:44,343
+Kind of amortized over all the
+different calls to DGS here.
+
+767
+00:30:44,343 --> 00:30:46,010
+And there's this for
+loop over vertices.
+
+768
+00:30:46,010 --> 00:30:49,070
+So there's clearly an
+order v that you need here.
+
+769
+00:30:49,070 --> 00:30:51,240
+Does that argument make sense?
+
+770
+00:30:51,240 --> 00:30:54,350
+So again, we call that linear
+in the size of the input.
+
+771
+00:30:54,350 --> 00:30:57,270
+I'm going to say it as many
+times to get it in my own head
+
+772
+00:30:57,270 --> 00:30:58,410
+correctly.
+
+773
+00:30:58,410 --> 00:30:59,770
+OK.
+
+774
+00:30:59,770 --> 00:31:00,270
+Right.
+
+775
+00:31:00,270 --> 00:31:02,185
+So this is the basic problem.
+
+776
+00:31:02,185 --> 00:31:03,810
+This comes up all
+the time, by the way.
+
+777
+00:31:03,810 --> 00:31:06,510
+Like, it seems like somehow
+a totally brain dead
+
+778
+00:31:06,510 --> 00:31:07,865
+weird algorithm.
+
+779
+00:31:07,865 --> 00:31:09,990
+Like, somehow, why would
+you want an algorithm that
+
+780
+00:31:09,990 --> 00:31:10,920
+finds connected components.
+
+781
+00:31:10,920 --> 00:31:13,295
+Like, why would you even have
+a graph that's disconnected
+
+782
+00:31:13,295 --> 00:31:13,996
+or something?
+
+783
+00:31:13,996 --> 00:31:15,538
+But of course, that
+can happen a lot.
+
+784
+00:31:15,538 --> 00:31:19,110
+So for instance, maybe you
+work at a social media company,
+
+785
+00:31:19,110 --> 00:31:20,130
+and people have friends.
+
+786
+00:31:20,130 --> 00:31:21,793
+But like, Eric
+and I are friends.
+
+787
+00:31:21,793 --> 00:31:23,460
+And we're not friends
+with anybody else.
+
+788
+00:31:23,460 --> 00:31:26,440
+We have a-- there's like,
+a blood oath kind of thing.
+
+789
+00:31:26,440 --> 00:31:30,030
+Then that might be not so
+easy to find in the graph
+
+790
+00:31:30,030 --> 00:31:33,540
+because, of course, we're just
+two among a sea of students
+
+791
+00:31:33,540 --> 00:31:35,970
+in this classroom,
+all of which have
+
+792
+00:31:35,970 --> 00:31:38,880
+different interconnections
+that are just enumerated based
+
+793
+00:31:38,880 --> 00:31:40,140
+on the list of edges.
+
+794
+00:31:40,140 --> 00:31:43,050
+And so even though
+like, pictorially, it's
+
+795
+00:31:43,050 --> 00:31:46,993
+kind of hard to draw a
+connecting component algorithm
+
+796
+00:31:46,993 --> 00:31:48,660
+in a way that doesn't
+make it sound kind
+
+797
+00:31:48,660 --> 00:31:50,700
+of like a useless
+technique from the start,
+
+798
+00:31:50,700 --> 00:31:53,220
+because it's very clear there
+are two connected components
+
+799
+00:31:53,220 --> 00:31:53,970
+there.
+
+800
+00:31:53,970 --> 00:31:56,012
+Of course, we still have
+to be able to write code
+
+801
+00:31:56,012 --> 00:31:58,780
+to solve this sort of thing.
+
+802
+00:31:58,780 --> 00:31:59,400
+OK.
+
+803
+00:31:59,400 --> 00:32:03,910
+So for once, I think I'm almost
+on time in lecture today.
+
+804
+00:32:03,910 --> 00:32:07,020
+So we have one
+additional application
+
+805
+00:32:07,020 --> 00:32:10,810
+of depth-first search
+in our class today,
+
+806
+00:32:10,810 --> 00:32:14,360
+which is sort of on the
+opposite end of the spectrum.
+
+807
+00:32:14,360 --> 00:32:18,000
+So we just talked about
+graphs that are undirected
+
+808
+00:32:18,000 --> 00:32:20,190
+and thinking about cycles.
+
+809
+00:32:20,190 --> 00:32:23,910
+Now, on the opposite end
+we might think of a DAG.
+
+810
+00:32:23,910 --> 00:32:28,690
+So a DAG is a Directed
+Acyclic Graph.
+
+811
+00:32:28,690 --> 00:32:30,550
+Can anyone think of a
+special case of a DAG?
+
+812
+00:32:30,550 --> 00:32:32,008
+I suppose I should
+define it first.
+
+813
+00:32:32,008 --> 00:32:34,913
+And then we'll come back to
+that question, which means
+
+814
+00:32:34,913 --> 00:32:36,080
+exactly what it sounds like.
+
+815
+00:32:36,080 --> 00:32:39,040
+So it's a graph that
+has directed edges now
+
+816
+00:32:39,040 --> 00:32:40,550
+and doesn't have
+any cycles in it.
+
+817
+00:32:40,550 --> 00:32:43,630
+So actually, the
+graph I gave you
+
+818
+00:32:43,630 --> 00:32:46,720
+all the way at the beginning
+of lecture I think secretly
+
+819
+00:32:46,720 --> 00:32:48,860
+was an example of one of these.
+
+820
+00:32:48,860 --> 00:32:51,996
+So let's say that I
+have directed edges.
+
+821
+00:32:51,996 --> 00:32:53,593
+Maybe if I make the
+head a triangle,
+
+822
+00:32:53,593 --> 00:32:54,760
+it's a little easier to see.
+
+823
+00:32:57,510 --> 00:32:59,000
+I'm not so sure.
+
+824
+00:32:59,000 --> 00:33:01,912
+In any event, so I'm going to
+have an edge up and an edge
+
+825
+00:33:01,912 --> 00:33:03,620
+to the right, and
+similarly, an edge down
+
+826
+00:33:03,620 --> 00:33:04,662
+and an edge to the right.
+
+827
+00:33:07,860 --> 00:33:09,930
+This graph looks like a cycle.
+
+828
+00:33:09,930 --> 00:33:13,380
+But it's not because the only
+direction that I can move
+
+829
+00:33:13,380 --> 00:33:16,120
+is from the left-hand side
+to the right-hand side.
+
+830
+00:33:16,120 --> 00:33:17,543
+So this is a directed graph.
+
+831
+00:33:17,543 --> 00:33:18,960
+And it doesn't
+contain any cycles,
+
+832
+00:33:18,960 --> 00:33:20,580
+meaning there's no
+path that it can
+
+833
+00:33:20,580 --> 00:33:23,400
+take from a vertex that
+gets back to itself
+
+834
+00:33:23,400 --> 00:33:25,570
+along the directed edges.
+
+835
+00:33:25,570 --> 00:33:26,070
+OK.
+
+836
+00:33:26,070 --> 00:33:27,320
+And DAGs show up all the time.
+
+837
+00:33:27,320 --> 00:33:28,950
+Now that I've defined
+what a DAG is,
+
+838
+00:33:28,950 --> 00:33:30,690
+can somebody give me
+an example of a DAG
+
+839
+00:33:30,690 --> 00:33:35,862
+that we've already seen in 6006?
+
+840
+00:33:35,862 --> 00:33:36,570
+AUDIENCE: A tree.
+
+841
+00:33:36,570 --> 00:33:37,320
+JUSTIN SOLOMON: A tree.
+
+842
+00:33:37,320 --> 00:33:39,653
+At least if we orient all all
+the edges kind of pointing
+
+843
+00:33:39,653 --> 00:33:40,560
+downward in the tree.
+
+844
+00:33:40,560 --> 00:33:42,210
+Yeah.
+
+845
+00:33:42,210 --> 00:33:44,850
+Otherwise, it gets
+kind of debatable over
+
+846
+00:33:44,850 --> 00:33:46,720
+whether it's a DAG or not.
+
+847
+00:33:46,720 --> 00:33:48,930
+If there's no direction
+to the edges, then somehow
+
+848
+00:33:48,930 --> 00:33:51,850
+the definition
+just doesn't apply.
+
+849
+00:33:51,850 --> 00:33:52,350
+OK.
+
+850
+00:33:52,350 --> 00:33:56,587
+So in processing
+directed acyclic graphs,
+
+851
+00:33:56,587 --> 00:33:58,170
+there's a really
+useful thing that you
+
+852
+00:33:58,170 --> 00:34:00,620
+can do that's going to show
+up in this class apparently
+
+853
+00:34:00,620 --> 00:34:02,620
+quite a bit, which is
+kind of interesting to me,
+
+854
+00:34:02,620 --> 00:34:05,000
+I'm curious to see
+what that looks like,
+
+855
+00:34:05,000 --> 00:34:09,637
+which is to compute a
+topological order on the graph.
+
+856
+00:34:09,637 --> 00:34:10,679
+We're at topologies here.
+
+857
+00:34:10,679 --> 00:34:14,370
+So as a geometry professor in
+my day job, I get all excited.
+
+858
+00:34:14,370 --> 00:34:16,230
+But in this case,
+a topological order
+
+859
+00:34:16,230 --> 00:34:18,318
+is a fairly
+straightforward thing.
+
+860
+00:34:18,318 --> 00:34:19,860
+Actually, it's
+defined on the screen,
+
+861
+00:34:19,860 --> 00:34:21,277
+and I have bad
+handwriting anyway.
+
+862
+00:34:21,277 --> 00:34:22,565
+So let's just stick with that.
+
+863
+00:34:22,565 --> 00:34:23,565
+So topological ordering.
+
+864
+00:34:23,565 --> 00:34:27,750
+So we think of f as a function
+that assigns maybe every node
+
+865
+00:34:27,750 --> 00:34:29,037
+an index in array.
+
+866
+00:34:29,037 --> 00:34:30,870
+I guess I shouldn't use
+the word array here.
+
+867
+00:34:30,870 --> 00:34:32,670
+But just like an
+index, an ordering.
+
+868
+00:34:32,670 --> 00:34:34,550
+So like, this is
+the first vertex.
+
+869
+00:34:34,550 --> 00:34:35,800
+And this is the second vertex.
+
+870
+00:34:35,800 --> 00:34:37,050
+And so on.
+
+871
+00:34:37,050 --> 00:34:39,570
+Then a topological
+order is one that
+
+872
+00:34:39,570 --> 00:34:41,070
+has the properties
+shown here, which
+
+873
+00:34:41,070 --> 00:34:46,770
+is that if I have a directed
+edge from u to v, then f of u
+
+874
+00:34:46,770 --> 00:34:51,610
+is less than f of v.
+So in other words,
+
+875
+00:34:51,610 --> 00:34:54,719
+if I look at the ordering that
+I get on my topological order,
+
+876
+00:34:54,719 --> 00:34:57,697
+u has to appear before v. Yeah?
+
+877
+00:34:57,697 --> 00:34:59,030
+Let's look at our example again.
+
+878
+00:34:59,030 --> 00:35:01,820
+So let's give our nodes names.
+
+879
+00:35:01,820 --> 00:35:08,470
+So here's A, B, C,
+D. Well, what clearly
+
+880
+00:35:08,470 --> 00:35:11,390
+has to be the first node
+in my topological order?
+
+881
+00:35:11,390 --> 00:35:12,240
+A. Right.
+
+882
+00:35:12,240 --> 00:35:13,990
+It goes all the way
+to the left-hand side.
+
+883
+00:35:13,990 --> 00:35:16,270
+Yeah.
+
+884
+00:35:16,270 --> 00:35:18,123
+Well, after that it's
+a bit of a toss-up.
+
+885
+00:35:18,123 --> 00:35:18,790
+What do we know?
+
+886
+00:35:18,790 --> 00:35:22,620
+We know that B and C have to
+appear before D. So maybe just
+
+887
+00:35:22,620 --> 00:35:28,160
+to be annoying, I do A, C,
+B-- that's a B-- and then D.
+
+888
+00:35:28,160 --> 00:35:29,683
+So it's a topological order.
+
+889
+00:35:29,683 --> 00:35:31,100
+Notice that things
+that are on the
+
+890
+00:35:31,100 --> 00:35:34,370
+left appear in my graph before
+things that are on the right,
+
+891
+00:35:34,370 --> 00:35:36,470
+where the word
+"before" here means
+
+892
+00:35:36,470 --> 00:35:39,530
+that there's an edge that
+points from one to the other.
+
+893
+00:35:39,530 --> 00:35:40,820
+OK.
+
+894
+00:35:40,820 --> 00:35:45,110
+By the way, are topological
+orderings unique?
+
+895
+00:35:45,110 --> 00:35:45,610
+No.
+
+896
+00:35:45,610 --> 00:35:47,790
+So if we look at our
+graph example here,
+
+897
+00:35:47,790 --> 00:35:53,610
+ABCD is also a
+topological order.
+
+898
+00:35:53,610 --> 00:35:55,950
+And what that means is
+somehow very liberating.
+
+899
+00:35:55,950 --> 00:35:57,750
+It means that when we
+design an algorithm
+
+900
+00:35:57,750 --> 00:36:00,480
+for finding a topological
+order, so there's some design
+
+901
+00:36:00,480 --> 00:36:01,860
+decisions that we can make.
+
+902
+00:36:01,860 --> 00:36:04,650
+And we just have to
+find one among many.
+
+903
+00:36:04,650 --> 00:36:09,000
+But in any event, we're going
+to define a slightly different
+
+904
+00:36:09,000 --> 00:36:09,810
+notion of order.
+
+905
+00:36:09,810 --> 00:36:10,920
+And then we're going to
+show that they're closely
+
+906
+00:36:10,920 --> 00:36:12,420
+linked to each other.
+
+907
+00:36:12,420 --> 00:36:15,097
+And that is the finishing order.
+
+908
+00:36:15,097 --> 00:36:16,680
+So in the finishing
+order, we're going
+
+909
+00:36:16,680 --> 00:36:19,185
+to call full DFS on our graph.
+
+910
+00:36:19,185 --> 00:36:21,310
+Remember, that means we
+iterate over all our nodes.
+
+911
+00:36:21,310 --> 00:36:24,450
+And if we haven't seen that
+node yet, we call DFS on it.
+
+912
+00:36:24,450 --> 00:36:28,410
+And now we're going to
+make an order in which
+
+913
+00:36:28,410 --> 00:36:31,530
+as soon as the call to a
+node in that visit function
+
+914
+00:36:31,530 --> 00:36:33,600
+is complete,
+meaning I've already
+
+915
+00:36:33,600 --> 00:36:36,180
+iterated over all
+my neighbors, then
+
+916
+00:36:36,180 --> 00:36:39,413
+I add my node to the ordering.
+
+917
+00:36:39,413 --> 00:36:40,080
+That make sense?
+
+918
+00:36:40,080 --> 00:36:41,510
+It's like a little
+bit backward from what
+
+919
+00:36:41,510 --> 00:36:42,718
+we're used to thinking about.
+
+920
+00:36:42,718 --> 00:36:44,960
+So it's the order
+in which full DFS
+
+921
+00:36:44,960 --> 00:36:48,020
+finishes visiting each vertex.
+
+922
+00:36:48,020 --> 00:36:49,190
+Yeah?
+
+923
+00:36:49,190 --> 00:36:53,240
+And now here's the
+claim, is that if we
+
+924
+00:36:53,240 --> 00:36:55,340
+have a reverse
+finishing order, meaning
+
+925
+00:36:55,340 --> 00:36:58,070
+that we take the finishing order
+and then we flip it backward.
+
+926
+00:36:58,070 --> 00:37:01,220
+That's exactly going to give
+us a topological ordering
+
+927
+00:37:01,220 --> 00:37:03,950
+of the vertices in our graph.
+
+928
+00:37:03,950 --> 00:37:04,660
+Right.
+
+929
+00:37:04,660 --> 00:37:07,922
+So let's do that really quickly.
+
+930
+00:37:07,922 --> 00:37:09,380
+So in other words,
+our claim here--
+
+931
+00:37:12,170 --> 00:37:15,030
+I think, yeah, let's
+see-- is that if I
+
+932
+00:37:15,030 --> 00:37:16,110
+have a directed graph.
+
+933
+00:37:18,840 --> 00:37:22,670
+So G is a DAG.
+
+934
+00:37:22,670 --> 00:37:27,740
+Then let's see here.
+
+935
+00:37:27,740 --> 00:37:30,652
+Then the-- oops.
+
+936
+00:37:30,652 --> 00:37:31,610
+My notes are backwards.
+
+937
+00:37:31,610 --> 00:37:32,945
+So I should switch to my--
+
+938
+00:37:32,945 --> 00:37:35,150
+Jason's notes, which
+of course, are correct.
+
+939
+00:37:41,220 --> 00:37:41,820
+Right.
+
+940
+00:37:41,820 --> 00:37:44,250
+So if I have a
+graph that's a DAG,
+
+941
+00:37:44,250 --> 00:37:54,790
+then the reverse of
+the finishing order
+
+942
+00:37:54,790 --> 00:37:56,320
+is a topological order.
+
+943
+00:38:01,920 --> 00:38:04,620
+By the way, we're not going to
+prove the converse that if I
+
+944
+00:38:04,620 --> 00:38:08,190
+have a topological order,
+that somehow that thing is
+
+945
+00:38:08,190 --> 00:38:13,348
+the reverse of DFS, at least
+the way that maybe I coded it.
+
+946
+00:38:13,348 --> 00:38:15,390
+There's a slightly different
+statement, which is,
+
+947
+00:38:15,390 --> 00:38:18,750
+does there exist a DFS
+that has that ordering?
+
+948
+00:38:18,750 --> 00:38:21,570
+But that's one that we'll
+worry about another time
+
+949
+00:38:21,570 --> 00:38:23,220
+around piazza or whatever.
+
+950
+00:38:23,220 --> 00:38:23,760
+OK.
+
+951
+00:38:23,760 --> 00:38:27,630
+So let's see here.
+
+952
+00:38:27,630 --> 00:38:28,950
+So we need to prove this thing.
+
+953
+00:38:28,950 --> 00:38:30,075
+So what are we going to do?
+
+954
+00:38:30,075 --> 00:38:32,600
+Well, what do we need to
+check is the topological order
+
+955
+00:38:32,600 --> 00:38:34,730
+is that if I look at
+any edge of my graph,
+
+956
+00:38:34,730 --> 00:38:38,180
+it obeys the relationship that
+I have on the screen here.
+
+957
+00:38:38,180 --> 00:38:40,490
+So in particularly,
+we're going to take
+
+958
+00:38:40,490 --> 00:38:44,480
+uv inside of my set of edges.
+
+959
+00:38:44,480 --> 00:38:51,070
+And then what I
+need is that u is
+
+960
+00:38:51,070 --> 00:38:59,140
+ordered before v using the
+reverse of the finishing order
+
+961
+00:38:59,140 --> 00:39:00,820
+that we've defined here.
+
+962
+00:39:00,820 --> 00:39:02,110
+OK.
+
+963
+00:39:02,110 --> 00:39:06,790
+So let's think back to our
+call to the DFS algorithm,
+
+964
+00:39:06,790 --> 00:39:09,140
+where call this visit function.
+
+965
+00:39:09,140 --> 00:39:09,640
+Right.
+
+966
+00:39:09,640 --> 00:39:11,650
+So we have two cases.
+
+967
+00:39:11,650 --> 00:39:15,430
+Either u is visited
+before v. Or it ain't.
+
+968
+00:39:15,430 --> 00:39:16,660
+Yeah.
+
+969
+00:39:16,660 --> 00:39:18,475
+So let's do those two cases.
+
+970
+00:39:22,080 --> 00:39:33,520
+So case Number 1 is, u
+is visited before v. OK.
+
+971
+00:39:40,780 --> 00:39:41,380
+All right.
+
+972
+00:39:41,380 --> 00:39:42,680
+So what does that mean?
+
+973
+00:39:42,680 --> 00:39:44,482
+Well, remember that
+there's an edge.
+
+974
+00:39:44,482 --> 00:39:45,940
+Like, pictorially,
+what's going on?
+
+975
+00:39:45,940 --> 00:39:47,983
+Well, there's all kinds
+of graph stuff going on.
+
+976
+00:39:47,983 --> 00:39:48,775
+And then there's u.
+
+977
+00:39:48,775 --> 00:39:51,490
+And we know that there's
+a directed edge from u
+
+978
+00:39:51,490 --> 00:39:53,870
+to v. That's our picture.
+
+979
+00:39:53,870 --> 00:39:54,370
+Right?
+
+980
+00:39:54,370 --> 00:39:57,820
+And maybe there's other
+stuff going on outside of us.
+
+981
+00:39:57,820 --> 00:40:00,790
+So in particular,
+well, just by the way
+
+982
+00:40:00,790 --> 00:40:03,380
+that we've defined that visit
+function, what do we know?
+
+983
+00:40:03,380 --> 00:40:10,450
+We know that when we
+call visit on u, well,
+
+984
+00:40:10,450 --> 00:40:12,500
+v is one of its
+outgoing neighbors.
+
+985
+00:40:12,500 --> 00:40:14,470
+So in particular,
+a visit on u is
+
+986
+00:40:14,470 --> 00:40:22,930
+going to call visit v. And
+we know that because well, u
+
+987
+00:40:22,930 --> 00:40:25,270
+is visited before v.
+
+988
+00:40:25,270 --> 00:40:28,240
+So currently, v's
+parent is l when
+
+989
+00:40:28,240 --> 00:40:32,770
+I get to you That make sense?
+
+990
+00:40:32,770 --> 00:40:34,940
+Now, here's where
+reverse ordering,
+
+991
+00:40:34,940 --> 00:40:37,540
+we're going have to keep
+it in our head because now,
+
+992
+00:40:37,540 --> 00:40:42,580
+well, visit of u calls visit
+of v. So notice that visit of v
+
+993
+00:40:42,580 --> 00:40:47,080
+has to complete
+before visit of u.
+
+994
+00:40:47,080 --> 00:40:47,580
+Right?
+
+995
+00:40:52,020 --> 00:41:00,470
+V completes before visit of u.
+
+996
+00:41:00,470 --> 00:41:00,970
+Well.
+
+997
+00:41:00,970 --> 00:41:05,040
+So in reverse, sorting--
+
+998
+00:41:05,040 --> 00:41:08,200
+in reverse finishing order
+here, what does that mean?
+
+999
+00:41:08,200 --> 00:41:11,310
+Well, if this completes before
+the other guy, then they get
+
+1000
+00:41:11,310 --> 00:41:13,170
+flipped backward
+in the list, which
+
+1001
+00:41:13,170 --> 00:41:16,950
+is exactly what I want because
+there's an edge from u to v.
+
+1002
+00:41:16,950 --> 00:41:17,450
+OK.
+
+1003
+00:41:17,450 --> 00:41:19,620
+So Case 1 is done.
+
+1004
+00:41:19,620 --> 00:41:26,490
+Now we have Case 2, which is
+that v is visited before u.
+
+1005
+00:41:33,570 --> 00:41:35,130
+OK.
+
+1006
+00:41:35,130 --> 00:41:38,740
+So now I'm going to make
+one additional observation.
+
+1007
+00:41:38,740 --> 00:41:39,240
+OK.
+
+1008
+00:41:39,240 --> 00:41:41,370
+So now I'm going to go
+back to my other notes
+
+1009
+00:41:41,370 --> 00:41:42,828
+because I like my
+schematic better.
+
+1010
+00:41:45,740 --> 00:41:46,700
+Right.
+
+1011
+00:41:46,700 --> 00:41:50,380
+So what's our
+basic picture here?
+
+1012
+00:41:50,380 --> 00:41:50,940
+Oh, no.
+
+1013
+00:41:50,940 --> 00:41:52,600
+I-- Oh, you know what it was?
+
+1014
+00:41:52,600 --> 00:41:54,090
+I printed out
+another copy of this.
+
+1015
+00:41:54,090 --> 00:41:54,590
+That's OK.
+
+1016
+00:41:54,590 --> 00:41:56,020
+I can do it off
+the top of my head.
+
+1017
+00:41:56,020 --> 00:41:56,520
+OK.
+
+1018
+00:41:56,520 --> 00:41:58,210
+So here's my source vertex.
+
+1019
+00:41:58,210 --> 00:42:03,550
+His name is S. Now, there's a
+bunch of edges and whatever.
+
+1020
+00:42:03,550 --> 00:42:05,680
+There's a long path.
+
+1021
+00:42:05,680 --> 00:42:08,630
+And now eventually,
+what happens?
+
+1022
+00:42:08,630 --> 00:42:09,130
+Well.
+
+1023
+00:42:09,130 --> 00:42:13,720
+I have a node v. And
+somewhere out there
+
+1024
+00:42:13,720 --> 00:42:16,620
+in the universe
+is another node u.
+
+1025
+00:42:16,620 --> 00:42:17,500
+And what do I know?
+
+1026
+00:42:17,500 --> 00:42:19,980
+I know that by
+assumption, I know
+
+1027
+00:42:19,980 --> 00:42:23,380
+that there's an edge from
+u to v. That make sense?
+
+1028
+00:42:23,380 --> 00:42:25,900
+So that's our sort
+of picture so far.
+
+1029
+00:42:25,900 --> 00:42:27,090
+OK.
+
+1030
+00:42:27,090 --> 00:42:28,360
+So what do we know?
+
+1031
+00:42:28,360 --> 00:42:30,840
+We know that our
+graph is acyclic.
+
+1032
+00:42:30,840 --> 00:42:31,530
+Yeah?
+
+1033
+00:42:31,530 --> 00:42:33,820
+Kind of by definition,
+that's our assumption.
+
+1034
+00:42:33,820 --> 00:42:38,570
+So can we reach u from v?
+
+1035
+00:42:38,570 --> 00:42:42,992
+In other words, does there
+exist a path from v to u?
+
+1036
+00:42:42,992 --> 00:42:44,200
+So that would look like this.
+
+1037
+00:42:49,200 --> 00:42:52,720
+No because our graph is acyclic,
+and I just drew a cycle.
+
+1038
+00:42:52,720 --> 00:42:56,010
+So this is a big X.
+There's a frowny face here.
+
+1039
+00:42:56,010 --> 00:42:57,370
+Can't do it.
+
+1040
+00:42:57,370 --> 00:42:59,930
+He has hair, unlike
+your instructor.
+
+1041
+00:42:59,930 --> 00:43:00,580
+OK.
+
+1042
+00:43:00,580 --> 00:43:01,810
+So right.
+
+1043
+00:43:01,810 --> 00:43:03,200
+So what does this mean?
+
+1044
+00:43:03,200 --> 00:43:04,030
+Well, OK.
+
+1045
+00:43:04,030 --> 00:43:10,330
+So by this picture, I suppose,
+we know that u cannot be
+
+1046
+00:43:10,330 --> 00:43:13,984
+reached from v.
+
+1047
+00:43:20,160 --> 00:43:21,930
+Yeah.
+
+1048
+00:43:21,930 --> 00:43:23,230
+So what does that mean?
+
+1049
+00:43:23,230 --> 00:43:25,710
+Well, it means
+that the visit to v
+
+1050
+00:43:25,710 --> 00:43:28,650
+is going to complete
+and never see u
+
+1051
+00:43:28,650 --> 00:43:31,410
+because remember, the visit to
+v only ever call things that
+
+1052
+00:43:31,410 --> 00:43:39,210
+are kind of descendants of v.
+So in other words, visit of v
+
+1053
+00:43:39,210 --> 00:43:45,130
+completes without seeing u.
+
+1054
+00:43:50,412 --> 00:43:51,870
+Well, that's exactly
+the same thing
+
+1055
+00:43:51,870 --> 00:43:53,100
+that we showed in
+our first case.
+
+1056
+00:43:53,100 --> 00:43:53,600
+Right?
+
+1057
+00:43:53,600 --> 00:43:56,580
+So by the same reasoning,
+what does that mean?
+
+1058
+00:43:56,580 --> 00:44:00,930
+In our reverse finishing
+order, the ordering from u to v
+
+1059
+00:44:00,930 --> 00:44:02,530
+is preserved.
+
+1060
+00:44:02,530 --> 00:44:03,030
+OK.
+
+1061
+00:44:03,030 --> 00:44:05,130
+So that sort of
+completes our proof
+
+1062
+00:44:05,130 --> 00:44:07,770
+here that reverse
+finishing order gives me
+
+1063
+00:44:07,770 --> 00:44:10,980
+a topological order,
+which is kind of nice.
+
+1064
+00:44:10,980 --> 00:44:12,660
+And so this is a
+nice convenient way
+
+1065
+00:44:12,660 --> 00:44:16,740
+of taking all of the nodes
+in a directed acyclic graph
+
+1066
+00:44:16,740 --> 00:44:18,450
+and ordering them in
+a way that respects
+
+1067
+00:44:18,450 --> 00:44:22,090
+the topology or the
+connectivity of that graph.
+
+1068
+00:44:22,090 --> 00:44:25,440
+So we're going to conclude
+with one final problem, which
+
+1069
+00:44:25,440 --> 00:44:26,520
+I don't have a slide on.
+
+1070
+00:44:26,520 --> 00:44:27,540
+But that's OK.
+
+1071
+00:44:27,540 --> 00:44:29,890
+And that's cycle detection.
+
+1072
+00:44:29,890 --> 00:44:36,090
+So there's a bit of an exercise
+left to the reader here.
+
+1073
+00:44:36,090 --> 00:44:44,040
+So the problem that
+we're looking for now
+
+1074
+00:44:44,040 --> 00:44:47,985
+is that we're given
+a directed graph.
+
+1075
+00:44:52,440 --> 00:44:55,500
+There's a G in graph, in
+case you're wondering.
+
+1076
+00:44:55,500 --> 00:44:58,600
+But now, we don't know
+if it's a DAG or not.
+
+1077
+00:44:58,600 --> 00:45:01,200
+And so the question that
+we're trying to ask is,
+
+1078
+00:45:01,200 --> 00:45:08,705
+does there exist a cycle in
+our directed acyclic graph?
+
+1079
+00:45:08,705 --> 00:45:10,830
+So we're just given our
+graph, and we want to know,
+
+1080
+00:45:10,830 --> 00:45:13,230
+can we do this?
+
+1081
+00:45:13,230 --> 00:45:15,628
+Let's think through the
+logic of this a bit.
+
+1082
+00:45:15,628 --> 00:45:16,420
+So what do we know?
+
+1083
+00:45:16,420 --> 00:45:22,140
+We know that if our
+graph were a DAG, then
+
+1084
+00:45:22,140 --> 00:45:25,365
+I could call DGS,
+get the ordering out,
+
+1085
+00:45:25,365 --> 00:45:27,240
+and then I guess flip
+its ordering backwards.
+
+1086
+00:45:27,240 --> 00:45:30,090
+So I could compute the
+reverse finishing order.
+
+1087
+00:45:30,090 --> 00:45:34,190
+And it would give me a
+topological order of my graph.
+
+1088
+00:45:34,190 --> 00:45:37,630
+So if I were a DAG, I would
+get a topological order
+
+1089
+00:45:37,630 --> 00:45:40,425
+when I call DFS.
+
+1090
+00:45:40,425 --> 00:45:43,940
+So let's say that I ran DFS.
+
+1091
+00:45:43,940 --> 00:45:46,093
+I got whatever ordering I got.
+
+1092
+00:45:46,093 --> 00:45:48,510
+And now I found an edge the
+points in the wrong direction.
+
+1093
+00:45:48,510 --> 00:45:50,810
+I can just double
+check my list of edges,
+
+1094
+00:45:50,810 --> 00:45:54,470
+and I find one that does not
+respect the relationship that I
+
+1095
+00:45:54,470 --> 00:45:57,580
+see in the second
+bullet point here.
+
+1096
+00:45:57,580 --> 00:46:00,350
+Can my graph be a DAG?
+
+1097
+00:46:00,350 --> 00:46:00,850
+No.
+
+1098
+00:46:00,850 --> 00:46:03,750
+Because if my graph were a
+DAG, the algorithm would work.
+
+1099
+00:46:03,750 --> 00:46:04,750
+I just proved it to you.
+
+1100
+00:46:04,750 --> 00:46:05,320
+Right?
+
+1101
+00:46:05,320 --> 00:46:08,200
+So if my graph
+were a DAG, then I
+
+1102
+00:46:08,200 --> 00:46:10,000
+could do reverse
+finishing order.
+
+1103
+00:46:10,000 --> 00:46:12,380
+And what I would get back
+is a topological order.
+
+1104
+00:46:12,380 --> 00:46:14,970
+So if I found a certificate that
+my order wasn't topological,
+
+1105
+00:46:14,970 --> 00:46:17,470
+something went wrong, and the
+only thing that could go wrong
+
+1106
+00:46:17,470 --> 00:46:19,670
+is that my graph isn't a DAG.
+
+1107
+00:46:19,670 --> 00:46:20,170
+Yeah.
+
+1108
+00:46:20,170 --> 00:46:21,590
+Isn't a DAG.
+
+1109
+00:46:21,590 --> 00:46:24,610
+In fact, sort of an exercise
+left to the reader and/or
+
+1110
+00:46:24,610 --> 00:46:26,530
+to your section-- do
+we still have section?
+
+1111
+00:46:26,530 --> 00:46:29,050
+I think we do, as of now--
+
+1112
+00:46:29,050 --> 00:46:32,275
+is that this is an if
+and only if, meaning
+
+1113
+00:46:32,275 --> 00:46:35,740
+that the only time that you
+even have a topological ordering
+
+1114
+00:46:35,740 --> 00:46:39,400
+in your graph is if
+your graph is a DAG.
+
+1115
+00:46:39,400 --> 00:46:41,900
+This is a really easy fact
+to sanity check, by the way.
+
+1116
+00:46:41,900 --> 00:46:43,630
+This is not like, a particularly
+challenging problem.
+
+1117
+00:46:43,630 --> 00:46:46,130
+But you should think through
+it because it's a good exercise
+
+1118
+00:46:46,130 --> 00:46:48,370
+to make sure you understand
+the definitions, which
+
+1119
+00:46:48,370 --> 00:46:51,010
+is to say that if you
+have a topological order,
+
+1120
+00:46:51,010 --> 00:46:52,120
+your graph is a DAG.
+
+1121
+00:46:52,120 --> 00:46:55,775
+If you don't have a topological
+order, your graph isn't a DAG.
+
+1122
+00:46:55,775 --> 00:46:57,400
+So in other words,
+we secretly gave you
+
+1123
+00:46:57,400 --> 00:47:00,410
+an algorithm for checking
+if a graph is a DAG at all.
+
+1124
+00:47:00,410 --> 00:47:00,910
+Right?
+
+1125
+00:47:00,910 --> 00:47:01,910
+What could I do?
+
+1126
+00:47:01,910 --> 00:47:04,360
+I could compute reverse
+finishing order.
+
+1127
+00:47:04,360 --> 00:47:06,280
+Check if it obeys
+the relationship
+
+1128
+00:47:06,280 --> 00:47:08,410
+on the second bullet
+point here for every edge.
+
+1129
+00:47:08,410 --> 00:47:10,130
+And if it does, then
+we're in good shape.
+
+1130
+00:47:10,130 --> 00:47:11,530
+My graph is a DAG.
+
+1131
+00:47:11,530 --> 00:47:13,030
+If it doesn't,
+something went wrong.
+
+1132
+00:47:13,030 --> 00:47:14,905
+And the only thing that
+could have gone wrong
+
+1133
+00:47:14,905 --> 00:47:16,590
+is not being a DAG.
+
+1134
+00:47:16,590 --> 00:47:17,610
+OK.
+
+1135
+00:47:17,610 --> 00:47:21,050
+So in other words,
+secretly we just solved--
+
+1136
+00:47:21,050 --> 00:47:23,050
+well, I guess the way
+that I've written it here,
+
+1137
+00:47:23,050 --> 00:47:26,240
+we've solved the cycle
+detection problem here,
+
+1138
+00:47:26,240 --> 00:47:29,560
+which is to say that,
+well, I have a cycle if
+
+1139
+00:47:29,560 --> 00:47:32,380
+and only if I'm
+not a DAG, which I
+
+1140
+00:47:32,380 --> 00:47:33,830
+can check using this technique.
+
+1141
+00:47:33,830 --> 00:47:35,980
+Of course, the word
+"detection" here probably means
+
+1142
+00:47:35,980 --> 00:47:37,647
+that I actually want
+to find that cycle,
+
+1143
+00:47:37,647 --> 00:47:39,680
+and I haven't told you
+how to do that yet.
+
+1144
+00:47:39,680 --> 00:47:42,400
+All we know how to do so
+far is say, like, somewhere
+
+1145
+00:47:42,400 --> 00:47:43,660
+in this graph there's a cycle.
+
+1146
+00:47:43,660 --> 00:47:45,520
+And that's not so good.
+
+1147
+00:47:45,520 --> 00:47:47,890
+So we can do one additional
+piece of information
+
+1148
+00:47:47,890 --> 00:47:50,680
+in the two minutes we have
+remaining to sort of complete
+
+1149
+00:47:50,680 --> 00:47:54,100
+our story here, which is to
+modify our algorithm ever so
+
+1150
+00:47:54,100 --> 00:47:57,100
+slightly to not only say thumbs
+up, thumbs down, is there
+
+1151
+00:47:57,100 --> 00:47:59,800
+a cycle in this graph, but also
+to actually return the vertices
+
+1152
+00:47:59,800 --> 00:48:01,690
+as a cycle.
+
+1153
+00:48:01,690 --> 00:48:03,520
+And here's the
+property that we're
+
+1154
+00:48:03,520 --> 00:48:06,980
+going to do that,
+which is following,
+
+1155
+00:48:06,980 --> 00:48:20,370
+which is that if G contains
+a cycle, right, then
+
+1156
+00:48:20,370 --> 00:48:31,580
+full DFS will traverse
+an edge from a vertex v
+
+1157
+00:48:31,580 --> 00:48:38,990
+to some ancestor of v. I guess
+we haven't carefully defined
+
+1158
+00:48:38,990 --> 00:48:40,540
+the term "ancestor" here.
+
+1159
+00:48:40,540 --> 00:48:45,995
+Essentially, if you think of the
+sort of the running of the DFS
+
+1160
+00:48:45,995 --> 00:48:47,870
+algorithm, then an
+ancestor is like something
+
+1161
+00:48:47,870 --> 00:48:52,050
+that appears in the recursive
+call tree before I got to v.
+
+1162
+00:48:52,050 --> 00:48:52,580
+OK.
+
+1163
+00:48:52,580 --> 00:48:54,840
+So how could we prove that?
+
+1164
+00:48:54,840 --> 00:48:58,705
+Well, let's take a cycle.
+
+1165
+00:49:03,130 --> 00:49:04,450
+And we'll give it a name.
+
+1166
+00:49:04,450 --> 00:49:10,270
+In particular, we'll say that
+it's a cycle from v0 v1 to vk.
+
+1167
+00:49:10,270 --> 00:49:12,790
+And then it's a cycle,
+so it goes back to v0.
+
+1168
+00:49:12,790 --> 00:49:14,080
+OK.
+
+1169
+00:49:14,080 --> 00:49:16,940
+And I can order this
+cycle any way I want.
+
+1170
+00:49:16,940 --> 00:49:19,385
+Notice that if I
+permute the vertices
+
+1171
+00:49:19,385 --> 00:49:21,010
+in this list in a
+cyclical way, meaning
+
+1172
+00:49:21,010 --> 00:49:22,990
+that I take the last few
+of them and stick them
+
+1173
+00:49:22,990 --> 00:49:25,032
+at the beginning of the
+list, it's still a cycle.
+
+1174
+00:49:25,032 --> 00:49:27,290
+That's the nice
+thing about cycles.
+
+1175
+00:49:27,290 --> 00:49:33,280
+So in particular, without
+loss of generality,
+
+1176
+00:49:33,280 --> 00:49:41,530
+we're going to assume that v0
+is the first vertex visited
+
+1177
+00:49:41,530 --> 00:49:42,685
+by DFS.
+
+1178
+00:49:52,157 --> 00:49:52,990
+What does that mean?
+
+1179
+00:49:52,990 --> 00:49:55,280
+That means, like, when I
+do my DFS algorithm making
+
+1180
+00:49:55,280 --> 00:49:57,680
+all these recursive calls,
+the very first vertex
+
+1181
+00:49:57,680 --> 00:50:00,670
+to be touched by
+this technique is v0.
+
+1182
+00:50:00,670 --> 00:50:02,170
+OK.
+
+1183
+00:50:02,170 --> 00:50:04,400
+Well, now what's going
+to end up happening?
+
+1184
+00:50:04,400 --> 00:50:07,345
+Well, think about the recursive
+call tree starting at v0.
+
+1185
+00:50:10,260 --> 00:50:13,350
+By the time that
+completes, anything
+
+1186
+00:50:13,350 --> 00:50:16,620
+that's reachable from v0 is
+also going to be complete.
+
+1187
+00:50:16,620 --> 00:50:18,280
+Do you see that?
+
+1188
+00:50:18,280 --> 00:50:22,520
+So for instance, v0 somewhere
+in its call tree might call v2.
+
+1189
+00:50:22,520 --> 00:50:24,360
+And notice that v2 was
+not already visited.
+
+1190
+00:50:24,360 --> 00:50:25,930
+So in fact, it will.
+
+1191
+00:50:25,930 --> 00:50:28,790
+For v1 I got to
+call v2 and so on.
+
+1192
+00:50:28,790 --> 00:50:34,760
+And in particular, we're going
+to get all the way to vertex k.
+
+1193
+00:50:34,760 --> 00:50:36,140
+Right?
+
+1194
+00:50:36,140 --> 00:50:43,150
+So in other words, we're
+going to visit a vertex vk.
+
+1195
+00:50:46,110 --> 00:50:47,710
+And notice what's
+going to happen.
+
+1196
+00:50:47,710 --> 00:50:49,147
+So remember our algorithm.
+
+1197
+00:50:49,147 --> 00:50:51,480
+In fact, we should probably
+just put it up on the screen
+
+1198
+00:50:51,480 --> 00:50:54,300
+would be easier than
+talking about it a bunch.
+
+1199
+00:50:54,300 --> 00:50:58,320
+Well, vk is now
+going to iterate over
+
+1200
+00:50:58,320 --> 00:51:00,660
+every one of the
+neighbors of vk.
+
+1201
+00:51:00,660 --> 00:51:05,040
+And in particular, it's
+going to see vertex v0.
+
+1202
+00:51:05,040 --> 00:51:06,330
+Right?
+
+1203
+00:51:06,330 --> 00:51:12,560
+So we're going to
+see the edge from vk
+
+1204
+00:51:12,560 --> 00:51:16,430
+to v0, which is an edge
+kind of by definition
+
+1205
+00:51:16,430 --> 00:51:19,517
+because we took this
+to be a cycle here.
+
+1206
+00:51:19,517 --> 00:51:21,850
+But notice that's exactly the
+thing we set out to prove,
+
+1207
+00:51:21,850 --> 00:51:26,140
+namely that full DFS traverses
+an edge from a vertex
+
+1208
+00:51:26,140 --> 00:51:27,520
+to one of its ancestors.
+
+1209
+00:51:27,520 --> 00:51:28,840
+Here's a vertex k.
+
+1210
+00:51:28,840 --> 00:51:30,688
+Here's the ancestor v0.
+
+1211
+00:51:30,688 --> 00:51:32,230
+Why do we know that
+it's an ancestor?
+
+1212
+00:51:32,230 --> 00:51:35,230
+Well, because v0 was
+called in our call tree
+
+1213
+00:51:35,230 --> 00:51:37,090
+before any of these other guys.
+
+1214
+00:51:37,090 --> 00:51:38,350
+Right?
+
+1215
+00:51:38,350 --> 00:51:41,140
+So we wanted an algorithm that
+not only did cycle detection,
+
+1216
+00:51:41,140 --> 00:51:42,910
+but also actually
+gave me the cycle.
+
+1217
+00:51:42,910 --> 00:51:43,910
+What could I do?
+
+1218
+00:51:43,910 --> 00:51:46,050
+Well, it's essentially
+a small modification
+
+1219
+00:51:46,050 --> 00:51:47,050
+of what we already have.
+
+1220
+00:51:47,050 --> 00:51:47,550
+Right.
+
+1221
+00:51:47,550 --> 00:51:48,740
+So-- whoops.
+
+1222
+00:51:48,740 --> 00:51:49,240
+Right.
+
+1223
+00:51:49,240 --> 00:51:51,580
+If I want to compute
+topological order or whatever,
+
+1224
+00:51:51,580 --> 00:51:53,170
+I can just do DFS.
+
+1225
+00:51:53,170 --> 00:51:55,930
+And that'll tell me like, yay or
+nay, does there exist a cycle.
+
+1226
+00:51:55,930 --> 00:51:59,170
+If I want to actually find
+that cycle, all I have to do
+
+1227
+00:51:59,170 --> 00:52:03,040
+is check that topological
+order property at the same time
+
+1228
+00:52:03,040 --> 00:52:05,290
+that it traversed
+the graph during DFS.
+
+1229
+00:52:05,290 --> 00:52:10,250
+And the second that I find an
+edge that loops back, I'm done.
+
+1230
+00:52:10,250 --> 00:52:12,280
+And so that's our
+basic algorithm here.
+
+1231
+00:52:12,280 --> 00:52:14,410
+And this is a technique
+for actually just finding
+
+1232
+00:52:14,410 --> 00:52:18,270
+the cycle in a graph
+using the DFS algorithm.

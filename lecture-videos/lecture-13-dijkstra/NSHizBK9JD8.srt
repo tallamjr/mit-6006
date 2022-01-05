@@ -1,0 +1,4091 @@
+1
+00:00:00,000 --> 00:00:01,458
+[SQUEAKING]
+
+2
+00:00:01,458 --> 00:00:02,916
+[RUSTLING]
+
+3
+00:00:02,916 --> 00:00:06,318
+[CLICKING]
+
+4
+00:00:12,275 --> 00:00:13,650
+JASON KU: Good
+morning, everyone.
+
+5
+00:00:13,650 --> 00:00:18,190
+Welcome to the 13th
+lecture of 6.006.
+
+6
+00:00:18,190 --> 00:00:23,020
+Just to recap from
+last time, we've
+
+7
+00:00:23,020 --> 00:00:24,940
+been talking about shortest--
+
+8
+00:00:24,940 --> 00:00:28,450
+single source shortest
+paths on weighted graphs
+
+9
+00:00:28,450 --> 00:00:31,330
+for the past two lectures.
+
+10
+00:00:31,330 --> 00:00:34,510
+Previously we were only talking
+about unweighted graphs.
+
+11
+00:00:34,510 --> 00:00:40,000
+And so far, up until today,
+we've talked about three ways
+
+12
+00:00:40,000 --> 00:00:44,950
+to solve single source shortest
+paths on weighted graphs.
+
+13
+00:00:44,950 --> 00:00:47,590
+Namely the first one used BFS.
+
+14
+00:00:47,590 --> 00:00:50,260
+If you can kind of
+transform your graph
+
+15
+00:00:50,260 --> 00:00:55,220
+into a linear-sized graph that's
+unweighted that corresponds
+
+16
+00:00:55,220 --> 00:00:58,520
+to your weighted
+problem, essentially
+
+17
+00:00:58,520 --> 00:01:02,390
+replacing each weighted
+edge with of weight
+
+18
+00:01:02,390 --> 00:01:05,900
+w with w single edges.
+
+19
+00:01:05,900 --> 00:01:09,410
+Now that's only good for
+positive weight things
+
+20
+00:01:09,410 --> 00:01:13,700
+and if the sum of your
+weights are small.
+
+21
+00:01:13,700 --> 00:01:15,830
+But if the sum of
+your weights is
+
+22
+00:01:15,830 --> 00:01:18,920
+linear in the combinatorial
+size of your graph,
+
+23
+00:01:18,920 --> 00:01:22,340
+V plus E, then we can get
+a linear time algorithm
+
+24
+00:01:22,340 --> 00:01:28,040
+to solve weighted shortest paths
+using breadth-first search.
+
+25
+00:01:28,040 --> 00:01:31,850
+Then we talked
+about how we could--
+
+26
+00:01:31,850 --> 00:01:35,630
+if we-- the problem with
+weighted shortest paths
+
+27
+00:01:35,630 --> 00:01:39,740
+is if our weights were negative
+and there could exist cycles,
+
+28
+00:01:39,740 --> 00:01:41,540
+then we could have
+negative weight cycles
+
+29
+00:01:41,540 --> 00:01:43,910
+and that would be more
+difficult to handle,
+
+30
+00:01:43,910 --> 00:01:47,180
+because then you have
+vertices where you have
+
+31
+00:01:47,180 --> 00:01:49,340
+an unbounded number
+of edges you might
+
+32
+00:01:49,340 --> 00:01:51,960
+have to go through
+for a shortest path.
+
+33
+00:01:51,960 --> 00:01:55,310
+There might not be a finite
+length shortest path.
+
+34
+00:01:55,310 --> 00:01:57,380
+But in the condition
+where we didn't
+
+35
+00:01:57,380 --> 00:01:58,790
+have cycles in the graph--
+
+36
+00:01:58,790 --> 00:02:01,490
+of course, we couldn't
+have negative weight ones,
+
+37
+00:02:01,490 --> 00:02:05,750
+so we were also able to
+do that in linear time
+
+38
+00:02:05,750 --> 00:02:08,210
+by exploiting the fact
+that our vertices could
+
+39
+00:02:08,210 --> 00:02:11,180
+be ordered in a
+topological order,
+
+40
+00:02:11,180 --> 00:02:15,650
+and then we could kind of
+push shortest path information
+
+41
+00:02:15,650 --> 00:02:19,880
+from the furthest one
+back to the ones forward.
+
+42
+00:02:19,880 --> 00:02:21,800
+By relaxing edges forward.
+
+43
+00:02:21,800 --> 00:02:27,140
+By maintaining this invariant
+that we had shortest paths as
+
+44
+00:02:27,140 --> 00:02:31,290
+we were processing these
+things in topological order.
+
+45
+00:02:31,290 --> 00:02:35,160
+Then last time, we were talking
+about general graphs, graphs
+
+46
+00:02:35,160 --> 00:02:37,590
+that could contain cycles,
+and this is our most general
+
+47
+00:02:37,590 --> 00:02:41,440
+algorithm, because if there
+are negative weight cycles,
+
+48
+00:02:41,440 --> 00:02:43,890
+Bellman-Ford, which we
+talked about last time,
+
+49
+00:02:43,890 --> 00:02:45,180
+can detect them.
+
+50
+00:02:45,180 --> 00:02:48,720
+And in particular,
+for any vertex
+
+51
+00:02:48,720 --> 00:02:52,960
+that had a finite
+weight shortest paths--
+
+52
+00:02:52,960 --> 00:02:57,460
+path, we could compute
+that shortest path for it,
+
+53
+00:02:57,460 --> 00:02:58,390
+compute its distance.
+
+54
+00:02:58,390 --> 00:03:00,190
+And for any one
+that is reachable
+
+55
+00:03:00,190 --> 00:03:03,550
+from a negative weight
+cycle, not only could we
+
+56
+00:03:03,550 --> 00:03:07,210
+mark it as minus
+infinity distance,
+
+57
+00:03:07,210 --> 00:03:10,750
+but we could also find
+a negative weight cycle
+
+58
+00:03:10,750 --> 00:03:14,500
+essentially by duplicating
+our graph to make it a DAG
+
+59
+00:03:14,500 --> 00:03:18,940
+and being able to follow
+pointers back in this expanded
+
+60
+00:03:18,940 --> 00:03:21,490
+DAG that had multiple layers.
+
+61
+00:03:21,490 --> 00:03:24,440
+So that's what we've
+done up until now.
+
+62
+00:03:24,440 --> 00:03:28,640
+We've gotten linear for
+some types of graphs.
+
+63
+00:03:28,640 --> 00:03:31,790
+And we've gotten kind
+of quadratic V times
+
+64
+00:03:31,790 --> 00:03:36,880
+E for general graphs, ones that
+could contain negative cycles.
+
+65
+00:03:36,880 --> 00:03:39,850
+Now how bad is this?
+
+66
+00:03:39,850 --> 00:03:45,970
+Well, if the graph is sparse,
+if the number of edges
+
+67
+00:03:45,970 --> 00:03:48,830
+in our graph is
+on the order of V,
+
+68
+00:03:48,830 --> 00:03:52,930
+then this is quadratic
+time and V, V squared.
+
+69
+00:03:52,930 --> 00:03:58,480
+But if the graph is dense
+where we have quadratic--
+
+70
+00:03:58,480 --> 00:04:01,790
+like the complete graph
+where every edge is present,
+
+71
+00:04:01,790 --> 00:04:06,010
+then we have quadratically
+many edges in our graph in V.
+
+72
+00:04:06,010 --> 00:04:08,380
+And so this running
+time is V cubed.
+
+73
+00:04:08,380 --> 00:04:11,080
+V cube's not great in
+terms of its running time.
+
+74
+00:04:11,080 --> 00:04:15,040
+We would like something
+closer to linear.
+
+75
+00:04:15,040 --> 00:04:18,640
+And so that's what
+we're going to do today.
+
+76
+00:04:18,640 --> 00:04:21,519
+If we have this
+restriction where
+
+77
+00:04:21,519 --> 00:04:24,190
+we have non-negative
+weights, we can
+
+78
+00:04:24,190 --> 00:04:26,920
+have negative weight cycles.
+
+79
+00:04:26,920 --> 00:04:31,990
+And this is a restriction that
+comes up a lot for many graphs
+
+80
+00:04:31,990 --> 00:04:34,040
+you might encounter.
+
+81
+00:04:34,040 --> 00:04:38,140
+A lot of times you don't have
+both positive and negative
+
+82
+00:04:38,140 --> 00:04:38,710
+weight.
+
+83
+00:04:38,710 --> 00:04:40,870
+I don't have a negative
+distance to my house.
+
+84
+00:04:43,390 --> 00:04:47,740
+In any metric we have
+non-negative weights.
+
+85
+00:04:47,740 --> 00:04:51,430
+So these things come up a
+lot, and we can actually
+
+86
+00:04:51,430 --> 00:04:54,100
+do quite a bit better, since
+there are no negative weight
+
+87
+00:04:54,100 --> 00:04:58,630
+cycles, we can
+get almost linear.
+
+88
+00:04:58,630 --> 00:05:03,910
+It's not going to be quite
+V plus E as you see up here
+
+89
+00:05:03,910 --> 00:05:04,870
+on the slide.
+
+90
+00:05:04,870 --> 00:05:07,270
+We're going to get
+something very close.
+
+91
+00:05:07,270 --> 00:05:10,720
+It's V plus the E,
+but on the V term,
+
+92
+00:05:10,720 --> 00:05:13,030
+we have this
+logarithmic factor in V.
+
+93
+00:05:13,030 --> 00:05:15,650
+Which remember for all
+intents and purposes,
+
+94
+00:05:15,650 --> 00:05:18,820
+this log of that
+thing in real life
+
+95
+00:05:18,820 --> 00:05:22,000
+is not going to be bigger
+than like a factor of 30
+
+96
+00:05:22,000 --> 00:05:24,550
+or something like that.
+
+97
+00:05:24,550 --> 00:05:25,600
+Maybe 60.
+
+98
+00:05:25,600 --> 00:05:27,790
+But it's a small number.
+
+99
+00:05:27,790 --> 00:05:30,890
+And so this is actually
+pretty good performance.
+
+100
+00:05:30,890 --> 00:05:34,060
+It's almost linear-- that's what
+I'm saying almost linear here,
+
+101
+00:05:34,060 --> 00:05:37,310
+and that's what we're
+going to try to do today.
+
+102
+00:05:37,310 --> 00:05:40,430
+So, how do we do this?
+
+103
+00:05:40,430 --> 00:05:44,280
+Well, I'm going to make two
+observations here, first off.
+
+104
+00:05:44,280 --> 00:05:50,500
+Our idea is going to be to
+generalize the notion of BFS.
+
+105
+00:05:50,500 --> 00:05:55,180
+When we had BFS, we
+split up our graph--
+
+106
+00:05:55,180 --> 00:05:59,140
+to solve unweighted-- solve
+weighted shortest paths in BFS,
+
+107
+00:05:59,140 --> 00:06:01,990
+we could take our
+positive edge weights,
+
+108
+00:06:01,990 --> 00:06:06,560
+break them up into
+individual edges.
+
+109
+00:06:06,560 --> 00:06:11,270
+But if the total weight
+of our edges was large,
+
+110
+00:06:11,270 --> 00:06:13,370
+then we'd have a problem,
+because now we've
+
+111
+00:06:13,370 --> 00:06:15,550
+expanded the size of our graph.
+
+112
+00:06:15,550 --> 00:06:18,050
+This is the same issue that we
+had with something like radix
+
+113
+00:06:18,050 --> 00:06:21,350
+sort where we don't
+want our algorithm
+
+114
+00:06:21,350 --> 00:06:25,050
+to run in the size of
+the numbers in our input,
+
+115
+00:06:25,050 --> 00:06:28,610
+we want our algorithm to
+run in the number of numbers
+
+116
+00:06:28,610 --> 00:06:29,780
+in our input.
+
+117
+00:06:29,780 --> 00:06:34,150
+This is the difference
+between N and U
+
+118
+00:06:34,150 --> 00:06:36,280
+back when we were talking
+about data structures.
+
+119
+00:06:36,280 --> 00:06:43,000
+Here, if the size of our weights
+are large compared to V and E,
+
+120
+00:06:43,000 --> 00:06:47,850
+then doing this expansion
+is going to be difficult.
+
+121
+00:06:47,850 --> 00:06:51,970
+But if we had, say, some graph--
+
+122
+00:06:51,970 --> 00:06:55,125
+this is my graph G, and
+we had a source vertex
+
+123
+00:06:55,125 --> 00:06:59,650
+s, the idea here
+is going to still
+
+124
+00:06:59,650 --> 00:07:04,960
+be to try to grow a
+frontier of increasing
+
+125
+00:07:04,960 --> 00:07:12,920
+distance from my source and try
+to maintain all of the things
+
+126
+00:07:12,920 --> 00:07:16,520
+within a certain
+distance from my source.
+
+127
+00:07:16,520 --> 00:07:19,240
+So that's the idea, grow a
+sphere centered at my source,
+
+128
+00:07:19,240 --> 00:07:23,590
+repeatedly explore
+closer vertices
+
+129
+00:07:23,590 --> 00:07:25,120
+before I get to further ones.
+
+130
+00:07:25,120 --> 00:07:29,350
+But how can I explore
+closer vertices
+
+131
+00:07:29,350 --> 00:07:32,920
+if I don't know the
+distances beforehand?
+
+132
+00:07:32,920 --> 00:07:36,100
+This is kind of-- seems
+like a circular logic.
+
+133
+00:07:36,100 --> 00:07:38,680
+I'm going to use the
+distance to my things
+
+134
+00:07:38,680 --> 00:07:41,350
+to compute the
+distances to my things.
+
+135
+00:07:41,350 --> 00:07:43,780
+That doesn't work so well.
+
+136
+00:07:43,780 --> 00:07:45,320
+So how do we do this?
+
+137
+00:07:45,320 --> 00:07:49,450
+Well, the idea here is
+to gradually compute
+
+138
+00:07:49,450 --> 00:07:53,080
+the distances-- compute
+the distances as we go so
+
+139
+00:07:53,080 --> 00:07:54,520
+that we maintain this property.
+
+140
+00:07:54,520 --> 00:07:59,680
+Now this property, this idea
+wouldn't work necessarily
+
+141
+00:07:59,680 --> 00:08:03,190
+in the context of
+negative edge weights.
+
+142
+00:08:03,190 --> 00:08:06,460
+Here, we have this
+growing frontier,
+
+143
+00:08:06,460 --> 00:08:09,340
+this ball around my source.
+
+144
+00:08:09,340 --> 00:08:13,420
+And as I grow my
+thing, these things are
+
+145
+00:08:13,420 --> 00:08:19,480
+at further and further distance,
+because any edge from something
+
+146
+00:08:19,480 --> 00:08:22,720
+back here as I'm growing
+my ball a certain distance,
+
+147
+00:08:22,720 --> 00:08:24,940
+these things are
+outside that distance.
+
+148
+00:08:24,940 --> 00:08:28,300
+We're kind of using a
+key observation here.
+
+149
+00:08:28,300 --> 00:08:30,070
+Here's my observation 1.
+
+150
+00:08:35,100 --> 00:08:43,220
+If weights greater
+than or equal to 0,
+
+151
+00:08:43,220 --> 00:08:56,985
+then distances increase
+along shortest paths.
+
+152
+00:09:00,640 --> 00:09:04,328
+Maybe weakly
+monotonically increase
+
+153
+00:09:04,328 --> 00:09:05,620
+if there are zero-weight edges.
+
+154
+00:09:05,620 --> 00:09:18,940
+But in general, if I had a
+path going from s to some v,
+
+155
+00:09:18,940 --> 00:09:23,080
+and it's going
+through some vertex u,
+
+156
+00:09:23,080 --> 00:09:24,460
+I have some shortest path.
+
+157
+00:09:24,460 --> 00:09:27,130
+This is the shortest
+path from s to v,
+
+158
+00:09:27,130 --> 00:09:31,330
+and it goes through some
+point u, some vertex u.
+
+159
+00:09:31,330 --> 00:09:35,950
+Then this monotonicity more
+specifically means that
+
+160
+00:09:35,950 --> 00:09:42,550
+the shortest path from s to u
+and the shortest path from s
+
+161
+00:09:42,550 --> 00:09:51,140
+to v, which is this
+whole thing, how
+
+162
+00:09:51,140 --> 00:09:54,610
+do these relate to each other?
+
+163
+00:09:54,610 --> 00:09:57,690
+If this is along
+that path, then this
+
+164
+00:09:57,690 --> 00:10:01,890
+has to be at least as
+large as the subpath.
+
+165
+00:10:01,890 --> 00:10:03,810
+Because all of these--
+
+166
+00:10:03,810 --> 00:10:07,030
+the weight of this path
+cannot be negative.
+
+167
+00:10:07,030 --> 00:10:10,050
+So that's the thing that
+Dijkstra's going to exploit.
+
+168
+00:10:10,050 --> 00:10:11,640
+It essentially
+means that when I'm
+
+169
+00:10:11,640 --> 00:10:18,130
+expanding this frontier
+of distance away from x,
+
+170
+00:10:18,130 --> 00:10:24,680
+it's possible if I had negative
+weight, that this line--
+
+171
+00:10:24,680 --> 00:10:28,580
+if I had some very negative
+weight going from a vertex
+
+172
+00:10:28,580 --> 00:10:33,570
+here to a vertex
+here, this vertex
+
+173
+00:10:33,570 --> 00:10:37,920
+could be within this boundary.
+
+174
+00:10:37,920 --> 00:10:42,999
+Maybe if this distance is x,
+this guy could be within x.
+
+175
+00:10:42,999 --> 00:10:47,330
+The things that are
+within distance x of s
+
+176
+00:10:47,330 --> 00:10:49,880
+might not be all contained.
+
+177
+00:10:49,880 --> 00:10:54,560
+There could be a path from
+here to this other vertex width
+
+178
+00:10:54,560 --> 00:10:56,360
+distance x.
+
+179
+00:10:56,360 --> 00:10:59,000
+It doesn't have this property
+because I could decrease
+
+180
+00:10:59,000 --> 00:11:01,070
+in distance along the path.
+
+181
+00:11:01,070 --> 00:11:03,390
+So that's the first observation.
+
+182
+00:11:03,390 --> 00:11:09,000
+Second observation,
+well, let's see
+
+183
+00:11:09,000 --> 00:11:15,590
+if we can piggyback
+on DAG relaxation.
+
+184
+00:11:15,590 --> 00:11:22,520
+I claim to you that we can solve
+single source shortest paths
+
+185
+00:11:22,520 --> 00:11:38,110
+faster if we're given
+an order of vertices
+
+186
+00:11:38,110 --> 00:11:46,330
+in increasing
+distance beforehand.
+
+187
+00:11:46,330 --> 00:11:48,250
+Distance from s.
+
+188
+00:11:48,250 --> 00:11:49,600
+So here's the idea.
+
+189
+00:11:49,600 --> 00:11:51,248
+I'm not going to give
+you the distances
+
+190
+00:11:51,248 --> 00:11:52,165
+to all these vertices.
+
+191
+00:11:54,890 --> 00:11:57,530
+Instead I'm going to
+give you the order
+
+192
+00:11:57,530 --> 00:12:02,780
+of the vertices in some
+increasing distance from s.
+
+193
+00:12:02,780 --> 00:12:06,680
+So basically I'm saying, if
+I had some, I don't know,
+
+194
+00:12:06,680 --> 00:12:09,698
+here's a graph.
+
+195
+00:12:09,698 --> 00:12:10,865
+Let's see if I can remember.
+
+196
+00:12:18,380 --> 00:12:20,420
+OK, and I'm going to
+put some edges on here.
+
+197
+00:12:36,060 --> 00:12:36,560
+OK.
+
+198
+00:12:36,560 --> 00:12:42,930
+And I'm going to call these
+vertices 0, 1, 2, 3, and 4.
+
+199
+00:12:42,930 --> 00:12:43,430
+OK.
+
+200
+00:12:43,430 --> 00:12:44,195
+So here's a graph.
+
+201
+00:12:46,740 --> 00:12:49,890
+Maybe I put some
+edge weights on here.
+
+202
+00:12:49,890 --> 00:12:57,990
+I'm going to say this one is 3,
+this one is 2, this one is 3,
+
+203
+00:12:57,990 --> 00:13:04,950
+this is 1, this is 1,
+this is 0, and this is 0.
+
+204
+00:13:04,950 --> 00:13:10,560
+So from vertex 1 to
+2, that was the 2
+
+205
+00:13:10,560 --> 00:13:13,680
+for the labeling of that vertex.
+
+206
+00:13:13,680 --> 00:13:14,800
+That edge is zero-weight.
+
+207
+00:13:14,800 --> 00:13:15,300
+OK.
+
+208
+00:13:15,300 --> 00:13:21,000
+So here's a weighted graph
+And I don't necessarily know--
+
+209
+00:13:21,000 --> 00:13:25,440
+I could use Bellman-Ford to find
+shortest paths from this vertex
+
+210
+00:13:25,440 --> 00:13:31,820
+0, but the idea here is
+I'm not going to give you
+
+211
+00:13:31,820 --> 00:13:34,520
+shortest paths, I'm going to
+try to compute shortest paths,
+
+212
+00:13:34,520 --> 00:13:36,770
+but I'm going to give you
+some additional information.
+
+213
+00:13:36,770 --> 00:13:43,640
+I'm going to give you the order
+of their shortest path distance
+
+214
+00:13:43,640 --> 00:13:45,620
+from the source.
+
+215
+00:13:45,620 --> 00:13:46,460
+And I can just--
+
+216
+00:13:46,460 --> 00:13:52,580
+I'm going to eyeball
+this and say--
+
+217
+00:13:52,580 --> 00:13:54,460
+I'm going to change
+this slightly
+
+218
+00:13:54,460 --> 00:13:56,680
+to make it a little
+bit more interesting.
+
+219
+00:13:56,680 --> 00:14:00,250
+I'm going to say
+this is distance 4.
+
+220
+00:14:00,250 --> 00:14:02,830
+OK.
+
+221
+00:14:02,830 --> 00:14:06,490
+All right, so now what we have
+is the shortest path distance--
+
+222
+00:14:06,490 --> 00:14:07,810
+I'm just eyeballing this.
+
+223
+00:14:07,810 --> 00:14:10,360
+The shortest distance to--
+
+224
+00:14:16,280 --> 00:14:17,930
+bad example.
+
+225
+00:14:17,930 --> 00:14:18,620
+All right.
+
+226
+00:14:18,620 --> 00:14:21,950
+So, these are the weights.
+
+227
+00:14:21,950 --> 00:14:25,310
+Shortest-path distance
+to 3 is going to be 2,
+
+228
+00:14:25,310 --> 00:14:28,670
+I'm going to say, through there.
+
+229
+00:14:28,670 --> 00:14:33,220
+Shortest-path distance
+here is 2 also.
+
+230
+00:14:33,220 --> 00:14:35,590
+Shortest-path distance
+here is also 2
+
+231
+00:14:35,590 --> 00:14:39,090
+because I can go through both
+of these 0's and it's not
+
+232
+00:14:39,090 --> 00:14:40,020
+a problem.
+
+233
+00:14:40,020 --> 00:14:41,490
+And then the
+shortest-path distance
+
+234
+00:14:41,490 --> 00:14:45,870
+here is 2 to here
+and a 1/3 to there.
+
+235
+00:14:45,870 --> 00:14:50,930
+So these are listed
+in increasing distance
+
+236
+00:14:50,930 --> 00:14:53,140
+from my source.
+
+237
+00:14:53,140 --> 00:14:58,820
+I had to compute those
+deltas to convince you
+
+238
+00:14:58,820 --> 00:15:00,380
+that this was the
+right ordering,
+
+239
+00:15:00,380 --> 00:15:03,110
+but this is a right
+ordering of these things.
+
+240
+00:15:03,110 --> 00:15:06,620
+Now it's not the
+only right ordering,
+
+241
+00:15:06,620 --> 00:15:07,850
+but it is a right ordering.
+
+242
+00:15:07,850 --> 00:15:09,470
+OK, so I'm told--
+
+243
+00:15:09,470 --> 00:15:12,470
+I'm arguing to you that I could
+solve a single source shortest
+
+244
+00:15:12,470 --> 00:15:16,160
+paths in linear time
+if I were to give you
+
+245
+00:15:16,160 --> 00:15:18,740
+the vertices in
+increasing distance?
+
+246
+00:15:18,740 --> 00:15:21,230
+How could I do that?
+
+247
+00:15:21,230 --> 00:15:27,430
+Well, because of this
+first observation,
+
+248
+00:15:27,430 --> 00:15:31,420
+I know that if these are
+increasing in distance,
+
+249
+00:15:31,420 --> 00:15:35,590
+any edge going backwards
+with respect to this ordering
+
+250
+00:15:35,590 --> 00:15:40,640
+can't participate in shortest
+paths with one exception.
+
+251
+00:15:40,640 --> 00:15:42,800
+Anyone know what
+that exception is?
+
+252
+00:15:42,800 --> 00:15:47,570
+No edge can go backwards
+in this ordering
+
+253
+00:15:47,570 --> 00:15:51,990
+based on this observation
+except under what condition?
+
+254
+00:15:51,990 --> 00:15:52,490
+Yeah?
+
+255
+00:15:52,490 --> 00:15:53,698
+AUDIENCE: If the weight is 0?
+
+256
+00:15:53,698 --> 00:15:55,430
+JASON KU: If the
+weight to 0, yeah.
+
+257
+00:15:55,430 --> 00:16:00,600
+So if the weight to 0, just
+like this situation here,
+
+258
+00:16:00,600 --> 00:16:03,630
+then I could go backwards
+in the ordering.
+
+259
+00:16:03,630 --> 00:16:05,520
+See, it's problematic.
+
+260
+00:16:05,520 --> 00:16:09,300
+The idea is I'm going to
+want to construct a DAG
+
+261
+00:16:09,300 --> 00:16:11,910
+so that I can run
+DAG relaxation.
+
+262
+00:16:11,910 --> 00:16:22,120
+Well, if I have a component
+here that has 0 weights,
+
+263
+00:16:22,120 --> 00:16:26,440
+I can coalesce this thing down--
+
+264
+00:16:26,440 --> 00:16:31,420
+I can deal with this
+component separately.
+
+265
+00:16:31,420 --> 00:16:33,790
+Let's worry about
+that separately.
+
+266
+00:16:33,790 --> 00:16:40,280
+If we do, we can collapse this
+edge down into a single vertex
+
+267
+00:16:40,280 --> 00:16:44,470
+and transform this graph so
+it does respect the ordering.
+
+268
+00:16:44,470 --> 00:16:50,680
+So I'm going to transform
+this graph into a new graph.
+
+269
+00:16:50,680 --> 00:16:53,590
+This is a graph--
+
+270
+00:16:53,590 --> 00:17:00,220
+contains vertex 2 and vertex
+0, vertex 1 and 3 here,
+
+271
+00:17:00,220 --> 00:17:03,170
+and vertex 4.
+
+272
+00:17:03,170 --> 00:17:05,690
+OK, now we have--
+
+273
+00:17:05,690 --> 00:17:09,020
+and I'm only going to keep
+edges going forward in the--
+
+274
+00:17:15,329 --> 00:17:23,970
+I'm going to need to collapse
+this entire section down
+
+275
+00:17:23,970 --> 00:17:25,290
+into one vertex.
+
+276
+00:17:25,290 --> 00:17:27,119
+This doesn't quite work.
+
+277
+00:17:27,119 --> 00:17:28,079
+OK.
+
+278
+00:17:28,079 --> 00:17:31,680
+Let's ignore zero-weight
+edges for now.
+
+279
+00:17:31,680 --> 00:17:32,760
+Let's assume these are--
+
+280
+00:17:41,132 --> 00:17:42,840
+all right, there's
+something broken here.
+
+281
+00:17:42,840 --> 00:17:44,450
+If I have a cycle here--
+
+282
+00:17:48,350 --> 00:17:51,750
+right now I don't have
+a cycle of zero-weight.
+
+283
+00:17:51,750 --> 00:17:54,810
+So what I could do is I
+could take this vertex
+
+284
+00:17:54,810 --> 00:17:57,660
+and put it after both
+of these vertices.
+
+285
+00:17:57,660 --> 00:17:59,225
+And now I would--
+
+286
+00:17:59,225 --> 00:18:02,180
+or I could rearrange the
+order of these three vertices
+
+287
+00:18:02,180 --> 00:18:06,560
+where there's a path of length
+0 and get a new ordering that
+
+288
+00:18:06,560 --> 00:18:09,620
+still satisfies the property.
+
+289
+00:18:09,620 --> 00:18:17,240
+And that's always the case
+because paths can't increase--
+
+290
+00:18:17,240 --> 00:18:19,910
+paths can't decrease in weight.
+
+291
+00:18:19,910 --> 00:18:22,470
+I can rearrange the
+ordering of these things
+
+292
+00:18:22,470 --> 00:18:26,840
+so that 3 comes
+first, 1 comes second,
+
+293
+00:18:26,840 --> 00:18:29,645
+and 2 comes third of
+those three vertices.
+
+294
+00:18:33,450 --> 00:18:34,170
+Yeah.
+
+295
+00:18:34,170 --> 00:18:43,380
+So for every set of 0 edges, I
+can just flip the relationship
+
+296
+00:18:43,380 --> 00:18:45,990
+if they have the same distance.
+
+297
+00:18:45,990 --> 00:18:50,550
+In my input, I'm given vertices
+that have the same distance
+
+298
+00:18:50,550 --> 00:18:51,490
+from the source.
+
+299
+00:18:51,490 --> 00:18:53,910
+And so if those are the same
+distance from the source
+
+300
+00:18:53,910 --> 00:18:56,040
+and they're connected
+by a zero-weight edge,
+
+301
+00:18:56,040 --> 00:18:57,870
+it doesn't hurt me to
+flip their ordering.
+
+302
+00:18:57,870 --> 00:18:59,940
+So I'm going to do that.
+
+303
+00:18:59,940 --> 00:19:02,457
+So let's convert
+that into a graph
+
+304
+00:19:02,457 --> 00:19:03,540
+with a different ordering.
+
+305
+00:19:13,030 --> 00:19:18,720
+0 3 now, 1 2.
+
+306
+00:19:18,720 --> 00:19:23,560
+OK and I have this distance,
+this edge, this edge,
+
+307
+00:19:23,560 --> 00:19:24,735
+this edge, this edge.
+
+308
+00:19:28,390 --> 00:19:28,995
+This edge.
+
+309
+00:19:31,980 --> 00:19:33,150
+What am I missing?
+
+310
+00:19:33,150 --> 00:19:36,190
+2 to 3.
+
+311
+00:19:36,190 --> 00:19:38,530
+And here.
+
+312
+00:19:38,530 --> 00:19:41,740
+I think I have all
+of those edges.
+
+313
+00:19:41,740 --> 00:19:43,550
+Yeah?
+
+314
+00:19:43,550 --> 00:19:44,660
+OK.
+
+315
+00:19:44,660 --> 00:19:47,960
+Now I have the property
+that every edge that
+
+316
+00:19:47,960 --> 00:19:50,360
+could participate
+in the shortest path
+
+317
+00:19:50,360 --> 00:19:57,270
+are going forward in the
+ordering, because all of these
+
+318
+00:19:57,270 --> 00:19:59,540
+are zero-weight.
+
+319
+00:19:59,540 --> 00:20:01,100
+So we flip those
+around so they're
+
+320
+00:20:01,100 --> 00:20:04,250
+going correct with
+respect to the ordering.
+
+321
+00:20:04,250 --> 00:20:07,850
+And any edge going
+backwards that
+
+322
+00:20:07,850 --> 00:20:10,400
+is positive weight
+certainly can't
+
+323
+00:20:10,400 --> 00:20:12,390
+be used in any shortest path.
+
+324
+00:20:12,390 --> 00:20:14,480
+So I'm just going
+to get rid of them.
+
+325
+00:20:17,790 --> 00:20:18,650
+Yeah?
+
+326
+00:20:18,650 --> 00:20:20,882
+What do I do if there's
+a zero-weight cycle?
+
+327
+00:20:20,882 --> 00:20:22,590
+JASON KU: If there's
+a zero-weight cycle,
+
+328
+00:20:22,590 --> 00:20:25,410
+I can just coalesce
+them all together down
+
+329
+00:20:25,410 --> 00:20:28,500
+to a single vertex, because
+if I reach one of them,
+
+330
+00:20:28,500 --> 00:20:30,990
+I can reach all of them.
+
+331
+00:20:30,990 --> 00:20:33,330
+AUDIENCE: You're getting a
+topological ordering of--
+
+332
+00:20:33,330 --> 00:20:34,080
+JASON KU: Exactly.
+
+333
+00:20:34,080 --> 00:20:37,470
+I'm computing-- so
+the idea here is we're
+
+334
+00:20:37,470 --> 00:20:39,420
+trying to construct a DAG.
+
+335
+00:20:39,420 --> 00:20:43,020
+I can construct this
+DAG in linear time.
+
+336
+00:20:43,020 --> 00:20:45,840
+And then I can
+run DAG relaxation
+
+337
+00:20:45,840 --> 00:20:50,070
+on this graph in linear
+time to get shortest paths.
+
+338
+00:20:50,070 --> 00:20:52,140
+So that's an approach.
+
+339
+00:20:52,140 --> 00:20:54,420
+If I knew the ordering
+of the vertices
+
+340
+00:20:54,420 --> 00:20:59,020
+in increasing distance, then
+I could use DAG relaxation.
+
+341
+00:20:59,020 --> 00:21:01,760
+So we're going to use both
+of these observations.
+
+342
+00:21:01,760 --> 00:21:04,710
+That's how we're going to solve
+this single source shortage
+
+343
+00:21:04,710 --> 00:21:08,850
+problem with non-negative
+weights using Dijkstra.
+
+344
+00:21:08,850 --> 00:21:12,600
+So that's finally now
+where we're coming to.
+
+345
+00:21:12,600 --> 00:21:16,230
+Sorry, I missed a case here
+when I was writing up my notes,
+
+346
+00:21:16,230 --> 00:21:20,610
+and I tried to fix it live and
+hopefully you guys followed me.
+
+347
+00:21:20,610 --> 00:21:21,110
+OK.
+
+348
+00:21:23,700 --> 00:21:28,200
+Dijkstra's algorithm.
+
+349
+00:21:32,200 --> 00:21:33,660
+Did I spell that right?
+
+350
+00:21:33,660 --> 00:21:35,070
+Kind of.
+
+351
+00:21:35,070 --> 00:21:36,180
+OK.
+
+352
+00:21:36,180 --> 00:21:37,065
+What?
+
+353
+00:21:37,065 --> 00:21:37,565
+Dijkstra.
+
+354
+00:21:42,480 --> 00:21:43,560
+OK.
+
+355
+00:21:43,560 --> 00:21:49,260
+Now Dijkstra was this
+Dutch computer scientist.
+
+356
+00:21:49,260 --> 00:21:50,700
+This is him.
+
+357
+00:21:50,700 --> 00:21:52,530
+Pretty famous, he
+wrote a monograph
+
+358
+00:21:52,530 --> 00:21:56,970
+on why programming
+languages should
+
+359
+00:21:56,970 --> 00:22:02,280
+start with 0 indexing as opposed
+to 1 indexing, so I like him.
+
+360
+00:22:02,280 --> 00:22:07,080
+But in particular, he designed
+this very nice generalization
+
+361
+00:22:07,080 --> 00:22:10,560
+of BFS for weighted graphs.
+
+362
+00:22:10,560 --> 00:22:12,210
+But maybe I didn't
+spell this right
+
+363
+00:22:12,210 --> 00:22:15,210
+because when he writes
+his name, he writes it
+
+364
+00:22:15,210 --> 00:22:17,730
+with a Y with a dash over it.
+
+365
+00:22:17,730 --> 00:22:25,440
+So in reality on a
+Dutch typewriter,
+
+366
+00:22:25,440 --> 00:22:29,280
+you might have a character
+that looks like this, Y
+
+367
+00:22:29,280 --> 00:22:31,960
+with a umlaut on top of it.
+
+368
+00:22:31,960 --> 00:22:37,600
+But on modern-- on
+an English keyboard,
+
+369
+00:22:37,600 --> 00:22:42,920
+this looks pretty
+similar to an IJ.
+
+370
+00:22:42,920 --> 00:22:50,120
+So in a lot of manuscripts,
+we write it as D-I--
+
+371
+00:22:50,120 --> 00:22:52,640
+there's no J sound in Dijkstra.
+
+372
+00:22:52,640 --> 00:22:55,460
+It's coming from this is Y here.
+
+373
+00:22:55,460 --> 00:22:59,690
+That's an interesting way to
+remember how to spell Dijkstra.
+
+374
+00:22:59,690 --> 00:23:04,760
+But the basic idea behind
+Dijkstra is the following idea.
+
+375
+00:23:09,830 --> 00:23:28,880
+Relaxed edges from vertices
+in increasing distance
+
+376
+00:23:28,880 --> 00:23:31,770
+from source.
+
+377
+00:23:31,770 --> 00:23:32,300
+OK.
+
+378
+00:23:32,300 --> 00:23:34,230
+This is the same
+kind of difficulty
+
+379
+00:23:34,230 --> 00:23:40,440
+we had before when we were
+trying to generalize BFS.
+
+380
+00:23:40,440 --> 00:23:45,320
+So how do we know what
+the next vertex is
+
+381
+00:23:45,320 --> 00:23:47,570
+with increasing distance to s?
+
+382
+00:23:47,570 --> 00:24:03,400
+Well, the second idea is find
+the next vertex efficiently
+
+383
+00:24:03,400 --> 00:24:05,351
+using a data structure.
+
+384
+00:24:08,440 --> 00:24:10,150
+And the data structure
+we're going to use
+
+385
+00:24:10,150 --> 00:24:14,020
+is something I like to call
+a changeable priority queue.
+
+386
+00:24:22,940 --> 00:24:27,460
+So this is a little different
+than a normal priority queue
+
+387
+00:24:27,460 --> 00:24:36,010
+that we had at the end of
+our data structures unit.
+
+388
+00:24:36,010 --> 00:24:40,280
+This changeable priority
+queue has three operations.
+
+389
+00:24:40,280 --> 00:24:42,970
+We're going to say it's a queue.
+
+390
+00:24:42,970 --> 00:24:49,330
+We can build it on an
+iterable set of items.
+
+391
+00:24:49,330 --> 00:24:54,700
+Just stick x-- like
+n items in there.
+
+392
+00:24:54,700 --> 00:25:03,850
+We can delete min
+from the queue.
+
+393
+00:25:03,850 --> 00:25:06,700
+OK, this is the same now
+as the priority queue.
+
+394
+00:25:06,700 --> 00:25:09,190
+It's this third operation
+that's going to be different.
+
+395
+00:25:12,910 --> 00:25:22,420
+Decrease the key of an
+item that has id, id.
+
+396
+00:25:22,420 --> 00:25:25,630
+OK, so this is a little strange.
+
+397
+00:25:25,630 --> 00:25:27,640
+What the heck is this id?
+
+398
+00:25:27,640 --> 00:25:30,430
+All right, with a change
+of priority queue,
+
+399
+00:25:30,430 --> 00:25:34,060
+each of our items has two
+values instead of one value.
+
+400
+00:25:34,060 --> 00:25:37,480
+It has a key, but it also--
+
+401
+00:25:37,480 --> 00:25:42,760
+on which the priority queue
+is leading the min item
+
+402
+00:25:42,760 --> 00:25:45,130
+with the minimum key.
+
+403
+00:25:45,130 --> 00:25:48,010
+But also, each item
+has an ID associated
+
+404
+00:25:48,010 --> 00:25:51,790
+with it, a unique integer.
+
+405
+00:25:51,790 --> 00:25:54,970
+So that when we
+perform this operation,
+
+406
+00:25:54,970 --> 00:26:01,690
+decrease_key, it can find some
+item in our data structure
+
+407
+00:26:01,690 --> 00:26:03,640
+with the given ID.
+
+408
+00:26:03,640 --> 00:26:05,470
+And if it's
+contained there, it's
+
+409
+00:26:05,470 --> 00:26:12,400
+going to change its key
+to some smaller value k.
+
+410
+00:26:12,400 --> 00:26:16,000
+And don't worry about
+the edge cases here.
+
+411
+00:26:16,000 --> 00:26:18,070
+We're always going to
+make sure this k is
+
+412
+00:26:18,070 --> 00:26:20,440
+going to be smaller
+then whatever
+
+413
+00:26:20,440 --> 00:26:23,090
+that key was to begin with.
+
+414
+00:26:23,090 --> 00:26:25,930
+So this is really a kind
+of a funky operation.
+
+415
+00:26:28,460 --> 00:26:33,450
+If I had a priority queue, not
+a changeable priority queue,
+
+416
+00:26:33,450 --> 00:26:35,210
+but I had a priority
+queue and I wanted
+
+417
+00:26:35,210 --> 00:26:38,420
+to implement a change
+of priority queue,
+
+418
+00:26:38,420 --> 00:26:39,230
+how could I do it?
+
+419
+00:26:43,980 --> 00:26:46,800
+Well, a regular priority
+queue is already
+
+420
+00:26:46,800 --> 00:26:49,680
+going to get me
+these two operations.
+
+421
+00:26:49,680 --> 00:26:50,790
+It's just this one.
+
+422
+00:26:50,790 --> 00:26:55,540
+I essentially need to
+find something by an ID
+
+423
+00:26:55,540 --> 00:26:59,190
+and then update its key.
+
+424
+00:26:59,190 --> 00:27:05,990
+So the idea how
+to implement this
+
+425
+00:27:05,990 --> 00:27:09,250
+is going to be to use a
+regular priority queue.
+
+426
+00:27:15,290 --> 00:27:17,840
+I'm going to call it Q prime.
+
+427
+00:27:17,840 --> 00:27:30,630
+And I'm going to cross-link
+it with a dictionary D.
+
+428
+00:27:30,630 --> 00:27:34,230
+So these are just regular
+priority queue on my items
+
+429
+00:27:34,230 --> 00:27:38,640
+that has the key
+as defined above.
+
+430
+00:27:38,640 --> 00:27:41,910
+But I'm going to cross-link it
+with a dictionary, a dictionary
+
+431
+00:27:41,910 --> 00:27:46,860
+that maps IDs to their
+location in the priority queue.
+
+432
+00:27:46,860 --> 00:27:50,610
+We've done this many times in
+the data structures section.
+
+433
+00:27:50,610 --> 00:27:53,820
+We're trying to cross
+link to data structures
+
+434
+00:27:53,820 --> 00:27:58,630
+to make a query on a
+different type of key
+
+435
+00:27:58,630 --> 00:28:01,870
+to find its place in
+another data structure.
+
+436
+00:28:01,870 --> 00:28:06,980
+So, if we had a
+priority a dictionary,
+
+437
+00:28:06,980 --> 00:28:09,430
+we could do this
+stuff pretty fast.
+
+438
+00:28:12,150 --> 00:28:14,220
+In particular, I'm
+going to assume
+
+439
+00:28:14,220 --> 00:28:18,360
+that our IDs of our vertices
+are the integers between 0
+
+440
+00:28:18,360 --> 00:28:19,830
+and v minus 1.
+
+441
+00:28:19,830 --> 00:28:24,000
+And so for my dictionary,
+I could get constant time
+
+442
+00:28:24,000 --> 00:28:30,438
+looking up of that ID by
+using what data structure?
+
+443
+00:28:30,438 --> 00:28:32,220
+AUDIENCE: Hash table.
+
+444
+00:28:32,220 --> 00:28:33,220
+JASON KU: We could get--
+
+445
+00:28:33,220 --> 00:28:37,520
+OK, so we could get
+expected constant time
+
+446
+00:28:37,520 --> 00:28:40,980
+if we used a hash table.
+
+447
+00:28:40,980 --> 00:28:45,040
+But if we knew that
+our vertex IDs were
+
+448
+00:28:45,040 --> 00:28:48,310
+just the numbers
+from 0 to v minus 1,
+
+449
+00:28:48,310 --> 00:28:51,190
+we could get rid of
+that expected time
+
+450
+00:28:51,190 --> 00:28:55,460
+by using a direct access array.
+
+451
+00:28:55,460 --> 00:28:56,120
+Great.
+
+452
+00:28:56,120 --> 00:28:57,900
+OK, so that's the assumption.
+
+453
+00:28:57,900 --> 00:28:59,720
+And so really, the
+name of the game
+
+454
+00:28:59,720 --> 00:29:04,730
+here is to choose a
+priority queue here
+
+455
+00:29:04,730 --> 00:29:07,430
+that's going to make
+these things fast when we
+
+456
+00:29:07,430 --> 00:29:08,540
+start to look at Dijkstra.
+
+457
+00:29:08,540 --> 00:29:12,530
+OK, so we're going to
+use this data structure
+
+458
+00:29:12,530 --> 00:29:18,470
+to keep track of our
+distance estimates
+
+459
+00:29:18,470 --> 00:29:21,895
+to all of the
+vertices away from s.
+
+460
+00:29:21,895 --> 00:29:25,220
+OK, so this is
+Dijkstra's algorithm.
+
+461
+00:29:25,220 --> 00:29:26,150
+OK.
+
+462
+00:29:26,150 --> 00:29:31,430
+Set-- so same
+initialization step.
+
+463
+00:29:31,430 --> 00:29:33,020
+We're going to set--
+
+464
+00:29:33,020 --> 00:29:37,430
+this is a distance
+estimate d, not delta.
+
+465
+00:29:37,430 --> 00:29:40,070
+We're going to want
+the d's be our delta
+
+466
+00:29:40,070 --> 00:29:41,540
+is at the end of the algorithm.
+
+467
+00:29:41,540 --> 00:29:43,430
+That's what we're
+going to have to prove.
+
+468
+00:29:43,430 --> 00:29:52,335
+So we first set all of them to
+infinity, and then set d of s,
+
+469
+00:29:52,335 --> 00:29:56,010
+s equal to 0.
+
+470
+00:29:56,010 --> 00:29:58,620
+And here, we're never
+going to update it again,
+
+471
+00:29:58,620 --> 00:30:02,580
+because our shortest
+distance is in a graph
+
+472
+00:30:02,580 --> 00:30:06,540
+with non-negative edge weights
+certainly can't go below 0.
+
+473
+00:30:09,090 --> 00:30:10,410
+All right.
+
+474
+00:30:10,410 --> 00:30:14,130
+Now we build our--
+
+475
+00:30:14,130 --> 00:30:18,540
+build our changeable
+priority queue--
+
+476
+00:30:18,540 --> 00:30:28,620
+queue-- with an item--
+
+477
+00:30:28,620 --> 00:30:34,890
+I'm going to say an item is--
+
+478
+00:30:34,890 --> 00:30:38,850
+x is represented by
+a tuple of its ID,
+
+479
+00:30:38,850 --> 00:30:43,410
+and then its key just
+for brevity here.
+
+480
+00:30:43,410 --> 00:30:49,020
+With an item v, d of s, v.
+
+481
+00:30:49,020 --> 00:30:53,070
+So I'm going to be storing in
+my changeable priority queue
+
+482
+00:30:53,070 --> 00:30:58,260
+the vertex label and its
+shortest-path distance estimate
+
+483
+00:30:58,260 --> 00:30:59,190
+d.
+
+484
+00:30:59,190 --> 00:31:01,500
+And that's going to be the
+key, the minimum that I'm
+
+485
+00:31:01,500 --> 00:31:11,820
+trying going to be querying
+on for each the v and V.
+
+486
+00:31:11,820 --> 00:31:13,410
+So I'm going to
+build that thing.
+
+487
+00:31:13,410 --> 00:31:18,180
+It's going to then have all
+of my vertices in my graph.
+
+488
+00:31:18,180 --> 00:31:25,710
+Then while my changeable
+priority queue still
+
+489
+00:31:25,710 --> 00:31:44,850
+has items, not empty, I'm
+going to delete some u, d s, u.
+
+490
+00:31:44,850 --> 00:31:49,620
+So some item such
+that its distance
+
+491
+00:31:49,620 --> 00:32:01,860
+is minimized from Q that
+has minimum distance.
+
+492
+00:32:05,830 --> 00:32:06,345
+OK.
+
+493
+00:32:06,345 --> 00:32:07,720
+So I'm going to
+I'm going to look
+
+494
+00:32:07,720 --> 00:32:09,370
+at all the things in
+my priority queue.
+
+495
+00:32:09,370 --> 00:32:11,830
+At the start it's
+just going to be s,
+
+496
+00:32:11,830 --> 00:32:14,500
+because everything as
+shortest-path distance
+
+497
+00:32:14,500 --> 00:32:17,080
+estimate infinite except for s.
+
+498
+00:32:17,080 --> 00:32:18,940
+And so that's
+clearly the smallest.
+
+499
+00:32:18,940 --> 00:32:21,550
+OK, so I'm going to
+remove that from my queue,
+
+500
+00:32:21,550 --> 00:32:23,570
+and then I'm going
+to process it.
+
+501
+00:32:23,570 --> 00:32:25,150
+How am I going to process it?
+
+502
+00:32:25,150 --> 00:32:28,600
+It's the exact same kind
+of thing as DAG relaxation.
+
+503
+00:32:28,600 --> 00:32:31,270
+I'm going to relax all
+its outgoing edges.
+
+504
+00:32:31,270 --> 00:32:40,100
+So just for completeness for
+v in the outgoing adjacencies
+
+505
+00:32:40,100 --> 00:32:50,070
+of u, I'm going to relax--
+
+506
+00:32:50,070 --> 00:32:52,830
+sorry.
+
+507
+00:32:52,830 --> 00:32:58,800
+We have to check
+whether we can relax it.
+
+508
+00:32:58,800 --> 00:33:09,710
+Basically if the shortest-path
+distance estimate to v
+
+509
+00:33:09,710 --> 00:33:22,760
+is greater than going to u first
+and then crossing that edge,
+
+510
+00:33:22,760 --> 00:33:24,830
+if going through
+that is better, this
+
+511
+00:33:24,830 --> 00:33:27,680
+is violating our
+triangle inequality.
+
+512
+00:33:27,680 --> 00:33:39,220
+And so we relax edge u, v, and
+by that we mean set this thing
+
+513
+00:33:39,220 --> 00:33:42,930
+to be equal to that thing.
+
+514
+00:33:42,930 --> 00:33:44,370
+That's what we meant by relax.
+
+515
+00:33:44,370 --> 00:33:46,950
+And then we have one
+other thing to do.
+
+516
+00:33:46,950 --> 00:33:53,560
+We have changed these
+distance estimates
+
+517
+00:33:53,560 --> 00:33:56,260
+but our Q doesn't know that
+we change these things.
+
+518
+00:33:56,260 --> 00:33:58,000
+We added these items in here.
+
+519
+00:34:01,170 --> 00:34:04,660
+But it doesn't know that
+my distances have changed.
+
+520
+00:34:04,660 --> 00:34:12,000
+So we to tell the Q to remember
+to change its key value
+
+521
+00:34:12,000 --> 00:34:15,929
+associated with the item v.
+
+522
+00:34:15,929 --> 00:34:22,320
+So decrease-- what is it?
+
+523
+00:34:22,320 --> 00:34:33,810
+Decrease key vertex
+v in Q to the new d
+
+524
+00:34:33,810 --> 00:34:37,570
+s, v, the one that I
+just decreased here.
+
+525
+00:34:37,570 --> 00:34:39,989
+And I know that I decreased
+it because I said it
+
+526
+00:34:39,989 --> 00:34:40,980
+to a smaller value.
+
+527
+00:34:40,980 --> 00:34:42,480
+That makes sense.
+
+528
+00:34:42,480 --> 00:34:45,929
+All right, so that's Dijkstra.
+
+529
+00:34:45,929 --> 00:34:50,550
+Let's run it on an example.
+
+530
+00:34:50,550 --> 00:34:53,830
+So here's an example.
+
+531
+00:34:53,830 --> 00:34:56,880
+I have a directed graph.
+
+532
+00:34:56,880 --> 00:34:58,170
+It does contain cycles.
+
+533
+00:34:58,170 --> 00:35:01,650
+In particular, here
+are some cycles.
+
+534
+00:35:01,650 --> 00:35:04,990
+I think those are the main ones.
+
+535
+00:35:04,990 --> 00:35:06,740
+There are definitely
+cycles in this graph.
+
+536
+00:35:09,980 --> 00:35:12,320
+But as you see,
+all of the weights
+
+537
+00:35:12,320 --> 00:35:15,020
+are non-negative, in
+particular-- they're positive,
+
+538
+00:35:15,020 --> 00:35:16,100
+actually.
+
+539
+00:35:16,100 --> 00:35:21,420
+It's going to be just helpful
+in writing out this example.
+
+540
+00:35:21,420 --> 00:35:25,310
+So let's run Dijkstra
+on this graph.
+
+541
+00:35:25,310 --> 00:35:28,400
+First we initialize and we set
+the shortest-path distance.
+
+542
+00:35:28,400 --> 00:35:32,760
+I'm going to label it in white
+here to all of the things.
+
+543
+00:35:32,760 --> 00:35:34,340
+Then I'm going to,
+as I update it,
+
+544
+00:35:34,340 --> 00:35:38,360
+I'm just going to cross them
+out and write a new number.
+
+545
+00:35:38,360 --> 00:35:40,750
+So that's what it
+is at the start.
+
+546
+00:35:40,750 --> 00:35:43,100
+That's initialization,
+that's after step 1.
+
+547
+00:35:43,100 --> 00:35:46,700
+And then I stick things
+into my Q. What's in my Q?
+
+548
+00:35:46,700 --> 00:35:52,100
+Here's my Q. It's everything.
+
+549
+00:35:52,100 --> 00:35:58,520
+It's vertices s, a, b, c, d.
+
+550
+00:35:58,520 --> 00:36:02,410
+I got five items
+in my Q. Really,
+
+551
+00:36:02,410 --> 00:36:05,740
+it's the item pair with its
+shortest distance estimate,
+
+552
+00:36:05,740 --> 00:36:08,440
+I'm just not going
+to rewrite that here.
+
+553
+00:36:08,440 --> 00:36:10,520
+So the idea here is--
+
+554
+00:36:10,520 --> 00:36:11,670
+the while loop, OK.
+
+555
+00:36:11,670 --> 00:36:13,990
+Q is not empty, great.
+
+556
+00:36:13,990 --> 00:36:17,590
+We're going to delete the one
+with the smallest distance
+
+557
+00:36:17,590 --> 00:36:21,220
+estimate, which
+is s, right, yeah.
+
+558
+00:36:21,220 --> 00:36:26,980
+So I remove that, and then
+I relax edges out of s.
+
+559
+00:36:26,980 --> 00:36:30,766
+So I relax edge here to a.
+
+560
+00:36:30,766 --> 00:36:32,890
+That's better than the
+distance estimate--
+
+561
+00:36:32,890 --> 00:36:36,340
+10 is better than the
+distance estimate infinite,
+
+562
+00:36:36,340 --> 00:36:39,730
+so I'm going to
+change this to 10.
+
+563
+00:36:39,730 --> 00:36:42,010
+And then here's
+another outgoing edge.
+
+564
+00:36:42,010 --> 00:36:46,390
+3 is better than
+infinite, so I'm
+
+565
+00:36:46,390 --> 00:36:49,540
+going to change its delta to 3.
+
+566
+00:36:49,540 --> 00:36:50,290
+OK.
+
+567
+00:36:50,290 --> 00:36:54,580
+So now I go back in here and I
+change the distance estimates
+
+568
+00:36:54,580 --> 00:36:58,140
+associated with my Q.
+
+569
+00:36:58,140 --> 00:37:01,860
+Now, next step of the
+algorithm, s is done.
+
+570
+00:37:01,860 --> 00:37:06,460
+I've processed everything
+distance 0 away.
+
+571
+00:37:06,460 --> 00:37:08,320
+But I'm now going to
+use my priority queue
+
+572
+00:37:08,320 --> 00:37:12,160
+to say which of my vertices
+has the shortest distance
+
+573
+00:37:12,160 --> 00:37:14,590
+estimate now.
+
+574
+00:37:14,590 --> 00:37:16,790
+So which one is it?
+
+575
+00:37:16,790 --> 00:37:18,220
+a, b, or c, or d?
+
+576
+00:37:20,860 --> 00:37:22,690
+Yeah, it's 3 and c.
+
+577
+00:37:22,690 --> 00:37:24,370
+3 is smaller than 10.
+
+578
+00:37:24,370 --> 00:37:28,360
+So Q is going to
+magically delete c for me,
+
+579
+00:37:28,360 --> 00:37:31,840
+tell me what that is, and now
+I'm going to process that.
+
+580
+00:37:31,840 --> 00:37:36,040
+Now I've changed my
+boundary to this.
+
+581
+00:37:36,040 --> 00:37:39,640
+And now I relax edges out of c.
+
+582
+00:37:39,640 --> 00:37:43,450
+So here's an edge
+at a c, that's a 4.
+
+583
+00:37:43,450 --> 00:37:49,540
+A 4 plus the 3 is smaller
+than 10, so I update it.
+
+584
+00:37:49,540 --> 00:37:54,460
+3 plus 8 is 11, that's smaller
+than infinite, so I update it,
+
+585
+00:37:54,460 --> 00:37:56,540
+I relax.
+
+586
+00:37:56,540 --> 00:37:59,360
+3 plus 2 is smaller
+than infinite,
+
+587
+00:37:59,360 --> 00:38:00,500
+so I relax that as well.
+
+588
+00:38:03,170 --> 00:38:06,020
+Now of the things
+still left in my Q,
+
+589
+00:38:06,020 --> 00:38:08,940
+I'm actually going to
+remove it from my Q
+
+590
+00:38:08,940 --> 00:38:10,940
+instead of crossing it
+out, maybe that's better.
+
+591
+00:38:13,730 --> 00:38:18,920
+Of the vertices still left in my
+Q, which has smallest distance?
+
+592
+00:38:18,920 --> 00:38:19,640
+Yeah.
+
+593
+00:38:19,640 --> 00:38:20,480
+d.
+
+594
+00:38:20,480 --> 00:38:22,880
+d has 5, 7, or 11.
+
+595
+00:38:22,880 --> 00:38:24,480
+5 is the smallest.
+
+596
+00:38:24,480 --> 00:38:27,890
+So I remove d from my cue
+and I relax edges from it.
+
+597
+00:38:27,890 --> 00:38:33,560
+And now my boundary looks
+something like this.
+
+598
+00:38:33,560 --> 00:38:35,180
+I relax edges out of it.
+
+599
+00:38:35,180 --> 00:38:37,640
+5 plus 5, that's 10.
+
+600
+00:38:37,640 --> 00:38:42,470
+10 is smaller than
+11, so that's a 10.
+
+601
+00:38:42,470 --> 00:38:45,896
+And that's the only
+outgoing edge from d.
+
+602
+00:38:45,896 --> 00:38:47,990
+so I'm done.
+
+603
+00:38:47,990 --> 00:38:53,690
+And then the last, 7
+is smaller than 10,
+
+604
+00:38:53,690 --> 00:38:55,400
+I relax edges out of a.
+
+605
+00:38:58,030 --> 00:39:03,340
+a to b, 7 plus 2
+is smaller than 10.
+
+606
+00:39:09,660 --> 00:39:10,440
+And now I'm done.
+
+607
+00:39:10,440 --> 00:39:13,970
+So what I did every
+time I removed s--
+
+608
+00:39:13,970 --> 00:39:17,810
+or I removed a vertex, I said
+its shortest-path distance
+
+609
+00:39:17,810 --> 00:39:19,880
+to the small--
+
+610
+00:39:19,880 --> 00:39:22,290
+the last value I assigned to it.
+
+611
+00:39:22,290 --> 00:39:29,670
+So this was then 3, and
+then a was 7, b was 9,
+
+612
+00:39:29,670 --> 00:39:33,150
+and then d was 5.
+
+613
+00:39:33,150 --> 00:39:35,430
+So that's Dijkstra in action.
+
+614
+00:39:35,430 --> 00:39:39,300
+It seems like these are the
+shortest-path distances,
+
+615
+00:39:39,300 --> 00:39:40,800
+but how do we prove that?
+
+616
+00:39:40,800 --> 00:39:44,040
+Did it do the right thing?
+
+617
+00:39:44,040 --> 00:39:45,530
+Well, let's find out.
+
+618
+00:39:45,530 --> 00:39:49,100
+So that's what we're going to
+spend some time on right now,
+
+619
+00:39:49,100 --> 00:39:51,380
+just talking about the
+correctness of Dijkstra's
+
+620
+00:39:51,380 --> 00:39:52,263
+algorithm.
+
+621
+00:39:57,690 --> 00:39:58,470
+OK.
+
+622
+00:39:58,470 --> 00:40:06,550
+Correctness follows from
+two main observations.
+
+623
+00:40:06,550 --> 00:40:14,290
+So the claim here that we're
+trying to prove is that d of s
+
+624
+00:40:14,290 --> 00:40:20,860
+equals the delta s--
+so the estimates equal
+
+625
+00:40:20,860 --> 00:40:30,680
+the shortest-path distance is
+at the end of Dijkstra for all v
+
+626
+00:40:30,680 --> 00:40:33,995
+and V at end.
+
+627
+00:40:37,570 --> 00:40:40,100
+And this is going to follow
+from two observations.
+
+628
+00:40:40,100 --> 00:40:53,230
+So the proof here,
+first, if ever relaxation
+
+629
+00:40:53,230 --> 00:40:57,160
+sets d of s of v--
+
+630
+00:40:57,160 --> 00:41:01,170
+it sets the estimate equal to
+the shortest-path distance,
+
+631
+00:41:01,170 --> 00:41:13,125
+if it ever does that, I argue
+to you that still true at end.
+
+632
+00:41:16,280 --> 00:41:18,915
+OK, that's not a very
+strong statement.
+
+633
+00:41:18,915 --> 00:41:23,150
+This is saying if I ever
+set the distance estimate
+
+634
+00:41:23,150 --> 00:41:26,060
+to the true distance,
+I'm never going to set it
+
+635
+00:41:26,060 --> 00:41:28,550
+to a different value later on.
+
+636
+00:41:28,550 --> 00:41:29,540
+And why is that?
+
+637
+00:41:32,140 --> 00:41:36,370
+Well, relaxation only ever
+decreases the distance.
+
+638
+00:41:39,580 --> 00:41:51,840
+Relaxation only
+decreases d s, v.
+
+639
+00:41:51,840 --> 00:41:56,220
+But we proved in lecture
+11-- so two lectures ago
+
+640
+00:41:56,220 --> 00:41:57,645
+that relaxation is safe.
+
+641
+00:42:02,130 --> 00:42:03,960
+And what does safe mean?
+
+642
+00:42:03,960 --> 00:42:08,740
+Safe means that relaxation--
+
+643
+00:42:08,740 --> 00:42:13,630
+that relaxation will only ever
+change these distant estimates
+
+644
+00:42:13,630 --> 00:42:18,280
+to be either infinite--
+
+645
+00:42:18,280 --> 00:42:24,000
+it was never-- there was
+never a path to my vertex.
+
+646
+00:42:24,000 --> 00:42:38,750
+Or it was the length of some
+path to v. Length of some path.
+
+647
+00:42:38,750 --> 00:42:39,590
+OK.
+
+648
+00:42:39,590 --> 00:42:42,200
+So what does that mean?
+
+649
+00:42:42,200 --> 00:42:46,070
+It only decreases,
+but it's always
+
+650
+00:42:46,070 --> 00:42:49,250
+the length of some
+path to v. So if this
+
+651
+00:42:49,250 --> 00:42:50,765
+is the length of
+the shortest path
+
+652
+00:42:50,765 --> 00:42:54,230
+to v, I could never set
+it to a smaller length,
+
+653
+00:42:54,230 --> 00:42:56,990
+because there are no paths
+with shorter distance.
+
+654
+00:42:56,990 --> 00:42:58,080
+That's the whole point.
+
+655
+00:42:58,080 --> 00:42:58,580
+OK.
+
+656
+00:42:58,580 --> 00:43:02,840
+So with this
+observation, I'm going
+
+657
+00:43:02,840 --> 00:43:05,570
+to argue this final claim.
+
+658
+00:43:05,570 --> 00:43:19,660
+It suffices to show that my
+estimate equals the shortest
+
+659
+00:43:19,660 --> 00:43:34,730
+distance when v is
+removed from the Q.
+
+660
+00:43:34,730 --> 00:43:41,770
+And since I removed every vertex
+from the Q in this while loop,
+
+661
+00:43:41,770 --> 00:43:45,460
+I will eventually said to
+all of the distance estimates
+
+662
+00:43:45,460 --> 00:43:49,810
+to the real distance
+and we'll be golden.
+
+663
+00:43:49,810 --> 00:43:50,660
+Happy days.
+
+664
+00:43:50,660 --> 00:43:51,160
+All right.
+
+665
+00:43:51,160 --> 00:43:54,220
+So we'll be done if we
+can prove that statement.
+
+666
+00:43:54,220 --> 00:43:55,270
+All right.
+
+667
+00:43:55,270 --> 00:44:01,360
+So we're going to prove
+this by induction obviously.
+
+668
+00:44:01,360 --> 00:44:21,950
+Induction on first k
+vertices removed from the Q.
+
+669
+00:44:21,950 --> 00:44:28,190
+So the Q, we're popping vertices
+from this Q in some order.
+
+670
+00:44:28,190 --> 00:44:31,580
+So I'm going to just
+argue that this claim is
+
+671
+00:44:31,580 --> 00:44:34,880
+true for the first k.
+
+672
+00:44:34,880 --> 00:44:38,270
+Clearly that's true
+for k equals 1.
+
+673
+00:44:38,270 --> 00:44:44,710
+Base case, k equals 1.
+
+674
+00:44:44,710 --> 00:44:45,640
+What is k equals 1?
+
+675
+00:44:45,640 --> 00:44:47,560
+That means the first
+word vertex that I
+
+676
+00:44:47,560 --> 00:44:50,980
+pop has this property,
+which is definitely true,
+
+677
+00:44:50,980 --> 00:44:54,823
+because we set the shortest
+distance to s to be 0.
+
+678
+00:44:54,823 --> 00:44:55,490
+That's all good.
+
+679
+00:44:58,150 --> 00:44:59,650
+Now we have our inductive step.
+
+680
+00:45:09,280 --> 00:45:17,920
+Assume it's true for k prime--
+
+681
+00:45:17,920 --> 00:45:22,030
+sorry, k less than k prime.
+
+682
+00:45:22,030 --> 00:45:30,780
+And let's let v prime be
+k prime vertex popped.
+
+683
+00:45:33,460 --> 00:45:35,160
+v prime.
+
+684
+00:45:35,160 --> 00:45:36,580
+OK.
+
+685
+00:45:36,580 --> 00:45:46,830
+And now let's look at
+some shortest path from s
+
+686
+00:45:46,830 --> 00:45:49,060
+to v prime.
+
+687
+00:45:49,060 --> 00:45:53,250
+So we got the shortest
+path from s to v prime.
+
+688
+00:45:53,250 --> 00:45:54,060
+It exists.
+
+689
+00:45:54,060 --> 00:45:56,400
+v prime is accessible.
+
+690
+00:45:56,400 --> 00:45:58,770
+Let's say we pruned
+our graph to be
+
+691
+00:45:58,770 --> 00:46:01,020
+only the things
+accessible from s
+
+692
+00:46:01,020 --> 00:46:07,610
+so that, yeah, there exists
+the shortest path to v prime.
+
+693
+00:46:07,610 --> 00:46:11,780
+And now let's think
+about these vertices.
+
+694
+00:46:11,780 --> 00:46:16,400
+Some of them were removed
+from the Q and some of them
+
+695
+00:46:16,400 --> 00:46:17,600
+were not.
+
+696
+00:46:17,600 --> 00:46:21,260
+s was definitely
+removed from the Q.
+
+697
+00:46:21,260 --> 00:46:25,250
+But some of these other
+vertices might not be.
+
+698
+00:46:25,250 --> 00:46:27,530
+I want to be able to
+induct on this path,
+
+699
+00:46:27,530 --> 00:46:30,410
+in particular, the
+vertex before me
+
+700
+00:46:30,410 --> 00:46:32,330
+so that I can say
+that when I removed
+
+701
+00:46:32,330 --> 00:46:39,300
+it and I relax the edge to v
+prime, then we're all golden.
+
+702
+00:46:39,300 --> 00:46:40,840
+But that might not be the case.
+
+703
+00:46:40,840 --> 00:46:43,830
+There could be a vertex,
+the vertex preceding me
+
+704
+00:46:43,830 --> 00:46:47,930
+in the graph in this
+shortest path that was not
+
+705
+00:46:47,930 --> 00:46:50,240
+popped from Q. I need
+to argue that it was
+
+706
+00:46:50,240 --> 00:46:52,790
+or some other thing.
+
+707
+00:46:52,790 --> 00:47:01,850
+So let's consider the first
+vertex in this path from s
+
+708
+00:47:01,850 --> 00:47:05,910
+to v. I'm going to
+call it y, I think.
+
+709
+00:47:05,910 --> 00:47:06,410
+Yeah.
+
+710
+00:47:09,660 --> 00:47:16,430
+A vertex y that is
+not in Q. After I
+
+711
+00:47:16,430 --> 00:47:21,740
+pop v prime, this is the
+first-- or before I pop v prime,
+
+712
+00:47:21,740 --> 00:47:25,790
+y is not in the Q. Now these
+might be the same vertex
+
+713
+00:47:25,790 --> 00:47:31,830
+if all of the preceding ones
+on this path were in the Q.
+
+714
+00:47:31,830 --> 00:47:35,280
+But in particular, we're
+going to look at this guy.
+
+715
+00:47:35,280 --> 00:47:39,130
+And say its predecessor's
+x in the path.
+
+716
+00:47:39,130 --> 00:47:41,760
+Well what do I know?
+
+717
+00:47:41,760 --> 00:47:45,470
+I know that x is in the queue.
+
+718
+00:47:45,470 --> 00:47:51,610
+Everything here was
+popped from the Q--
+
+719
+00:47:51,610 --> 00:47:52,400
+not in.
+
+720
+00:47:55,720 --> 00:47:59,800
+Which means that by induction,
+the shortest-path distance
+
+721
+00:47:59,800 --> 00:48:01,480
+was set here correctly.
+
+722
+00:48:01,480 --> 00:48:07,990
+So that the distance
+estimate at y
+
+723
+00:48:07,990 --> 00:48:16,432
+can't be bigger than the
+shortest path to x plus w x, y.
+
+724
+00:48:20,580 --> 00:48:23,280
+But this is on the
+shortest path to y,
+
+725
+00:48:23,280 --> 00:48:27,340
+because the subpaths of shortest
+paths or shortest paths.
+
+726
+00:48:27,340 --> 00:48:32,640
+So this has to equal d
+s, y, the distance to y.
+
+727
+00:48:32,640 --> 00:48:35,080
+So actually, y is all good here.
+
+728
+00:48:35,080 --> 00:48:39,030
+And so if v prime
+were y, we'd be done.
+
+729
+00:48:39,030 --> 00:48:43,030
+That's the same argument
+is DAG relaxation.
+
+730
+00:48:43,030 --> 00:48:46,040
+But we need to prove
+something about v prime.
+
+731
+00:48:46,040 --> 00:48:50,200
+Well, because we have
+non-negative weights,
+
+732
+00:48:50,200 --> 00:48:53,890
+the distance to v prime
+has to be at least as big
+
+733
+00:48:53,890 --> 00:48:57,000
+as this distance,
+because it's a subpath.
+
+734
+00:48:57,000 --> 00:49:01,450
+So this has to be less than
+or equal to the true distance
+
+735
+00:49:01,450 --> 00:49:03,205
+to v prime.
+
+736
+00:49:06,090 --> 00:49:11,100
+Because of negative--
+non-negative weights,
+
+737
+00:49:11,100 --> 00:49:15,050
+because the weights
+are non-negative.
+
+738
+00:49:15,050 --> 00:49:18,420
+But because
+relaxation is safe, we
+
+739
+00:49:18,420 --> 00:49:21,150
+know that our distance
+estimate for v prime
+
+740
+00:49:21,150 --> 00:49:23,340
+has to be at least the
+shortest-path distance.
+
+741
+00:49:28,320 --> 00:49:31,490
+This is because it's safe.
+
+742
+00:49:31,490 --> 00:49:36,760
+This is-- weights are
+greater than or equal to 0.
+
+743
+00:49:40,060 --> 00:49:43,870
+The last step here
+is that because we're
+
+744
+00:49:43,870 --> 00:49:46,030
+popping the minimum
+from our priority
+
+745
+00:49:46,030 --> 00:49:49,660
+queue, the thing
+with the smallest
+
+746
+00:49:49,660 --> 00:49:52,720
+shortest-path distance,
+this has to be less than
+
+747
+00:49:52,720 --> 00:49:59,440
+or equal to the shortest-path
+distance estimate to y.
+
+748
+00:49:59,440 --> 00:50:02,410
+Because this is the smallest
+among all such vertices
+
+749
+00:50:02,410 --> 00:50:05,700
+in my Q.
+
+750
+00:50:05,700 --> 00:50:07,600
+But these are the same value.
+
+751
+00:50:07,600 --> 00:50:10,200
+So everything between
+here is the same value.
+
+752
+00:50:10,200 --> 00:50:14,370
+In particular, the
+estimate here is
+
+753
+00:50:14,370 --> 00:50:16,737
+equal to my true
+shortest-path distance,
+
+754
+00:50:16,737 --> 00:50:18,570
+which is exactly what
+we're trying to prove.
+
+755
+00:50:18,570 --> 00:50:21,430
+OK, so that's why
+Dijkstra's correct.
+
+756
+00:50:21,430 --> 00:50:24,990
+I'm going to spend the last
+five minutes on the running
+
+757
+00:50:24,990 --> 00:50:25,965
+time of Dijkstra.
+
+758
+00:50:28,580 --> 00:50:35,810
+We set this up so
+that we did everything
+
+759
+00:50:35,810 --> 00:50:39,380
+in terms of these Q operations.
+
+760
+00:50:39,380 --> 00:50:42,170
+Right so we have
+these Q operations,
+
+761
+00:50:42,170 --> 00:50:43,460
+we have three of them.
+
+762
+00:50:43,460 --> 00:50:48,660
+I'm going to say if I
+have a build operation,
+
+763
+00:50:48,660 --> 00:50:51,210
+let's say it takes
+B time; to lead min,
+
+764
+00:50:51,210 --> 00:50:54,330
+I'm going to say it takes M
+time; and this decreased key,
+
+765
+00:50:54,330 --> 00:50:57,360
+I'm going to say
+it takes D time.
+
+766
+00:50:57,360 --> 00:50:59,310
+So what is the running
+time of Dijkstra?
+
+767
+00:50:59,310 --> 00:51:03,400
+If I take a look at that
+algorithm over there--
+
+768
+00:51:03,400 --> 00:51:09,990
+well I guess let's switch
+these back up again.
+
+769
+00:51:09,990 --> 00:51:11,760
+OK, so what does this do?
+
+770
+00:51:11,760 --> 00:51:12,630
+We build once.
+
+771
+00:51:15,330 --> 00:51:21,080
+Then we delete the minimum
+from the Q how many times?
+
+772
+00:51:21,080 --> 00:51:22,040
+v times.
+
+773
+00:51:22,040 --> 00:51:26,212
+We remove every
+vertex from our Q.
+
+774
+00:51:26,212 --> 00:51:30,880
+Then for every
+possible edge, we may
+
+775
+00:51:30,880 --> 00:51:35,410
+need to relax and decrease
+the key in our queue
+
+776
+00:51:35,410 --> 00:51:37,420
+once for every outgoing edge.
+
+777
+00:51:40,370 --> 00:51:55,640
+So the running time is B plus
+V times M plus E times D. OK.
+
+778
+00:51:55,640 --> 00:51:58,340
+So how could we implement
+this priority queue?
+
+779
+00:51:58,340 --> 00:52:04,270
+Well, if we use the stupidest
+priority queue in the world,
+
+780
+00:52:04,270 --> 00:52:06,070
+here's a list of
+different implementations
+
+781
+00:52:06,070 --> 00:52:08,600
+we could have for
+our priority queues.
+
+782
+00:52:08,600 --> 00:52:12,820
+And when I say priority queue,
+I mean this priority queue.
+
+783
+00:52:12,820 --> 00:52:15,340
+We're already implementing
+the changeable priority queue
+
+784
+00:52:15,340 --> 00:52:18,800
+by linking it with a
+dictionary that's efficient
+
+785
+00:52:18,800 --> 00:52:22,280
+If I just use an array, I can
+find the min in linear time,
+
+786
+00:52:22,280 --> 00:52:23,950
+sure.
+
+787
+00:52:23,950 --> 00:52:26,635
+And I don't have to update
+that array in any way.
+
+788
+00:52:29,350 --> 00:52:32,950
+I mean, I can just
+keep the distances
+
+789
+00:52:32,950 --> 00:52:34,580
+in my direct access array.
+
+790
+00:52:34,580 --> 00:52:36,580
+I don't have to store a
+separate data structure.
+
+791
+00:52:36,580 --> 00:52:40,400
+I just store the distances
+in my direct access array D,
+
+792
+00:52:40,400 --> 00:52:43,210
+and so I can find
+it in constant time
+
+793
+00:52:43,210 --> 00:52:45,208
+and I can update the
+values stored there.
+
+794
+00:52:45,208 --> 00:52:46,750
+And then whenever
+I want the minimum,
+
+795
+00:52:46,750 --> 00:52:49,280
+I can just loop through
+the whole thing.
+
+796
+00:52:49,280 --> 00:52:51,940
+So that gives me a
+really fast decrease key,
+
+797
+00:52:51,940 --> 00:52:54,190
+but slow delete min.
+
+798
+00:52:54,190 --> 00:52:58,920
+But if we take a look at
+the running time bound here,
+
+799
+00:52:58,920 --> 00:53:01,560
+we get something, if
+we replace n with v,
+
+800
+00:53:01,560 --> 00:53:05,250
+we get a quadratic
+time algorithm
+
+801
+00:53:05,250 --> 00:53:10,410
+in the number of vertices,
+which for a dense graph,
+
+802
+00:53:10,410 --> 00:53:11,643
+this is in linear time.
+
+803
+00:53:11,643 --> 00:53:12,810
+That's actually pretty good.
+
+804
+00:53:12,810 --> 00:53:15,205
+Dense meaning that I have
+at least a quadratic number
+
+805
+00:53:15,205 --> 00:53:15,705
+of vertices.
+
+806
+00:53:18,420 --> 00:53:20,150
+So that's actually
+really good, and it's
+
+807
+00:53:20,150 --> 00:53:23,180
+the stupidest possible
+data structure
+
+808
+00:53:23,180 --> 00:53:25,460
+we could use for
+this priority queue.
+
+809
+00:53:25,460 --> 00:53:29,480
+Now we can do a little better,
+actually, for not dense--
+
+810
+00:53:29,480 --> 00:53:32,840
+I mean, for sparse graphs
+where the number of edges
+
+811
+00:53:32,840 --> 00:53:40,133
+is at most v, then this is
+pretty bad, it's quadratic.
+
+812
+00:53:40,133 --> 00:53:41,800
+We want to do something
+a little better.
+
+813
+00:53:41,800 --> 00:53:45,340
+Now if we're sparse,
+a binary heap
+
+814
+00:53:45,340 --> 00:53:49,330
+can delete min in
+logarithmic time,
+
+815
+00:53:49,330 --> 00:53:53,500
+but it can actually, if I know
+where I am in the heap and I
+
+816
+00:53:53,500 --> 00:53:59,150
+decrease the key and
+I'm in a min heap,
+
+817
+00:53:59,150 --> 00:54:01,400
+I can just swap with
+my parent upwards
+
+818
+00:54:01,400 --> 00:54:05,900
+in the tree in log n time
+and rebalance the-- refix
+
+819
+00:54:05,900 --> 00:54:07,710
+the binary heap property.
+
+820
+00:54:07,710 --> 00:54:11,240
+And so I can do that
+in logarithmic time.
+
+821
+00:54:11,240 --> 00:54:14,900
+And if I do that and I
+put it into this formula,
+
+822
+00:54:14,900 --> 00:54:16,790
+I actually get n--
+
+823
+00:54:16,790 --> 00:54:24,830
+or V plus V times log
+V plus E times log V.
+
+824
+00:54:24,830 --> 00:54:29,780
+And so that's going to give me
+E log V if I'm assuming that I'm
+
+825
+00:54:29,780 --> 00:54:34,190
+first pruning out all of the
+things not connected to me,
+
+826
+00:54:34,190 --> 00:54:37,670
+then E asymptotically
+upper bounds V,
+
+827
+00:54:37,670 --> 00:54:42,440
+and I get this E log V running
+time, which is pretty good.
+
+828
+00:54:42,440 --> 00:54:44,930
+That's just an extra
+log factor on linear.
+
+829
+00:54:48,400 --> 00:54:50,740
+Now there's an even better--
+
+830
+00:54:50,740 --> 00:54:54,910
+well, better is hard to say.
+
+831
+00:54:54,910 --> 00:54:57,970
+Really, there's a
+different data structure
+
+832
+00:54:57,970 --> 00:55:03,940
+that achieves both bounds
+for sparse and dense graphs
+
+833
+00:55:03,940 --> 00:55:05,530
+and everything in between.
+
+834
+00:55:05,530 --> 00:55:10,120
+It gives us an E plus V
+log V running time bound.
+
+835
+00:55:10,120 --> 00:55:12,280
+This data structure is
+called the Fibonacci heap.
+
+836
+00:55:12,280 --> 00:55:15,760
+We're not going to
+talk about it in 6.006.
+
+837
+00:55:15,760 --> 00:55:19,510
+They talk about it-- and you
+can look at chapter 19 in CLRS
+
+838
+00:55:19,510 --> 00:55:20,680
+or you can look at--
+
+839
+00:55:20,680 --> 00:55:23,560
+I think they talk
+about it in 6.854
+
+840
+00:55:23,560 --> 00:55:26,200
+if you're interested in
+learning about Fibonacci heaps.
+
+841
+00:55:26,200 --> 00:55:27,550
+But these are almost never--
+
+842
+00:55:27,550 --> 00:55:30,720
+I mean, they get good
+theoretical bounds.
+
+843
+00:55:30,720 --> 00:55:33,820
+So what you want to say
+is, whenever we give you
+
+844
+00:55:33,820 --> 00:55:36,970
+a theory problem where you
+might want to use Dijkstra,
+
+845
+00:55:36,970 --> 00:55:43,690
+you want to use this
+theoretical running time bound
+
+846
+00:55:43,690 --> 00:55:48,850
+for your problem E plus
+V log V. But if you
+
+847
+00:55:48,850 --> 00:55:55,000
+happen to know that your graph
+is sparse or dense, just using
+
+848
+00:55:55,000 --> 00:55:58,180
+an array or a heap is
+going to get you just as
+
+849
+00:55:58,180 --> 00:55:59,650
+good of a running time.
+
+850
+00:55:59,650 --> 00:56:02,200
+Very close to linear.
+
+851
+00:56:02,200 --> 00:56:06,520
+And so in practice, most people,
+when they are implementing
+
+852
+00:56:06,520 --> 00:56:08,710
+a graph search
+algorithm, they know
+
+853
+00:56:08,710 --> 00:56:10,720
+if their graph is
+sparse or dense,
+
+854
+00:56:10,720 --> 00:56:13,670
+and so they never bother
+implementing a Fibonacci heap,
+
+855
+00:56:13,670 --> 00:56:16,180
+which is a little complicated.
+
+856
+00:56:16,180 --> 00:56:19,570
+So they're usually either in
+one of these first two cases
+
+857
+00:56:19,570 --> 00:56:23,350
+where V squared is linear
+when your graph is dense,
+
+858
+00:56:23,350 --> 00:56:29,072
+or we're very close to linear,
+E times log V, which is V log
+
+859
+00:56:29,072 --> 00:56:31,570
+V if your graph is sparse.
+
+860
+00:56:31,570 --> 00:56:35,185
+So that's the running
+time of Dijkstra.
+
+861
+00:56:38,030 --> 00:56:45,820
+So so far, we've gotten
+all of these nice bounds.
+
+862
+00:56:45,820 --> 00:56:48,130
+Some special cases where we're--
+
+863
+00:56:48,130 --> 00:56:51,130
+I mean, special cases
+where we're linear.
+
+864
+00:56:51,130 --> 00:56:55,180
+Dijkstra where we're
+close to linear.
+
+865
+00:56:55,180 --> 00:56:59,140
+And Bellman-Ford, if we throw
+our hands up in the air,
+
+866
+00:56:59,140 --> 00:57:01,518
+there might be negative
+cycles in our graph,
+
+867
+00:57:01,518 --> 00:57:03,560
+we gotta spend that
+quadratic running time bound.
+
+868
+00:57:03,560 --> 00:57:05,290
+Now there are faster
+algorithms, but this
+
+869
+00:57:05,290 --> 00:57:07,990
+is the fastest we're going
+to teach you in this class.
+
+870
+00:57:07,990 --> 00:57:10,260
+Now and in the
+next lecture we're
+
+871
+00:57:10,260 --> 00:57:13,030
+going to be talking about
+all pair shortest paths,
+
+872
+00:57:13,030 --> 00:57:16,470
+and we'll pick it up next time.
